@@ -21,6 +21,8 @@
  * Released under the MIT License.
  */
 
+/*jshint unused:false*/
+
 if (!(typeof window.google === 'object' && window.google.maps)) {
   throw 'Google Maps API is required. Please register the following JavaScript library http://maps.google.com/maps/api/js?sensor=true.'
 }
@@ -28,12 +30,10 @@ if (!(typeof window.google === 'object' && window.google.maps)) {
 var extend_object = function(obj, new_obj) {
   var name;
 
-  if (obj === new_obj) {
-    return obj;
-  }
-
   for (name in new_obj) {
-    obj[name] = new_obj[name];
+    if(new_obj.hasOwnProperty(name)) {
+      obj[name] = new_obj[name];
+    }
   }
 
   return obj;
@@ -47,7 +47,7 @@ var replace_object = function(obj, replace) {
   }
 
   for (name in replace) {
-    if (obj[name] != undefined) {
+    if (obj.hasOwnProperty(name)) {
       obj[name] = replace[name];
     }
   }
@@ -59,11 +59,12 @@ var array_map = function(array, callback) {
   var original_callback_params = Array.prototype.slice.call(arguments, 2),
       array_return = [],
       array_length = array.length,
-      i;
+      i,
+      callback_params;
 
   if (Array.prototype.map && array.map === Array.prototype.map) {
     array_return = Array.prototype.map.call(array, function(item) {
-      var callback_params = original_callback_params.slice(0);
+      callback_params = original_callback_params.slice(0);
       callback_params.splice(0, 0, item);
 
       return callback.apply(this, callback_params);
@@ -108,7 +109,7 @@ var arrayToLatLng = function(coords, useGeoJSON) {
 
   for (i = 0; i < coords.length; i++) {
     if (!(coords[i] instanceof google.maps.LatLng)) {
-      if (coords[i].length > 0 && typeof(coords[i][0]) === "object") {
+      if (coords[i].length > 0 && typeof(coords[i][0]) === 'object') {
         coords[i] = arrayToLatLng(coords[i], useGeoJSON);
       }
       else {
@@ -127,7 +128,7 @@ var getElementsByClassName = function (class_name, context) {
         _class = class_name.replace('.', '');
 
     if ('jQuery' in this && context) {
-        element = $("." + _class, context)[0];
+        element = $('.' + _class, context)[0];
     } else {
         element = document.getElementsByClassName(_class)[0];
     }
@@ -136,14 +137,14 @@ var getElementsByClassName = function (class_name, context) {
 };
 
 var getElementById = function(id, context) {
-  var element,
+  var element;
   id = id.replace('#', '');
 
   if ('jQuery' in window && context) {
     element = $('#' + id, context)[0];
   } else {
     element = document.getElementById(id);
-  };
+  }
 
   return element;
 };
@@ -162,13 +163,19 @@ var findAbsolutePosition = function(obj)  {
   return [curleft, curtop];
 };
 
-var GMaps = (function(global) {
-  "use strict";
+var subcribeEvent = function(callback, obj) {
+  return function(e) {
+    return callback(e, (obj || this));
+  };
+};
+
+var GMaps = (function() {
+  'use strict';
 
   var doc = document;
 
   var GMaps = function(options) {
-    if (!this) return new GMaps(options);
+    if (!this) { return new GMaps(options); }
 
     options.zoom = options.zoom || 15;
     options.mapType = options.mapType || 'roadmap';
@@ -223,7 +230,7 @@ var GMaps = (function(global) {
 
       if (typeof(options.el) === 'string' || typeof(options.div) === 'string') {
 
-          if (identifier.indexOf("#") > -1) {
+          if (identifier.indexOf('#') > -1) {
               this.el = getElementById(identifier, options.context);
           } else {
               this.el = getElementsByClassName.apply(this, [identifier, options.context]);
@@ -262,7 +269,7 @@ var GMaps = (function(global) {
       delete options[options_to_be_deleted[i]];
     }
 
-    if(options.disableDefaultUI != true) {
+    if(options.disableDefaultUI !== true) {
       map_base_options = extend_object(map_base_options, map_controls_options);
     }
 
@@ -294,36 +301,42 @@ var GMaps = (function(global) {
         }
       }
 
-      if (!getElementById('gmaps_context_menu')) return;
+      if (!getElementById('gmaps_context_menu')) { return; }
 
       var context_menu_element = getElementById('gmaps_context_menu');
       
       context_menu_element.innerHTML = html;
 
       var context_menu_items = context_menu_element.getElementsByTagName('a'),
-          context_menu_items_count = context_menu_items.length,
-          i;
+          context_menu_items_count = context_menu_items.length;
+
+      function menuItemActionHandler(ev, e, id, context) {
+        return function() {
+          ev.preventDefault();
+
+          options[id.replace(control + '_', '')].action.apply(context, [e]);
+          context.hideContextMenu();
+        };
+      }
 
       for (i = 0; i < context_menu_items_count; i++) {
         var context_menu_item = context_menu_items[i];
 
-        var assign_menu_item_action = function(ev){
-          ev.preventDefault();
-
-          options[this.id.replace(control + '_', '')].action.apply(self, [e]);
-          self.hideContextMenu();
-        };
-
         google.maps.event.clearListeners(context_menu_item, 'click');
-        google.maps.event.addDomListenerOnce(context_menu_item, 'click', assign_menu_item_action, false);
+        google.maps.event.addDomListenerOnce(
+          context_menu_item,
+          'click',
+          menuItemActionHandler(ev, e, this.id, self), 
+          false
+        );
       }
 
       var position = findAbsolutePosition.apply(this, [self.el]),
           left = position[0] + e.pixel.x - 15,
           top = position[1] + e.pixel.y- 15;
 
-      context_menu_element.style.left = left + "px";
-      context_menu_element.style.top = top + "px";
+      context_menu_element.style.left = left + 'px';
+      context_menu_element.style.top = top + 'px';
 
       context_menu_element.style.display = 'block';
     };
@@ -398,7 +411,7 @@ var GMaps = (function(global) {
 
     var setupListener = function(object, name) {
       google.maps.event.addListener(object, name, function(e){
-        if (e == undefined) {
+        if (typeof e === 'undefined') {
           e = this;
         }
 
@@ -411,16 +424,18 @@ var GMaps = (function(global) {
     //google.maps.event.addListener(this.map, 'idle', this.hideContextMenu);
     google.maps.event.addListener(this.map, 'zoom_changed', this.hideContextMenu);
 
-    for (var ev = 0; ev < events_that_hide_context_menu.length; ev++) {
-      var name = events_that_hide_context_menu[ev];
+    var ev, name;
+
+    for (ev = 0; ev < events_that_hide_context_menu.length; ev++) {
+      name = events_that_hide_context_menu[ev];
 
       if (name in options) {
         setupListener(this.map, name);
       }
     }
 
-    for (var ev = 0; ev < events_that_doesnt_hide_context_menu.length; ev++) {
-      var name = events_that_doesnt_hide_context_menu[ev];
+    for (ev = 0; ev < events_that_doesnt_hide_context_menu.length; ev++) {
+      name = events_that_doesnt_hide_context_menu[ev];
 
       if (name in options) {
         setupListener(this.map, name);
@@ -432,7 +447,7 @@ var GMaps = (function(global) {
         options.rightclick.apply(this, [e]);
       }
 
-      if(window.context_menu[self.el.id]['map'] != undefined) {
+      if(typeof window.context_menu[self.el.id]['map'] !== 'undefined') {
         self.buildContextMenu('map', e);
       }
     });
@@ -447,7 +462,7 @@ var GMaps = (function(global) {
           i;
 
       for (i = 0; i < markers_length; i++) {
-        if(typeof(this.markers[i].visible) === 'boolean' && this.markers[i].visible) {
+        if(typeof this.markers[i].visible === 'boolean' && this.markers[i].visible) {
           latLngs.push(this.markers[i].getPosition());
         }
       }
@@ -497,22 +512,26 @@ var GMaps = (function(global) {
         method;
 
     for (method in this.map) {
-      if (typeof(this.map[method]) == 'function' && !this[method]) {
+      if (typeof this.map[method] === 'function' && !this[method]) {
         native_methods.push(method);
       }
     }
 
+    function createNativeMethod(gmaps, scope, method_name) {
+      gmaps[method_name] = function() {
+        return scope[method_name].apply(scope, arguments);
+      };
+    }
+
     for (i = 0; i < native_methods.length; i++) {
-      (function(gmaps, scope, method_name) {
-        gmaps[method_name] = function(){
-          return scope[method_name].apply(scope, arguments);
-        };
-      })(this, this.map, native_methods[i]);
+      createNativeMethod(this, this.map, native_methods[i]);
     }
   };
 
   return GMaps;
-})(this);
+})();
+
+/* globals subcribeEvent: true */
 
 GMaps.prototype.createControl = function(options) {
   var control = document.createElement('div');
@@ -526,7 +545,9 @@ GMaps.prototype.createControl = function(options) {
   }
 
   for (var option in options.style) {
-    control.style[option] = options.style[option];
+    if(options.style.hasOwnProperty(option)) {
+      control.style[option] = options.style[option];
+    }
   }
 
   if (options.id) {
@@ -555,11 +576,10 @@ GMaps.prototype.createControl = function(options) {
   }
 
   for (var ev in options.events) {
-    (function(object, name) {
-      google.maps.event.addDomListener(object, name, function(){
-        options.events[name].apply(this, [this]);
-      });
-    })(control, ev);
+    if(options.events.hasOwnProperty(ev)) {
+      google.maps.event.addDomListener(control, ev, subcribeEvent(options.events[ev])
+      );
+    }
   }
 
   control.index = 1;
@@ -581,7 +601,7 @@ GMaps.prototype.removeControl = function(control) {
       i;
 
   for (i = 0; i < this.controls.length; i++) {
-    if (this.controls[i] == control) {
+    if (this.controls[i] === control) {
       position = this.controls[i].position;
       this.controls.splice(i, 1);
     }
@@ -591,7 +611,7 @@ GMaps.prototype.removeControl = function(control) {
     for (i = 0; i < this.map.controls.length; i++) {
       var controlsForPosition = this.map.controls[control.position];
 
-      if (controlsForPosition.getAt(i) == control) {
+      if (controlsForPosition.getAt(i) === control) {
         controlsForPosition.removeAt(i);
 
         break;
@@ -948,6 +968,8 @@ GMaps.prototype.removeOverlays = function() {
   this.overlays = [];
 };
 
+/* globals extend_object: true, subcribeEvent: true, array_flat: true, array_map: true, arrayToLatLng: true */
+
 GMaps.prototype.drawPolyline = function(options) {
   var path = [],
       points = options.path;
@@ -975,19 +997,19 @@ GMaps.prototype.drawPolyline = function(options) {
     visible: true
   };
 
-  if (options.hasOwnProperty("clickable")) {
+  if (options.hasOwnProperty('clickable')) {
     polyline_options.clickable = options.clickable;
   }
 
-  if (options.hasOwnProperty("editable")) {
+  if (options.hasOwnProperty('editable')) {
     polyline_options.editable = options.editable;
   }
 
-  if (options.hasOwnProperty("icons")) {
+  if (options.hasOwnProperty('icons')) {
     polyline_options.icons = options.icons;
   }
 
-  if (options.hasOwnProperty("zIndex")) {
+  if (options.hasOwnProperty('zIndex')) {
     polyline_options.zIndex = options.zIndex;
   }
 
@@ -996,13 +1018,9 @@ GMaps.prototype.drawPolyline = function(options) {
   var polyline_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
 
   for (var ev = 0; ev < polyline_events.length; ev++) {
-    (function(object, name) {
-      if (options[name]) {
-        google.maps.event.addListener(object, name, function(e){
-          options[name].apply(this, [e]);
-        });
-      }
-    })(polyline, polyline_events[ev]);
+    if (options.hasOwnProperty(name)) {
+      google.maps.event.addListener(polyline, name, subcribeEvent(polyline_events[ev], polyline));
+    }
   }
 
   this.polylines.push(polyline);
@@ -1046,13 +1064,9 @@ GMaps.prototype.drawCircle = function(options) {
       polygon_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
 
   for (var ev = 0; ev < polygon_events.length; ev++) {
-    (function(object, name) {
-      if (options[name]) {
-        google.maps.event.addListener(object, name, function(e){
-          options[name].apply(this, [e]);
-        });
-      }
-    })(polygon, polygon_events[ev]);
+    if (options.hasOwnProperty(name)) {
+      google.maps.event.addListener(polygon, name, subcribeEvent(polygon_events[ev], polygon));
+    }
   }
 
   this.polygons.push(polygon);
@@ -1076,13 +1090,9 @@ GMaps.prototype.drawRectangle = function(options) {
       polygon_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
 
   for (var ev = 0; ev < polygon_events.length; ev++) {
-    (function(object, name) {
-      if (options[name]) {
-        google.maps.event.addListener(object, name, function(e){
-          options[name].apply(this, [e]);
-        });
-      }
-    })(polygon, polygon_events[ev]);
+    if (options.hasOwnProperty(name)) {
+      google.maps.event.addListener(polygon, name, subcribeEvent(polygon_events[ev], polygon));
+    }
   }
 
   this.polygons.push(polygon);
@@ -1093,7 +1103,7 @@ GMaps.prototype.drawRectangle = function(options) {
 GMaps.prototype.drawPolygon = function(options) {
   var useGeoJSON = false;
 
-  if(options.hasOwnProperty("useGeoJSON")) {
+  if(options.hasOwnProperty('useGeoJSON')) {
     useGeoJSON = options.useGeoJSON;
   }
 
@@ -1103,7 +1113,7 @@ GMaps.prototype.drawPolygon = function(options) {
     map: this.map
   }, options);
 
-  if (useGeoJSON == false) {
+  if (useGeoJSON === false) {
     options.paths = [options.paths.slice(0)];
   }
 
@@ -1117,13 +1127,9 @@ GMaps.prototype.drawPolygon = function(options) {
       polygon_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
 
   for (var ev = 0; ev < polygon_events.length; ev++) {
-    (function(object, name) {
-      if (options[name]) {
-        google.maps.event.addListener(object, name, function(e){
-          options[name].apply(this, [e]);
-        });
-      }
-    })(polygon, polygon_events[ev]);
+    if (options.hasOwnProperty(name)) {
+      google.maps.event.addListener(polygon, name, subcribeEvent(polygon, polygon_events[ev]));
+    }
   }
 
   this.polygons.push(polygon);

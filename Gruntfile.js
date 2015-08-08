@@ -54,12 +54,27 @@ module.exports = function(grunt) {
     },
 
     watch : {
-      files : '<%= concat.dist.src %>',
-      tasks : 'default'
+      dev: {
+        files : ['Gruntfile.js', '<%= concat.dist.src %>'],
+        tasks : ['jshint:main', 'test', 'concat', 'umd']
+      }
     },
 
     jshint : {
-      all : ['Gruntfile.js']
+      main : {
+        options: {
+          jshintrc: './.jshintrc',
+          force: true
+        },
+        src: ['Gruntfile.js', '<%= concat.dist.src %>']
+      },
+      test: {
+        options: {
+          jshintrc: './test/.jshintrc',
+          force: true
+        },
+        src: ['test/spec/**/*.js']
+      }
     },
 
     uglify : {
@@ -94,6 +109,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-umd');
 
-  grunt.registerTask('test', ['jshint', 'jasmine']);
-  grunt.registerTask('default', ['test', 'concat', 'umd', 'uglify']);
+  grunt.registerTask('test', ['jshint:test', 'jasmine']);
+  grunt.registerTask('dev', ['jshint:main', 'test', 'concat', 'umd', 'watch:dev']);
+  grunt.registerTask('default', ['jshint:main', 'test', 'concat', 'umd', 'uglify']);
 };

@@ -1,0 +1,39 @@
+{
+    "folders":
+    [
+        // add paths per directory you want to show
+        {
+            // relative paths to the root
+            "path": "/",
+            // optionally give it a different name
+            "name": "Gmaps-For-Apps",
+            // possible folders to exclude
+            "folder_exclude_patterns": [
+                "node_modules",
+                ".sass-cache",
+                "_docs",
+                "_nosql", 
+                "images", 
+                ".grunt"
+            ],
+            // possible files to exclude
+            "file_exclude_patterns": [
+                "._*",
+                "*.ico",
+                "*.swf",
+                "*.tar",
+                "*.zip",
+                "*.7z",
+                "*.rar",
+                "*.sublime-workspace",
+                ".ghignore",
+                ".gitignore",
+                "_SpecRunner.html"
+            ]
+        }
+    ],
+    "settings":
+    {
+       
+    }
+}
