@@ -1,20 +1,20 @@
 {
-  "name": "gmaps",
+  "name": "gmaps-for-apps",
   "version": "0.4.18",
-  "description": "the easiest way to use Google Maps",
+  "description": "the easiest way to use Google Maps in your apps",
   "main": "gmaps.js",
   "scripts": {
     "test": "./node_modules/.bin/grunt test --verbose"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/HPNeo/gmaps"
+    "url": "https://github.com/Matt-Jensen/gmaps-for-apps"
   },
-  "author": "Gustavo Leon",
+  "author": "Matt jensen",
   "homepage": "http://hpneo.github.com/gmaps/",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/HPNeo/gmaps/issues"
+    "url": "https://github.com/Matt-Jensen/gmaps-for-apps/issues"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
