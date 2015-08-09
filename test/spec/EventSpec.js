@@ -1,4 +1,4 @@
-describe("Creating event listeners", function() {
+describe('Creating event listeners', function() {
   var map_events, marker, line, polygon, callbacks_native, callbacks_gmaps;
   var added_marker, added_line, added_polygon;
   var marker_added_event, marker_removed_event,
@@ -36,7 +36,7 @@ describe("Creating event listeners", function() {
     });
   });
 
-  describe("for google.maps events", function() {
+  describe('for google.maps events', function() {
     beforeEach(function() {
       callbacks_native = callbacks_native || {
         map : {
@@ -67,8 +67,8 @@ describe("Creating event listeners", function() {
       spyOn(callbacks_native.polygon, 'onclick').andCallThrough();
     });
 
-    describe("To a map", function() {
-      it("should add the listener to the listeners collection", function() {
+    describe('To a map', function() {
+      it('should add the listener to the listeners collection', function() {
         var click_event = GMaps.on('click', map_events.map, callbacks_native.map.onclick);
 
         expect(map_events.map['__e3_']['click'][click_event['id']]).toBeDefined();
@@ -76,8 +76,8 @@ describe("Creating event listeners", function() {
       });
     });
 
-    describe("To a marker", function() {
-      it("should add the listener to the listeners collection", function() {
+    describe('To a marker', function() {
+      it('should add the listener to the listeners collection', function() {
         var click_event = GMaps.on('click', marker, callbacks_native.marker.onclick);
 
         expect(marker['__e3_']['click'][click_event['id']]).toBeDefined();
@@ -85,8 +85,8 @@ describe("Creating event listeners", function() {
       });
     });
 
-    describe("To a line", function() {
-      it("should add the listener to the listeners collection", function() {
+    describe('To a line', function() {
+      it('should add the listener to the listeners collection', function() {
         var click_event = GMaps.on('click', line, callbacks_native.line.onclick);
 
         expect(line['__e3_']['click'][click_event['id']]).toBeDefined();
@@ -94,8 +94,8 @@ describe("Creating event listeners", function() {
       });
     });
 
-    describe("To a polygon", function() {
-      it("should add the listener to the listeners collection", function() {
+    describe('To a polygon', function() {
+      it('should add the listener to the listeners collection', function() {
         var click_event = GMaps.on('click', polygon, callbacks_native.polygon.onclick);
 
         expect(polygon['__e3_']['click'][click_event['id']]).toBeDefined();
@@ -132,7 +132,7 @@ describe("Creating event listeners", function() {
     });
   });
 
-  describe("for GMaps events", function() {
+  describe('for GMaps events', function() {
     beforeEach(function() {
       callbacks_gmaps = {
         marker_added : function() {
@@ -163,16 +163,16 @@ describe("Creating event listeners", function() {
       spyOn(callbacks_gmaps, 'polygon_removed').andCallThrough();
     });
 
-    describe("#marker_added", function() {
+    describe('#marker_added', function() {
       beforeEach(function() {
         marker_added_event = GMaps.on('marker_added', map_events, callbacks_gmaps.marker_added);
       });
 
-      it("should add the listener to the listeners collection", function() {
+      it('should add the listener to the listeners collection', function() {
         expect(map_events.registered_events['marker_added'][0]).toEqual(marker_added_event);
       });
 
-      it("should trigger the listener created", function() {
+      it('should trigger the listener created', function() {
         added_marker = added_marker || map_events.addMarker({
           lat : -12.0433,
           lng : -77.0273,
@@ -187,16 +187,16 @@ describe("Creating event listeners", function() {
       });
     });
 
-    describe("#marker_removed", function() {
+    describe('#marker_removed', function() {
       beforeEach(function() {
         marker_removed_event = GMaps.on('marker_removed', map_events, callbacks_gmaps.marker_removed);
       });
 
-      it("should add the listener to the listeners collection", function() {
+      it('should add the listener to the listeners collection', function() {
         expect(map_events.registered_events['marker_removed'][0]).toEqual(marker_removed_event);
       });
 
-      it("should trigger the listener created", function() {
+      it('should trigger the listener created', function() {
         map_events.removeMarker(added_marker);
 
         expect(callbacks_gmaps.marker_removed).toHaveBeenCalled();
@@ -207,16 +207,16 @@ describe("Creating event listeners", function() {
       });
     });
 
-    describe("#polyline_added", function() {
+    describe('#polyline_added', function() {
       beforeEach(function() {
         polyline_added_event = GMaps.on('polyline_added', map_events, callbacks_gmaps.polyline_added);
       });
 
-      it("should add the listener to the listeners collection", function() {
+      it('should add the listener to the listeners collection', function() {
         expect(map_events.registered_events['polyline_added'][0]).toEqual(polyline_added_event);
       });
 
-      it("should trigger the listener created", function() {
+      it('should trigger the listener created', function() {
         added_line = added_line || map_events.drawPolyline({
           path : [[-12.0420, -77.0247], [-12.0544, -77.0102], [-12.0751, -77.0903], [-12.0759, -77.0276], [-12.0763, -77.0279], [-12.0768, -77.0289], [-12.0885, -77.0241], [-12.0908, -77.0227]],
           strokeColor : '#271804',
@@ -232,16 +232,16 @@ describe("Creating event listeners", function() {
       });
     });
 
-    describe("#polyline_removed", function() {
+    describe('#polyline_removed', function() {
       beforeEach(function() {
         polyline_removed_event = GMaps.on('polyline_removed', map_events, callbacks_gmaps.polyline_removed);
       });
 
-      it("should add the listener to the listeners collection", function() {
+      it('should add the listener to the listeners collection', function() {
         expect(map_events.registered_events['polyline_removed'][0]).toEqual(polyline_removed_event);
       });
 
-      it("should trigger the listener created", function() {
+      it('should trigger the listener created', function() {
         map_events.removePolyline(added_line);
 
         expect(callbacks_gmaps.polyline_removed).toHaveBeenCalled();
@@ -252,16 +252,16 @@ describe("Creating event listeners", function() {
       });
     });
 
-    describe("#polygon_added", function() {
+    describe('#polygon_added', function() {
       beforeEach(function() {
         polygon_added_event = GMaps.on('polygon_added', map_events, callbacks_gmaps.polygon_added);
       });
 
-      it("should add the listener to the listeners collection", function() {
+      it('should add the listener to the listeners collection', function() {
         expect(map_events.registered_events['polygon_added'][0]).toEqual(polygon_added_event);
       });
 
-      it("should trigger the listener created", function() {
+      it('should trigger the listener created', function() {
         added_polygon = added_polygon || map_events.drawPolygon({
           paths : [[-12.0203,-77.0137],[-12.0402,-77.0109],[-12.0500,-77.0144],[-12.0848,-77.0115]],
           strokeColor : '#D32559',
@@ -279,16 +279,16 @@ describe("Creating event listeners", function() {
       });
     });
 
-    describe("#polygon_removed", function() {
+    describe('#polygon_removed', function() {
       beforeEach(function() {
         polygon_removed_event = GMaps.on('polygon_removed', map_events, callbacks_gmaps.polygon_removed);
       });
 
-      it("should add the listener to the listeners collection", function() {
+      it('should add the listener to the listeners collection', function() {
         expect(map_events.registered_events['polygon_removed'][0]).toEqual(polygon_removed_event);
       });
 
-      it("should trigger the listener created", function() {
+      it('should trigger the listener created', function() {
         map_events.removePolygon(added_polygon);
 
         expect(callbacks_gmaps.polygon_removed).toHaveBeenCalled();

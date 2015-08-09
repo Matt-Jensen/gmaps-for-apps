@@ -1,7 +1,9 @@
 {
   "globals": {
-    "google"  : true,
-    "GMaps"   : true
+    "google"    : true,
+    "GMaps"     : true,
+    "navigator" : true,
+    "document"  : true
   },
 
   "asi"       : true,
@@ -12,11 +14,11 @@
   "devel"     : true,
   "eqeqeq"    : true,
   "eqnull"    : false,
-  "es5"       : true,
+  "es5"       : false,
   "evil"      : false,
   "forin"     : true,
   "immed"     : true,
-  "indent"    : 4,
+  "indent"    : false,
   "jquery"    : true,
   "latedef"   : true,
   "laxbreak"  : false,
@@ -26,7 +28,7 @@
   "noempty"   : false,
   "nomen"     : false,
   "nonew"     : true,
-  "onevar"    : true,
+  "onevar"    : false,
   "plusplus"  : false,
   "quotmark"  : "single",
   "regexp"    : false,

@@ -1,4 +1,4 @@
-describe("Create a Street View Panorama", function() {
+describe('Create a Street View Panorama', function() {
   var map_with_streetview, attached_panorama, standalone_panorama, panorama_with_events;
 
   beforeEach(function() {
@@ -10,7 +10,7 @@ describe("Create a Street View Panorama", function() {
     });
   });
 
-  describe("Standalone", function() {
+  describe('Standalone', function() {
     beforeEach(function() {
       standalone_panorama = standalone_panorama || GMaps.createPanorama({
         el : '#streetview-standalone-panorama',
@@ -24,12 +24,12 @@ describe("Create a Street View Panorama", function() {
       });
     });
 
-    it("should create a Street View panorama", function() {
+    it('should create a Street View panorama', function() {
       expect(standalone_panorama).toBeDefined();
     });
   });
 
-  describe("Attached to the current map", function() {
+  describe('Attached to the current map', function() {
     beforeEach(function() {
       attached_panorama = attached_panorama || map_with_streetview.createPanorama({
         el : '#streetview-panorama',
@@ -41,12 +41,12 @@ describe("Create a Street View Panorama", function() {
       });
     });
 
-    it("should be equal to the current map Street View panorama", function() {
+    it('should be equal to the current map Street View panorama', function() {
       expect(map_with_streetview.getStreetView()).toEqual(attached_panorama);
     });
   });
 
-  describe("With events", function() {
+  describe('With events', function() {
     var callbacks;
 
     beforeEach(function() {
@@ -71,7 +71,7 @@ describe("Create a Street View Panorama", function() {
       });
     });
 
-    it("should respond to pov_changed event", function() {
+    it('should respond to pov_changed event', function() {
       panorama_with_events.setPov({
         heading : 80,
         pitch : -10,

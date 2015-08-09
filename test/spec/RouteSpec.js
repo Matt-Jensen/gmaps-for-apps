@@ -1,6 +1,6 @@
-var map_with_routes, route, routes;
+var map_with_routes;
 
-describe("Drawing a route", function() {
+describe('Drawing a route', function() {
   beforeEach(function() {
     map_with_routes = map_with_routes || new GMaps({
       el : '#map-with-routes',
@@ -10,7 +10,7 @@ describe("Drawing a route", function() {
     });
   });
 
-  it("should add a line in the current map", function() {
+  it('should add a line in the current map', function() {
     var route_flag;
 
     runs(function() {
@@ -31,7 +31,7 @@ describe("Drawing a route", function() {
 
     waitsFor(function() {
       return route_flag;
-    }, "The drawn route should create a line in the current map", 3500);
+    }, 'The drawn route should create a line in the current map', 3500);
 
     runs(function() {
       expect(map_with_routes.polylines.length).toEqual(1);
@@ -42,7 +42,7 @@ describe("Drawing a route", function() {
   });
 });
 
-describe("Getting routes", function() {
+describe('Getting routes', function() {
   beforeEach(function() {
     map_with_routes = map_with_routes || new GMaps({
       el : '#map-with-routes',
@@ -52,15 +52,15 @@ describe("Getting routes", function() {
     });
   });
 
-  it("should return an array of routes", function() {
+  it('should return an array of routes', function() {
     var routes, routes_flag;
 
     runs(function() {
       routes_flag = false;
 
       map_with_routes.getRoutes({
-        origin : "grand central station, new york, ny",
-        destination : "350 5th Ave, New York, NY, 10118",
+        origin : 'grand central station, new york, ny',
+        destination : '350 5th Ave, New York, NY, 10118',
         callback : function(r) {
           routes = r;
 
@@ -71,7 +71,7 @@ describe("Getting routes", function() {
 
     waitsFor(function() {
       return routes_flag;
-    }, "#getRoutes should return the found routes as an argument", 3500);
+    }, '#getRoutes should return the found routes as an argument', 3500);
 
     runs(function() {
       expect(routes).toBeDefined();

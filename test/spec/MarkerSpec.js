@@ -1,4 +1,4 @@
-describe("Creating a marker", function() {
+describe('Creating a marker', function() {
   var map, marker;
 
   beforeEach(function() {
@@ -10,7 +10,7 @@ describe("Creating a marker", function() {
     });
   });
 
-  describe("With basic options", function() {
+  describe('With basic options', function() {
     beforeEach(function() {
       marker = map.addMarker({
         lat : -12.0533,
@@ -19,19 +19,19 @@ describe("Creating a marker", function() {
       });
     });
 
-    it("should add the marker to the markers collection", function() {
+    it('should add the marker to the markers collection', function() {
       expect(map.markers.length).toEqual(1);
       expect(map.markers[0]).toEqual(marker);
     });
 
-    it("should create a marker with defined position", function() {
+    it('should create a marker with defined position', function() {
       // Fix for floating-point bug
       expect(parseFloat(marker.getPosition().lat().toFixed(4))).toEqual(-12.0533);
       expect(parseFloat(marker.getPosition().lng().toFixed(4))).toEqual(-77.0293);
     });
   });
 
-  describe("With events", function() {
+  describe('With events', function() {
     var callbacks;
 
     beforeEach(function() {
@@ -51,7 +51,7 @@ describe("Creating a marker", function() {
       });
     });
 
-    it("should respond to click event", function() {
+    it('should respond to click event', function() {
       google.maps.event.trigger(marker, 'click');
 
       expect(callbacks.onclick).toHaveBeenCalled();
@@ -59,7 +59,7 @@ describe("Creating a marker", function() {
   });
 });
 
-describe("Removing markers", function() {
+describe('Removing markers', function() {
   var map;
 
   beforeEach(function() {
@@ -91,13 +91,13 @@ describe("Removing markers", function() {
     }]);
   });
 
-  it("should remove a marker from the markers collection", function() {
+  it('should remove a marker from the markers collection', function() {
     map.removeMarker(map.markers[0]);
 
     expect(map.markers.length).toEqual(3);
   });
 
-  it("should remove an array of markers from the markers collection", function() {
+  it('should remove an array of markers from the markers collection', function() {
     var markers = [map.markers[0], map.markers[2]];
     map.removeMarkers(markers);
 

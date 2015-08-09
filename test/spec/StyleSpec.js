@@ -1,4 +1,4 @@
-describe("Adding Map Styles", function() {
+describe('Adding Map Styles', function() {
   var map_with_styles;
 
   beforeEach(function() {
@@ -31,11 +31,11 @@ describe("Adding Map Styles", function() {
     });
   });
 
-  it("should add a MapType to the current map", function() {
+  it('should add a MapType to the current map', function() {
     expect(map_with_styles.map.mapTypes.get('lighter')).toBeDefined();
   });
 
-  it("should update the styles in the current map", function() {
+  it('should update the styles in the current map', function() {
     map_with_styles.setStyle('lighter');
 
     expect(map_with_styles.getMapTypeId()).toEqual('lighter');

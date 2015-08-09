@@ -1,4 +1,4 @@
-describe("Drawing HTML overlays", function() {
+describe('Drawing HTML overlays', function() {
   var map_with_overlays, overlay;
 
   beforeEach(function() {
@@ -19,16 +19,16 @@ describe("Drawing HTML overlays", function() {
     });
   });
 
-  it("should add the overlay to the overlays collection", function() {
+  it('should add the overlay to the overlays collection', function() {
     expect(map_with_overlays.overlays.length).toEqual(1);
     expect(map_with_overlays.overlays[0]).toEqual(overlay);
   });
 
-  it("should add the overlay in the current map", function() {
+  it('should add the overlay in the current map', function() {
     expect(overlay.getMap()).toEqual(map_with_overlays.map);
   });
 
-  describe("With events", function() {
+  describe('With events', function() {
     var callbacks, overlayWithClick;
 
     beforeEach(function() {
@@ -48,19 +48,19 @@ describe("Drawing HTML overlays", function() {
       });
     });
 
-    it("should respond to click event", function() {
+    it('should respond to click event', function() {
       var domIsReady = false;
 
-      google.maps.event.addListenerOnce(overlayWithClick, "ready", function () {
+      google.maps.event.addListenerOnce(overlayWithClick, 'ready', function () {
         domIsReady = true;
       });
 
       waitsFor(function () {
         return domIsReady;
-      }, "the overlay's DOM element to be ready", 10000);
+      }, 'the overlay\'s DOM element to be ready', 10000);
 
       runs(function () {
-        google.maps.event.trigger(overlayWithClick.el, "click");
+        google.maps.event.trigger(overlayWithClick.el, 'click');
         expect(callbacks.onclick).toHaveBeenCalled();
       });
     });

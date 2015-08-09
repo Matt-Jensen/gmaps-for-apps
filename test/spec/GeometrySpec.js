@@ -1,4 +1,4 @@
-describe("Drawing geometry overlays", function() {
+describe('Drawing geometry overlays', function() {
   var map_with_polygons, line, rectangle, circle, polygon;
 
   beforeEach(function() {
@@ -10,7 +10,7 @@ describe("Drawing geometry overlays", function() {
     });
   });
 
-  describe("A line", function() {
+  describe('A line', function() {
     beforeEach(function() {
       line = line || map_with_polygons.drawPolyline({
         path : [[-12.0440, -77.0247], [-12.0544, -77.0302], [-12.0551, -77.0303], [-12.0759, -77.0276], [-12.0763, -77.0279], [-12.0768, -77.0289], [-12.0885, -77.0241], [-12.0908, -77.0227]],
@@ -20,16 +20,16 @@ describe("Drawing geometry overlays", function() {
       });
     });
 
-    it("should add the line to the polylines collection", function() {
+    it('should add the line to the polylines collection', function() {
       expect(map_with_polygons.polylines.length).toEqual(1);
       expect(map_with_polygons.polylines[0]).toEqual(line);
     });
 
-    it("should be added in the current map", function() {
+    it('should be added in the current map', function() {
       expect(line.getMap()).toEqual(map_with_polygons.map);
     });
 
-    it("should return the defined path", function() {
+    it('should return the defined path', function() {
       var first_point = line.getPath().getAt(0);
 
       expect(parseFloat(first_point.lat().toFixed(4))).toEqual(-12.0440);
@@ -37,7 +37,7 @@ describe("Drawing geometry overlays", function() {
     });
   });
 
-  describe("A rectangle", function() {
+  describe('A rectangle', function() {
     beforeEach(function() {
       rectangle = rectangle || map_with_polygons.drawRectangle({
         bounds : [[-12.0303,-77.0237],[-12.0348,-77.0115]],
@@ -49,16 +49,16 @@ describe("Drawing geometry overlays", function() {
       });
     });
 
-    it("should add the rectangle to the polygons collection", function() {
+    it('should add the rectangle to the polygons collection', function() {
       expect(map_with_polygons.polygons.length).toEqual(1);
       expect(map_with_polygons.polygons[0]).toEqual(rectangle);
     });
 
-    it("should be added in the current map", function() {
+    it('should be added in the current map', function() {
       expect(rectangle.getMap()).toEqual(map_with_polygons.map);
     });
 
-    it("should have the defined bounds", function() {
+    it('should have the defined bounds', function() {
       // Fix for floating-point bug
       var SWLat = parseFloat(rectangle.getBounds().getSouthWest().lat().toFixed(4));
       var SWLng = parseFloat(rectangle.getBounds().getSouthWest().lng().toFixed(4));
@@ -73,7 +73,7 @@ describe("Drawing geometry overlays", function() {
     });
   });
 
-  describe("A polygon", function() {
+  describe('A polygon', function() {
     beforeEach(function() {
       polygon = polygon || map_with_polygons.drawPolygon({
         paths : [[-12.0403,-77.0337],[-12.0402,-77.0399],[-12.0500,-77.0244],[-12.0448,-77.0215]],
@@ -85,16 +85,16 @@ describe("Drawing geometry overlays", function() {
       });
     });
 
-    it("should add the polygon to the polygons collection", function() {
+    it('should add the polygon to the polygons collection', function() {
       expect(map_with_polygons.polygons.length).toEqual(2);
       expect(map_with_polygons.polygons[1]).toEqual(polygon);
     });
 
-    it("should be added in the current map", function() {
+    it('should be added in the current map', function() {
       expect(polygon.getMap()).toEqual(map_with_polygons.map);
     });
 
-    it("should return the defined path", function() {
+    it('should return the defined path', function() {
       var first_point = polygon.getPath().getAt(0);
 
       expect(parseFloat(first_point.lat().toFixed(4))).toEqual(-12.0403);
@@ -102,7 +102,7 @@ describe("Drawing geometry overlays", function() {
     });
   });
 
-  describe("A circle", function() {
+  describe('A circle', function() {
     beforeEach(function() {
       circle = circle || map_with_polygons.drawCircle({
         lat : -12.040504866577001,
@@ -116,22 +116,22 @@ describe("Drawing geometry overlays", function() {
       });
     });
 
-    it("should add the circle to the polygons collection", function() {
+    it('should add the circle to the polygons collection', function() {
       expect(map_with_polygons.polygons.length).toEqual(3);
       expect(map_with_polygons.polygons[2]).toEqual(circle);
     });
 
-    it("should be added in the current map", function() {
+    it('should be added in the current map', function() {
       expect(circle.getMap()).toEqual(map_with_polygons.map);
     });
 
-    it("should have the defined radius", function() {
+    it('should have the defined radius', function() {
       expect(circle.getRadius()).toEqual(350);
     });
   });
 });
 
-describe("Removing geometry overlays", function() {
+describe('Removing geometry overlays', function() {
   var map_with_polygons, line, rectangle, circle, polygon;
 
   beforeEach(function() {
@@ -143,7 +143,7 @@ describe("Removing geometry overlays", function() {
     });
   });
 
-  describe("A line", function() {
+  describe('A line', function() {
     beforeEach(function() {
       line = map_with_polygons.drawPolyline({
         path : [[-12.0440, -77.0247], [-12.0544, -77.0302], [-12.0551, -77.0303], [-12.0759, -77.0276], [-12.0763, -77.0279], [-12.0768, -77.0289], [-12.0885, -77.0241], [-12.0908, -77.0227]],
@@ -155,13 +155,13 @@ describe("Removing geometry overlays", function() {
       map_with_polygons.removePolyline(line);
     });
 
-    it("should remove the line from the polylines collection", function() {
+    it('should remove the line from the polylines collection', function() {
       expect(map_with_polygons.polylines.length).toEqual(0);
       expect(line.getMap()).toBeNull();
     });
   });
 
-  describe("A rectangle", function() {
+  describe('A rectangle', function() {
     beforeEach(function() {
       rectangle = map_with_polygons.drawRectangle({
         bounds : [[-12.0303,-77.0237],[-12.0348,-77.0115]],
@@ -175,13 +175,13 @@ describe("Removing geometry overlays", function() {
       map_with_polygons.removePolygon(rectangle);
     });
 
-    it("should remove the rectangle from the polygons collection", function() {
+    it('should remove the rectangle from the polygons collection', function() {
       expect(map_with_polygons.polygons.length).toEqual(0);
       expect(rectangle.getMap()).toBeNull();
     });
   });
 
-  describe("A polygon", function() {
+  describe('A polygon', function() {
     beforeEach(function() {
       polygon = map_with_polygons.drawPolygon({
         paths : [[-12.0403,-77.0337],[-12.0402,-77.0399],[-12.0500,-77.0244],[-12.0448,-77.0215]],
@@ -195,13 +195,13 @@ describe("Removing geometry overlays", function() {
       map_with_polygons.removePolygon(polygon);
     });
 
-    it("should remove the polygon from the polygons collection", function() {
+    it('should remove the polygon from the polygons collection', function() {
       expect(map_with_polygons.polygons.length).toEqual(0);
       expect(polygon.getMap()).toBeNull();
     });
   });
 
-  describe("A circle", function() {
+  describe('A circle', function() {
     beforeEach(function() {
       circle = map_with_polygons.drawCircle({
         lat : -12.040504866577001,
@@ -217,7 +217,7 @@ describe("Removing geometry overlays", function() {
       map_with_polygons.removePolygon(circle);
     });
 
-    it("should remove the circle from the polygons collection", function() {
+    it('should remove the circle from the polygons collection', function() {
       expect(map_with_polygons.polygons.length).toEqual(0);
       expect(circle.getMap()).toBeNull();
     });

@@ -1,11 +1,11 @@
-describe("Creating a map", function() {
+describe('Creating a map', function() {
   var basic_map, advanced_map, map_with_events, map_with_custom_controls;
 
-  it("should throw an error if element is not defined", function() {
+  it('should throw an error if element is not defined', function() {
     expect(function() { new GMaps({}); }).toThrow(new Error('No element defined.'));
   });
 
-  describe("With basic options", function() {
+  describe('With basic options', function() {
     beforeEach(function() {
       basic_map = basic_map || new GMaps({
         el : '#basic-map',
@@ -15,11 +15,11 @@ describe("Creating a map", function() {
       });
     });
 
-    it("should create a GMaps object", function() {
+    it('should create a GMaps object', function() {
       expect(basic_map).toBeDefined();
     });
 
-    it("should have centered the map at the initial coordinates", function() {
+    it('should have centered the map at the initial coordinates', function() {
       var lat = basic_map.getCenter().lat();
       var lng = basic_map.getCenter().lng();
 
@@ -27,12 +27,12 @@ describe("Creating a map", function() {
       expect(lng).toEqual(-77.0283);
     });
 
-    it("should have the correct zoom", function() {
+    it('should have the correct zoom', function() {
       expect(basic_map.getZoom()).toEqual(12);
     });
   });
 
-  describe("With advanced controls", function() {
+  describe('With advanced controls', function() {
     beforeEach(function() {
       advanced_map = advanced_map || new GMaps({
         el : '#advanced-map',
@@ -46,7 +46,7 @@ describe("Creating a map", function() {
       });
     });
 
-    it("should show the defined controls", function() {
+    it('should show the defined controls', function() {
       expect(advanced_map.map.zoomControl).toBeTruthy();
       expect(advanced_map.map.panControl).toBeFalsy();
       expect(advanced_map.map.streetViewControl).toBeFalsy();
@@ -55,7 +55,7 @@ describe("Creating a map", function() {
     });
   });
 
-  describe("With events", function() {
+  describe('With events', function() {
     var callbacks, current_zoom = 0, current_center = null;
 
     beforeEach(function() {
@@ -94,14 +94,14 @@ describe("Creating a map", function() {
       });
     });
 
-    it("should respond to zoom_changed event", function() {
+    it('should respond to zoom_changed event', function() {
       map_with_events.map.setZoom(16);
 
       expect(callbacks.onzoomchanged).toHaveBeenCalled();
       expect(current_zoom).toEqual(16);
     });
 
-    it("should respond to center_changed event", function() {
+    it('should respond to center_changed event', function() {
       map_with_events.map.setCenter(new google.maps.LatLng(-12.0907, -77.0227));
 
       // Fix for floating-point bug
@@ -113,7 +113,7 @@ describe("Creating a map", function() {
       expect(lng).toEqual(-77.0227);
     });
 
-    it("should respond to click event", function() {
+    it('should respond to click event', function() {
       google.maps.event.trigger(map_with_events.map, 'click', {
         latLng : new google.maps.LatLng(-12.0433, -77.0283)
       });
@@ -128,8 +128,8 @@ describe("Creating a map", function() {
     });
   });
 
-  describe("With custom controls", function() {
-    var callbacks, markers_in_map = 0;
+  describe('With custom controls', function() {
+    var callbacks;
 
     beforeEach(function() {
       callbacks = {
@@ -164,11 +164,11 @@ describe("Creating a map", function() {
       });
     });
 
-    it("should add the control to the controls collection", function() {
+    it('should add the control to the controls collection', function() {
       expect(map_with_custom_controls.controls.length).toEqual(1);
     });
 
-    it("should respond to click event attached to the custom control", function() {
+    it('should respond to click event attached to the custom control', function() {
       google.maps.event.trigger(map_with_custom_controls.controls[0], 'click');
 
       expect(callbacks.onclick).toHaveBeenCalled();
