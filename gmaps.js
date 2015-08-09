@@ -17,7 +17,7 @@
  * GMaps.js v0.4.18
  * http://hpneo.github.com/gmaps/
  *
- * Copyright 2015, Gustavo Leon
+ * Copyright 2015, Matt Jensen
  * Released under the MIT License.
  */
 
@@ -247,12 +247,14 @@ var GMaps = (function() {
 
     this.controls = [];
     this.overlays = [];
+    this.polygons = [];
+    this.polylines = [];
+    this.circles = [];
+    this.rectangles = [];
     this.layers = []; // array with kml/georss and fusiontables layers, can be as many
     this.singleLayers = {}; // object with the other layers, only one per layer
     this.markers = [];
-    this.polylines = [];
     this.routes = [];
-    this.polygons = [];
     this.infoWindow = null;
     this.overlay_el = null;
     this.zoom = options.zoom;
@@ -575,7 +577,10 @@ GMaps.prototype.createControl = function(options) {
 
   for (var ev in options.events) {
     if(options.events.hasOwnProperty(ev)) {
-      google.maps.event.addDomListener(control, ev, subcribeEvent(options.events[ev])
+      google.maps.event.addDomListener(
+        control, 
+        ev, 
+        subcribeEvent(options.events[ev])
       );
     }
   }
@@ -618,6 +623,264 @@ GMaps.prototype.removeControl = function(control) {
   }
 
   return control;
+};
+
+/* globals extend_object: true, subcribeEvent: true */
+
+GMaps.prototype.drawCircle = function(options) {
+  options = extend_object({
+    map: this.map,
+    center: new google.maps.LatLng(options.lat, options.lng)
+  }, options);
+
+  delete options.lat;
+  delete options.lng;
+
+  var circle = new google.maps.Circle(options);
+  var circle_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+
+  for (var i = 0, name; i < circle_events.length; i++) {
+    name = circle_events[i];
+
+    // If object has configured event
+    if (options.hasOwnProperty(name)) {
+      google.maps.event.addListener(
+        circle, 
+        name, 
+        subcribeEvent(options[name], circle)
+      );
+    }
+  }
+
+  this.circles.push(circle);
+
+  return circle;
+};
+
+GMaps.prototype.removeCircle = function(circle) {
+  for (var i = 0, l = this.circles.length; i < l; i++) {
+    if (this.circles[i] === circle) {
+      this.circles[i].setMap(null);
+      this.circles.splice(i, 1);
+
+      GMaps.fire('circle_removed', circle, this);
+
+      return true;
+    }
+  }
+
+  return false;
+};
+/* globals extend_object: true, subcribeEvent: true, array_flat: true, array_map: true, arrayToLatLng: true */
+
+GMaps.prototype.drawPolygon = function(options) {
+  var useGeoJSON = false;
+
+  if(options.hasOwnProperty('useGeoJSON')) {
+    useGeoJSON = options.useGeoJSON;
+  }
+
+  delete options.useGeoJSON;
+
+  options = extend_object({
+    map: this.map
+  }, options);
+
+  if (useGeoJSON === false) {
+    options.paths = [options.paths.slice(0)];
+  }
+
+  if (options.paths.length > 0) {
+    if (options.paths[0] && options.paths[0].length > 0) {
+      options.paths = array_flat(array_map(options.paths, arrayToLatLng, useGeoJSON));
+    }
+  }
+
+  var polygon = new google.maps.Polygon(options),
+      polygonEvents = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+
+  for (var ev = 0, name; ev < polygonEvents.length; ev++) {
+    name = polygonEvents[ev];
+    if (options.hasOwnProperty(name)) {
+      google.maps.event.addListener(
+        polygon, 
+        name, 
+        subcribeEvent(options[name], polygon)
+      );
+    }
+  }
+
+  this.polygons.push(polygon);
+
+  GMaps.fire('polygon_added', polygon, this);
+
+  return polygon;
+};
+
+GMaps.prototype.removePolygon = function(polygon) {
+  for (var i = 0; i < this.polygons.length; i++) {
+    if (this.polygons[i] === polygon) {
+      this.polygons[i].setMap(null);
+      this.polygons.splice(i, 1);
+
+      GMaps.fire('polygon_removed', polygon, this);
+
+      return true;
+    }
+  }
+
+  return false;
+};
+
+GMaps.prototype.removePolygons = function() {
+  var item;
+
+  for (var i = 0, l = this.polygons.length; i < l; i++) {
+    item = this.polygons[i];
+    item.setMap(null);
+  }
+
+  this.polygons.length = 0;
+};
+/* globals extend_object: true, subcribeEvent: true */
+
+GMaps.prototype.drawRectangle = function(options) {
+  options = extend_object({
+    map: this.map
+  }, options);
+
+  var latLngBounds = new google.maps.LatLngBounds(
+    new google.maps.LatLng(options.bounds[0][0], options.bounds[0][1]),
+    new google.maps.LatLng(options.bounds[1][0], options.bounds[1][1])
+  );
+
+  options.bounds = latLngBounds;
+
+  var rectangle = new google.maps.Rectangle(options),
+      rectangle_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+
+  for (var ev = 0, name; ev < rectangle_events.length; ev++) {
+    name = rectangle_events[ev];
+    if (options.hasOwnProperty(name)) {
+      google.maps.event.addListener(
+        rectangle, 
+        name, 
+        subcribeEvent(options[name], rectangle)
+      );
+    }
+  }
+
+  this.rectangles.push(rectangle);
+
+  GMaps.fire('rectangle_added', rectangle, this);
+
+  return rectangle;
+};
+
+GMaps.prototype.removeRectangle = function(rectangle) {
+  for (var i = 0; i < this.rectangles.length; i++) {
+    if (this.rectangles[i] === rectangle) {
+      this.rectangles[i].setMap(null);
+      this.rectangles.splice(i, 1);
+
+      GMaps.fire('rectangle_removed', rectangle, this);
+
+      return true;
+    }
+  }
+
+  return false;
+}
+/* globals subcribeEvent: true */
+
+GMaps.prototype.drawPolyline = function(options) {
+  var path = [],
+      points = options.path;
+
+  if (points.length) {
+    if (typeof points[0][0] === 'undefined') {
+      path = points;
+    }
+    else {
+      for (var i = 0, latlng; latlng = points[i]; i++) {
+        path.push(new google.maps.LatLng(latlng[0], latlng[1]));
+      }
+    }
+  }
+
+  var polyline_options = {
+    map: this.map,
+    path: path,
+    strokeColor: options.strokeColor,
+    strokeOpacity: options.strokeOpacity,
+    strokeWeight: options.strokeWeight,
+    geodesic: options.geodesic,
+    clickable: true,
+    editable: false,
+    visible: true
+  };
+
+  if (options.hasOwnProperty('clickable')) {
+    polyline_options.clickable = options.clickable;
+  }
+
+  if (options.hasOwnProperty('editable')) {
+    polyline_options.editable = options.editable;
+  }
+
+  if (options.hasOwnProperty('icons')) {
+    polyline_options.icons = options.icons;
+  }
+
+  if (options.hasOwnProperty('zIndex')) {
+    polyline_options.zIndex = options.zIndex;
+  }
+
+  var polyline = new google.maps.Polyline(polyline_options);
+
+  var polylineEvents = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+
+  for (var ev = 0, name; ev < polylineEvents.length; ev++) {
+    name = polylineEvents[ev];
+    if (options.hasOwnProperty(name)) {
+      google.maps.event.addListener(
+        polyline, 
+        name, 
+        subcribeEvent(options[name], polyline)
+      );
+    }
+  }
+
+  this.polylines.push(polyline);
+
+  GMaps.fire('polyline_added', polyline, this);
+
+  return polyline;
+};
+
+GMaps.prototype.removePolyline = function(polyline) {
+  for (var i = 0; i < this.polylines.length; i++) {
+    if (this.polylines[i] === polyline) {
+      this.polylines[i].setMap(null);
+      this.polylines.splice(i, 1);
+
+      GMaps.fire('polyline_removed', polyline, this);
+
+      return true;
+    }
+  }
+  return false;
+};
+
+GMaps.prototype.removePolylines = function() {
+  var item;
+
+  for (var i = 0, l = this.polylines.length; i < l; i++) {
+    item = this.polylines[i];
+    item.setMap(null);
+  }
+
+  this.polylines.length = 0;
 };
 
 /* globals extend_object: true, subcribeEvent: true */
@@ -979,198 +1242,6 @@ GMaps.prototype.removeOverlays = function() {
   this.overlays = [];
 };
 
-/* globals extend_object: true, subcribeEvent: true, array_flat: true, array_map: true, arrayToLatLng: true */
-
-GMaps.prototype.drawPolyline = function(options) {
-  var path = [],
-      points = options.path;
-
-  if (points.length) {
-    if (points[0][0] === undefined) {
-      path = points;
-    }
-    else {
-      for (var i = 0, latlng; latlng = points[i]; i++) {
-        path.push(new google.maps.LatLng(latlng[0], latlng[1]));
-      }
-    }
-  }
-
-  var polyline_options = {
-    map: this.map,
-    path: path,
-    strokeColor: options.strokeColor,
-    strokeOpacity: options.strokeOpacity,
-    strokeWeight: options.strokeWeight,
-    geodesic: options.geodesic,
-    clickable: true,
-    editable: false,
-    visible: true
-  };
-
-  if (options.hasOwnProperty('clickable')) {
-    polyline_options.clickable = options.clickable;
-  }
-
-  if (options.hasOwnProperty('editable')) {
-    polyline_options.editable = options.editable;
-  }
-
-  if (options.hasOwnProperty('icons')) {
-    polyline_options.icons = options.icons;
-  }
-
-  if (options.hasOwnProperty('zIndex')) {
-    polyline_options.zIndex = options.zIndex;
-  }
-
-  var polyline = new google.maps.Polyline(polyline_options);
-
-  var polyline_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
-
-  for (var ev = 0; ev < polyline_events.length; ev++) {
-    if (options.hasOwnProperty(name)) {
-      google.maps.event.addListener(polyline, name, subcribeEvent(polyline_events[ev], polyline));
-    }
-  }
-
-  this.polylines.push(polyline);
-
-  GMaps.fire('polyline_added', polyline, this);
-
-  return polyline;
-};
-
-GMaps.prototype.removePolyline = function(polyline) {
-  for (var i = 0; i < this.polylines.length; i++) {
-    if (this.polylines[i] === polyline) {
-      this.polylines[i].setMap(null);
-      this.polylines.splice(i, 1);
-
-      GMaps.fire('polyline_removed', polyline, this);
-
-      break;
-    }
-  }
-};
-
-GMaps.prototype.removePolylines = function() {
-  for (var i = 0, item; item = this.polylines[i]; i++) {
-    item.setMap(null);
-  }
-
-  this.polylines = [];
-};
-
-GMaps.prototype.drawCircle = function(options) {
-  options =  extend_object({
-    map: this.map,
-    center: new google.maps.LatLng(options.lat, options.lng)
-  }, options);
-
-  delete options.lat;
-  delete options.lng;
-
-  var polygon = new google.maps.Circle(options),
-      polygon_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
-
-  for (var ev = 0; ev < polygon_events.length; ev++) {
-    if (options.hasOwnProperty(name)) {
-      google.maps.event.addListener(polygon, name, subcribeEvent(polygon_events[ev], polygon));
-    }
-  }
-
-  this.polygons.push(polygon);
-
-  return polygon;
-};
-
-GMaps.prototype.drawRectangle = function(options) {
-  options = extend_object({
-    map: this.map
-  }, options);
-
-  var latLngBounds = new google.maps.LatLngBounds(
-    new google.maps.LatLng(options.bounds[0][0], options.bounds[0][1]),
-    new google.maps.LatLng(options.bounds[1][0], options.bounds[1][1])
-  );
-
-  options.bounds = latLngBounds;
-
-  var polygon = new google.maps.Rectangle(options),
-      polygon_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
-
-  for (var ev = 0; ev < polygon_events.length; ev++) {
-    if (options.hasOwnProperty(name)) {
-      google.maps.event.addListener(polygon, name, subcribeEvent(polygon_events[ev], polygon));
-    }
-  }
-
-  this.polygons.push(polygon);
-
-  return polygon;
-};
-
-GMaps.prototype.drawPolygon = function(options) {
-  var useGeoJSON = false;
-
-  if(options.hasOwnProperty('useGeoJSON')) {
-    useGeoJSON = options.useGeoJSON;
-  }
-
-  delete options.useGeoJSON;
-
-  options = extend_object({
-    map: this.map
-  }, options);
-
-  if (useGeoJSON === false) {
-    options.paths = [options.paths.slice(0)];
-  }
-
-  if (options.paths.length > 0) {
-    if (options.paths[0].length > 0) {
-      options.paths = array_flat(array_map(options.paths, arrayToLatLng, useGeoJSON));
-    }
-  }
-
-  var polygon = new google.maps.Polygon(options),
-      polygon_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
-
-  for (var ev = 0; ev < polygon_events.length; ev++) {
-    if (options.hasOwnProperty(name)) {
-      google.maps.event.addListener(polygon, name, subcribeEvent(polygon, polygon_events[ev]));
-    }
-  }
-
-  this.polygons.push(polygon);
-
-  GMaps.fire('polygon_added', polygon, this);
-
-  return polygon;
-};
-
-GMaps.prototype.removePolygon = function(polygon) {
-  for (var i = 0; i < this.polygons.length; i++) {
-    if (this.polygons[i] === polygon) {
-      this.polygons[i].setMap(null);
-      this.polygons.splice(i, 1);
-
-      GMaps.fire('polygon_removed', polygon, this);
-
-      break;
-    }
-  }
-};
-
-GMaps.prototype.removePolygons = function() {
-  for (var i = 0, item; item = this.polygons[i]; i++) {
-    item.setMap(null);
-  }
-
-  this.polygons = [];
-};
-
 /* globals subcribeEvent: true */
 
 GMaps.prototype.getFromFusionTables = function(options) {
@@ -1183,7 +1254,11 @@ GMaps.prototype.getFromFusionTables = function(options) {
 
   for (var ev in events) {
     if(events.hasOwnProperty(ev)) {
-      google.maps.event.addListener(layer, name, subcribeEvent(events[ev], layer));
+      google.maps.event.addListener(
+        layer, 
+        ev, 
+        subcribeEvent(events[ev], layer)
+      );
     }
   }
 
@@ -1211,7 +1286,11 @@ GMaps.prototype.getFromKML = function(options) {
 
   for (var ev in events) {
     if(events.hasOwnProperty(ev)) {
-      google.maps.event.addListener(layer, name, subcribeEvent(events[ev], layer));
+      google.maps.event.addListener(
+        layer, 
+        ev, 
+        subcribeEvent(events[ev], layer)
+      );
     }
   }
 

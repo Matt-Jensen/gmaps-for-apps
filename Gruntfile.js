@@ -25,9 +25,12 @@ module.exports = function(grunt) {
         src: [
           'lib/gmaps.core.js',
           'lib/gmaps.controls.js',
+          'lib/gmaps.circles.js',
+          'lib/gmaps.polygons.js',
+          'lib/gmaps.rectangles.js',
+          'lib/gmaps.polylines.js',
           'lib/gmaps.markers.js',
           'lib/gmaps.overlays.js',
-          'lib/gmaps.geometry.js',
           'lib/gmaps.layers.js',
           'lib/gmaps.routes.js',
           'lib/gmaps.geofences.js',
@@ -50,7 +53,7 @@ module.exports = function(grunt) {
         vendor: 'http://maps.google.com/maps/api/js?sensor=true',
         styles: 'test/style.css'
       },
-      src : '<%= concat.dist.src %>'
+      src : ['<%= concat.dist.src %>']
     },
 
     watch : {
@@ -111,5 +114,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test', ['jshint:test', 'jasmine']);
   grunt.registerTask('dev', ['jshint:main', 'test', 'concat', 'umd', 'watch:dev']);
+  grunt.registerTask('build', ['concat', 'umd', 'uglify']);
   grunt.registerTask('default', ['jshint:main', 'test', 'concat', 'umd', 'uglify']);
 };
