@@ -3,7 +3,7 @@ describe('GMaps rectangles', function() {
 
   beforeEach(function() {
     mapInstance = mapInstance || new GMaps({
-      el : '#map-with-polygons',
+      el : '#map-with-rectangles',
       lat : -12.0433,
       lng : -77.0283,
       zoom : 12
@@ -55,10 +55,20 @@ describe('GMaps rectangles', function() {
       callbacks = {
         onclick : function() {
           this.passed = true;
-        }.bind(context)
+        }.bind(context),
+
+        onmousedown: function() {
+          return true;
+        },
+
+        onmouseover: function() {
+          return true;
+        }
       };
 
       spyOn(callbacks, 'onclick').andCallThrough();
+      spyOn(callbacks, 'onmousedown').andCallThrough();
+      spyOn(callbacks, 'onmouseover').andCallThrough();
 
       rectangle = mapInstance.drawRectangle({
         bounds : [[-12.0303,-77.0237],[-12.0348,-77.0115]],
@@ -67,7 +77,9 @@ describe('GMaps rectangles', function() {
         strokeWeight : 3,
         fillColor : '#BBD8E9',
         fillOpacity : 0.6,
-        click: callbacks.onclick
+        click: callbacks.onclick,
+        mousedown: callbacks.onmousedown,
+        mouseover: callbacks.onmouseover
       });
     });
 
@@ -75,6 +87,14 @@ describe('GMaps rectangles', function() {
       google.maps.event.trigger(rectangle, 'click', {});
       expect(callbacks.onclick).toHaveBeenCalled();
       expect(context.passed).toBe(true);
+    });
+
+    it('should subscribe multiple events', function() {
+      google.maps.event.trigger(rectangle, 'mousedown', {});
+      expect(callbacks.onmousedown).toHaveBeenCalled();
+
+      google.maps.event.trigger(rectangle, 'mouseover', {});
+      expect(callbacks.onmouseover).toHaveBeenCalled();
     });
   });
 
@@ -96,6 +116,11 @@ describe('GMaps rectangles', function() {
       mapInstance.removeRectangle(rectangle);
       expect(mapInstance.rectangles.length).toBeLessThan(originalLength);
       expect(rectangle.getMap()).toBeNull();
+    });
+
+    it('should removal all rectangles from collection w/ removeRectangles', function() {
+      mapInstance.removeRectangles();
+      expect(mapInstance.rectangles.length).toEqual(0);
     });
   });
 });

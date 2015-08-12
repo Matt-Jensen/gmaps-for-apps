@@ -51,10 +51,20 @@ describe('Polygons', function() {
       callbacks = {
         onclick : function() {
           this.passed = true;
-        }.bind(context)
+        }.bind(context),
+
+        onmousedown: function() {
+          return true;
+        },
+
+        onmousemove: function() {
+          return true;
+        }
       };
 
       spyOn(callbacks, 'onclick').andCallThrough();
+      spyOn(callbacks, 'onmousedown').andCallThrough();
+      spyOn(callbacks, 'onmousemove').andCallThrough();
 
       polygon = mapInstance.drawPolygon({
         paths : paths,
@@ -63,7 +73,9 @@ describe('Polygons', function() {
         strokeWeight: 3,
         fillColor: '#25D359',
         fillOpacity: 0.6,
-        click : callbacks.onclick
+        click: callbacks.onclick,
+        mousedown: callbacks.onmousedown,
+        mousemove: callbacks.onmousemove
       });
     });
 
@@ -71,6 +83,14 @@ describe('Polygons', function() {
       google.maps.event.trigger(polygon, 'click', {});
       expect(callbacks.onclick).toHaveBeenCalled();
       expect(context.passed).toBe(true);
+    });
+
+    it('should bind multiple events', function() {
+      google.maps.event.trigger(polygon, 'mousedown', {});
+      expect(callbacks.onmousedown).toHaveBeenCalled();
+
+      google.maps.event.trigger(polygon, 'mousemove', {});
+      expect(callbacks.onmousemove).toHaveBeenCalled();
     });
   });
 

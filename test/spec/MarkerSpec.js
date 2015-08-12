@@ -39,27 +39,46 @@ describe('Marker', function() {
     beforeEach(function() {
       context = { passed: false };
       callbacks = {
-        onclick : function() {
+        onclick: function() {
           this.passed = true;
-        }.bind(context)
+        }.bind(context),
+
+        onmouseover: function() {
+          return true;
+        },
+
+        ondrag: function() {
+          return true;
+        }
       };
 
       spyOn(callbacks, 'onclick').andCallThrough();
+      spyOn(callbacks, 'onmouseover').andCallThrough();
+      spyOn(callbacks, 'ondrag').andCallThrough();
 
       marker = mapInstance.addMarker({
         lat : -12.0533,
         lng: -77.0193,
         title : 'New marker',
-        click : callbacks.onclick
+        click : callbacks.onclick,
+        mouseover: callbacks.onmouseover,
+        drag: callbacks.ondrag
       });
     });
 
     it('should respond to click event and maintain method context', function() {
       google.maps.event.trigger(marker, 'click');
-
       expect(callbacks.onclick).toHaveBeenCalled();
       expect(context.passed).toBe(true);
     });
+
+    it('should subscribe multiple events', function() {
+      google.maps.event.trigger(marker, 'mouseover', {});
+      expect(callbacks.onmouseover).toHaveBeenCalled();
+
+      google.maps.event.trigger(marker, 'drag', {});
+      expect(callbacks.ondrag).toHaveBeenCalled();
+    })
   });
 
 

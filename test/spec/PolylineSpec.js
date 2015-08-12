@@ -5,7 +5,7 @@ describe('GMaps Polylines', function() {
 
   beforeEach(function() {
     mapInstance = mapInstance || new GMaps({
-      el : '#map-with-polygons',
+      el : '#map-with-polylines',
       lat : -12.0433,
       lng : -77.0283,
       zoom : 12
@@ -46,19 +46,31 @@ describe('GMaps Polylines', function() {
     beforeEach(function() {
       context = { passed: false };
       callbacks = {
-        onclick : function() {
+        onclick: function() {
           this.passed = true;
-        }.bind(context)
+        }.bind(context),
+
+        onmousemove: function() {
+          return true;
+        },
+
+        onmouseover: function() {
+          return true;
+        }
       };
 
       spyOn(callbacks, 'onclick').andCallThrough();
+      spyOn(callbacks, 'onmousemove').andCallThrough();
+      spyOn(callbacks, 'onmouseover').andCallThrough();
 
       polyline = mapInstance.drawPolyline({
-        path : path,
-        strokeColor : '#131540',
-        strokeOpacity : 0.6,
-        strokeWeight : 6,
-        click : callbacks.onclick
+        path: path,
+        strokeColor: '#131540',
+        strokeOpacity: 0.6,
+        strokeWeight: 6,
+        click: callbacks.onclick,
+        mousemove: callbacks.onmousemove,
+        mouseover: callbacks.onmouseover
       });
     });
 
@@ -66,6 +78,14 @@ describe('GMaps Polylines', function() {
       google.maps.event.trigger(polyline, 'click', {});
       expect(callbacks.onclick).toHaveBeenCalled();
       expect(context.passed).toBe(true);
+    });
+
+    it('should subscribe multiple events', function() {
+      google.maps.event.trigger(polyline, 'mousemove', {});
+      expect(callbacks.onmousemove).toHaveBeenCalled();
+
+      google.maps.event.trigger(polyline, 'mouseover', {});
+      expect(callbacks.onmouseover).toHaveBeenCalled();
     });
   });
 

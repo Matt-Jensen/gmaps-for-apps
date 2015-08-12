@@ -1,4 +1,4 @@
-describe('Adding layers', function() {
+describe('Layers', function() {
   var mapInstance, singleLayer, multipleLayers = [];
 
   beforeEach(function() {
@@ -10,7 +10,7 @@ describe('Adding layers', function() {
     });
   });
 
-  describe('Single layer', function() {
+  describe('creating single', function() {
     beforeEach(function() {
       singleLayer = singleLayer || mapInstance.addLayer('traffic');
     })
@@ -26,7 +26,7 @@ describe('Adding layers', function() {
     });
   });
 
-  describe('Multiple layers', function() {
+  describe('creating multiple', function() {
     beforeEach(function() {
       if (multipleLayers.length === 0) {
         multipleLayers.push(mapInstance.addLayer('transit'));
@@ -45,6 +45,19 @@ describe('Adding layers', function() {
 
       expect(multipleLayers[0].getMap()).toBeNull();
       expect(multipleLayers[1].getMap()).toBeNull();
+    });
+  });
+
+  describe('removing all', function() {
+    beforeEach(function() {
+      // Continuously add
+      mapInstance.addLayer('transit');
+    });
+
+    it('should remove all layers from store /w removeLayers', function() {
+      mapInstance.removeLayers();
+      expect(mapInstance.layers.length).toBe(0);
+      expect(mapInstance.singleLayers.transit).toBeUndefined();
     });
   });
 });

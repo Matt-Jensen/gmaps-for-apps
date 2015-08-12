@@ -3,7 +3,7 @@ describe('GMap circles', function() {
 
   beforeEach(function() {
     mapInstance = mapInstance || new GMaps({
-      el : '#map-with-polygons',
+      el : '#map-with-circles',
       lat : -12.0433,
       lng : -77.0283,
       zoom : 12
@@ -46,10 +46,20 @@ describe('GMap circles', function() {
       callbacks = {
         onclick: function() {
           this.passed = true;
-        }.bind(context)
+        }.bind(context),
+
+        onmousemove: function() {
+          return true;
+        },
+
+        onmouseout: function() {
+          return true;
+        }
       };
 
       spyOn(callbacks, 'onclick').andCallThrough();
+      spyOn(callbacks, 'onmousemove').andCallThrough();
+      spyOn(callbacks, 'onmouseout').andCallThrough();
 
       circle = mapInstance.drawCircle({
         lat : -12.040504866577001,
@@ -63,20 +73,31 @@ describe('GMap circles', function() {
         details: {
           id: 'rosebud'
         },
-        click : callbacks.onclick
+        click : callbacks.onclick,
+        mousemove : callbacks.onmousemove,
+        mouseout : callbacks.onmouseout
       });
     });
 
     it('should respond to click event and maintain method context', function() {
-      google.maps.event.trigger(circle, 'click');
+      google.maps.event.trigger(circle, 'click', {});
       expect(callbacks.onclick).toHaveBeenCalled();
       expect(context.passed).toBe(true);
+    });
+
+    it('should bind multiple events', function() {
+      google.maps.event.trigger(circle, 'mousemove', {});
+      expect(callbacks.onmousemove).toHaveBeenCalled();
+
+      google.maps.event.trigger(circle, 'mouseout', {});
+      expect(callbacks.onmouseout).toHaveBeenCalled();
     });
   });
 
   describe('Removing', function() {
     beforeEach(function() {
-      circle = circle || mapInstance.drawCircle({
+      // Continuously add circles
+      circle = mapInstance.drawCircle({
         lat : -12.040504866577001,
         lng : -77.02024422636042,
         radius : 350,
@@ -93,6 +114,11 @@ describe('GMap circles', function() {
       mapInstance.removeCircle(circle);
       expect(mapInstance.circles.length).toBeLessThan(originalLength);
       expect(circle.getMap()).toBeNull();
+    });
+
+    it('should remove the circle from the circles collection', function() {
+      mapInstance.removeCircles();
+      expect(mapInstance.circles.length).toBe(0);
     });
   });
 });
