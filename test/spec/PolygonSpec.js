@@ -1,4 +1,6 @@
-describe('GMap Polygons', function() {
+var paths = [[-12.0403,-77.0337],[-12.040248585302038,-77.03993927003302],[-12.050047116528843,-77.02448169303511],[-12.044804866577001,-77.02154422636042]];
+
+describe('Polygons', function() {
   var mapInstance, polygon;
 
   beforeEach(function() {
@@ -10,11 +12,11 @@ describe('GMap Polygons', function() {
     });
   });
 
-  describe('Creating', function() {
+  describe('creating', function() {
     beforeEach(function() {
       // Add one polygon
       polygon = polygon || mapInstance.drawPolygon({
-        paths : [[-12.0403,-77.0337],[-12.0402,-77.0399],[-12.0500,-77.0244],[-12.0448,-77.0215]],
+        paths : paths,
         strokeColor : '#25D359',
         strokeOpacity : 1,
         strokeWeight : 3,
@@ -40,11 +42,44 @@ describe('GMap Polygons', function() {
     });
   });
 
-  describe('Removing', function() {
+
+  describe('events', function() {
+    var callbacks, context;
+
+    beforeEach(function() {
+      context = { passed: false };
+      callbacks = {
+        onclick : function() {
+          this.passed = true;
+        }.bind(context)
+      };
+
+      spyOn(callbacks, 'onclick').andCallThrough();
+
+      polygon = mapInstance.drawPolygon({
+        paths : paths,
+        strokeColor: '#25D359',
+        strokeOpacity: 1,
+        strokeWeight: 3,
+        fillColor: '#25D359',
+        fillOpacity: 0.6,
+        click : callbacks.onclick
+      });
+    });
+
+    it('should respond to click event and maintain method context', function() {
+      google.maps.event.trigger(polygon, 'click', {});
+      expect(callbacks.onclick).toHaveBeenCalled();
+      expect(context.passed).toBe(true);
+    });
+  });
+
+
+  describe('removing', function() {
     beforeEach(function() {
       // Continuously add polygons
       mapInstance.drawPolygon({
-        paths : [[-12.0403,-77.0337],[-12.0402,-77.0399],[-12.0500,-77.0244],[-12.0448,-77.0215]],
+        paths : paths,
         strokeColor : '#25D359',
         strokeOpacity : 1,
         strokeWeight : 3,
@@ -54,8 +89,9 @@ describe('GMap Polygons', function() {
     });
 
     it('should remove one polygon from collection w/ removePolygon', function() {
+      var originalLength = mapInstance.polygons.length;
       mapInstance.removePolygon(polygon);
-      expect(mapInstance.polygons.length).toEqual(1);
+      expect(mapInstance.polygons.length).toBeLessThan(originalLength);
       expect(polygon.getMap()).toBeNull();
     });
 

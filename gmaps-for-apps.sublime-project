@@ -9,7 +9,6 @@
             "name": "Gmaps-For-Apps",
             // possible folders to exclude
             "folder_exclude_patterns": [
-                "node_modules",
                 ".sass-cache",
                 "_docs",
                 "_nosql", 

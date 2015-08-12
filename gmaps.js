@@ -578,8 +578,8 @@ GMaps.prototype.createControl = function(options) {
   for (var ev in options.events) {
     if(options.events.hasOwnProperty(ev)) {
       google.maps.event.addDomListener(
-        control, 
-        ev, 
+        control,
+        ev,
         subcribeEvent(options.events[ev])
       );
     }
@@ -645,8 +645,8 @@ GMaps.prototype.drawCircle = function(options) {
     // If object has configured event
     if (options.hasOwnProperty(name)) {
       google.maps.event.addListener(
-        circle, 
-        name, 
+        circle,
+        name,
         subcribeEvent(options[name], circle)
       );
     }
@@ -703,8 +703,8 @@ GMaps.prototype.drawPolygon = function(options) {
     name = polygonEvents[ev];
     if (options.hasOwnProperty(name)) {
       google.maps.event.addListener(
-        polygon, 
-        name, 
+        polygon,
+        name,
         subcribeEvent(options[name], polygon)
       );
     }
@@ -763,8 +763,8 @@ GMaps.prototype.drawRectangle = function(options) {
     name = rectangle_events[ev];
     if (options.hasOwnProperty(name)) {
       google.maps.event.addListener(
-        rectangle, 
-        name, 
+        rectangle,
+        name,
         subcribeEvent(options[name], rectangle)
       );
     }
@@ -844,8 +844,8 @@ GMaps.prototype.drawPolyline = function(options) {
     name = polylineEvents[ev];
     if (options.hasOwnProperty(name)) {
       google.maps.event.addListener(
-        polyline, 
-        name, 
+        polyline,
+        name,
         subcribeEvent(options[name], polyline)
       );
     }
@@ -1255,8 +1255,8 @@ GMaps.prototype.getFromFusionTables = function(options) {
   for (var ev in events) {
     if(events.hasOwnProperty(ev)) {
       google.maps.event.addListener(
-        layer, 
-        ev, 
+        layer,
+        ev,
         subcribeEvent(events[ev], layer)
       );
     }
@@ -1287,8 +1287,8 @@ GMaps.prototype.getFromKML = function(options) {
   for (var ev in events) {
     if(events.hasOwnProperty(ev)) {
       google.maps.event.addListener(
-        layer, 
-        ev, 
+        layer,
+        ev,
         subcribeEvent(events[ev], layer)
       );
     }

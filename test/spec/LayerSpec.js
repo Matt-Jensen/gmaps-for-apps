@@ -1,8 +1,8 @@
 describe('Adding layers', function() {
-  var map_with_layers, single_layer, multiple_layers = [];
+  var mapInstance, singleLayer, multipleLayers = [];
 
   beforeEach(function() {
-    map_with_layers = map_with_layers || new GMaps({
+    mapInstance = mapInstance || new GMaps({
       el : '#map-with-layers',
       lat: -12.0433,
       lng: -77.0283,
@@ -12,39 +12,39 @@ describe('Adding layers', function() {
 
   describe('Single layer', function() {
     beforeEach(function() {
-      single_layer = single_layer || map_with_layers.addLayer('traffic');
+      singleLayer = singleLayer || mapInstance.addLayer('traffic');
     })
 
     it('should be added in the current map', function() {
-      expect(single_layer.getMap()).toEqual(map_with_layers.map);
+      expect(singleLayer.getMap()).toEqual(mapInstance.map);
     });
 
     it('should be removed from the current map', function() {
-      map_with_layers.removeLayer('traffic');
+      mapInstance.removeLayer('traffic');
       
-      expect(single_layer.getMap()).toBeNull();
+      expect(singleLayer.getMap()).toBeNull();
     });
   });
 
   describe('Multiple layers', function() {
     beforeEach(function() {
-      if (multiple_layers.length === 0) {
-        multiple_layers.push(map_with_layers.addLayer('transit'));
-        multiple_layers.push(map_with_layers.addLayer('bicycling'));
+      if (multipleLayers.length === 0) {
+        multipleLayers.push(mapInstance.addLayer('transit'));
+        multipleLayers.push(mapInstance.addLayer('bicycling'));
       }
     });
 
     it('should be added in the current map', function() {
-      expect(multiple_layers[0].getMap()).toEqual(map_with_layers.map);
-      expect(multiple_layers[1].getMap()).toEqual(map_with_layers.map);
+      expect(multipleLayers[0].getMap()).toEqual(mapInstance.map);
+      expect(multipleLayers[1].getMap()).toEqual(mapInstance.map);
     });
     
     it('should be removed from the current map', function() {
-      map_with_layers.removeLayer('transit');
-      map_with_layers.removeLayer('bicycling');
+      mapInstance.removeLayer('transit');
+      mapInstance.removeLayer('bicycling');
 
-      expect(multiple_layers[0].getMap()).toBeNull();
-      expect(multiple_layers[1].getMap()).toBeNull();
+      expect(multipleLayers[0].getMap()).toBeNull();
+      expect(multipleLayers[1].getMap()).toBeNull();
     });
   });
 });

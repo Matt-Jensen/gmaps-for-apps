@@ -1,4 +1,4 @@
-describe('Creating a marker', function() {
+describe('Marker', function() {
   var mapInstance, marker;
 
   beforeEach(function() {
@@ -10,7 +10,8 @@ describe('Creating a marker', function() {
     });
   });
 
-  describe('With basic options', function() {
+
+  describe('creating', function() {
     beforeEach(function() {
       marker = mapInstance.addMarker({
         lat : -12.0533,
@@ -31,14 +32,16 @@ describe('Creating a marker', function() {
     });
   });
 
-  describe('With events', function() {
-    var callbacks;
+
+  describe('events', function() {
+    var callbacks, context;
 
     beforeEach(function() {
+      context = { passed: false };
       callbacks = {
         onclick : function() {
-          console.log(this.title);
-        }
+          this.passed = true;
+        }.bind(context)
       };
 
       spyOn(callbacks, 'onclick').andCallThrough();
@@ -51,56 +54,50 @@ describe('Creating a marker', function() {
       });
     });
 
-    it('should respond to click event', function() {
+    it('should respond to click event and maintain method context', function() {
       google.maps.event.trigger(marker, 'click');
 
       expect(callbacks.onclick).toHaveBeenCalled();
+      expect(context.passed).toBe(true);
     });
   });
-});
 
-describe('Removing markers', function() {
-  var mapInstance;
 
-  beforeEach(function() {
-    mapInstance = mapInstance || new GMaps({
-      el : '#map-with-markers',
-      lat : -12.0533,
-      lng: -77.0293,
-      zoom: 14
+  describe('removing', function() {
+    beforeEach(function() {
+
+      mapInstance.removeMarkers();
+
+      mapInstance.addMarkers([{
+        lat : -12.0523,
+        lng: -77.0297,
+        title : 'Marker #1'
+      }, {
+        lat : -12.0531,
+        lng: -77.0289,
+        title : 'Marker #2'
+      }, {
+        lat : -12.0537,
+        lng: -77.0299,
+        title : 'Marker #3'
+      }, {
+        lat : -12.0532,
+        lng: -77.0278,
+        title : 'Marker #4'
+      }]);
     });
 
-    mapInstance.removeMarkers();
+    it('should remove a marker from the markers collection', function() {
+      mapInstance.removeMarker(mapInstance.markers[0]);
 
-    mapInstance.addMarkers([{
-      lat : -12.0523,
-      lng: -77.0297,
-      title : 'Marker #1'
-    }, {
-      lat : -12.0531,
-      lng: -77.0289,
-      title : 'Marker #2'
-    }, {
-      lat : -12.0537,
-      lng: -77.0299,
-      title : 'Marker #3'
-    }, {
-      lat : -12.0532,
-      lng: -77.0278,
-      title : 'Marker #4'
-    }]);
-  });
+      expect(mapInstance.markers.length).toEqual(3);
+    });
 
-  it('should remove a marker from the markers collection', function() {
-    mapInstance.removeMarker(mapInstance.markers[0]);
+    it('should remove an array of markers from the markers collection', function() {
+      var markers = [mapInstance.markers[0], mapInstance.markers[2]];
+      mapInstance.removeMarkers(markers);
 
-    expect(mapInstance.markers.length).toEqual(3);
-  });
-
-  it('should remove an array of markers from the markers collection', function() {
-    var markers = [mapInstance.markers[0], mapInstance.markers[2]];
-    mapInstance.removeMarkers(markers);
-
-    expect(mapInstance.markers.length).toEqual(2);
+      expect(mapInstance.markers.length).toEqual(2);
+    });
   });
 });

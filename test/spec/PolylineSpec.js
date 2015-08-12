@@ -1,3 +1,5 @@
+var path = [[-12.0440, -77.0247], [-12.0544, -77.0302], [-12.0551, -77.0303], [-12.0759, -77.0276], [-12.0763, -77.0279], [-12.0768, -77.0289], [-12.0885, -77.0241], [-12.0908, -77.0227]];
+
 describe('GMaps Polylines', function() {
   var mapInstance, polyline;
 
@@ -10,10 +12,10 @@ describe('GMaps Polylines', function() {
     });
   });
 
-  describe('Creation', function() {
+  describe('creation', function() {
     beforeEach(function() {
       polyline = polyline || mapInstance.drawPolyline({
-        path : [[-12.0440, -77.0247], [-12.0544, -77.0302], [-12.0551, -77.0303], [-12.0759, -77.0276], [-12.0763, -77.0279], [-12.0768, -77.0289], [-12.0885, -77.0241], [-12.0908, -77.0227]],
+        path : path,
         strokeColor : '#131540',
         strokeOpacity : 0.6,
         strokeWeight : 6
@@ -37,11 +39,42 @@ describe('GMaps Polylines', function() {
     });
   });
 
-  describe('Removal', function() {
+
+  describe('events', function() {
+    var callbacks, context;
+
+    beforeEach(function() {
+      context = { passed: false };
+      callbacks = {
+        onclick : function() {
+          this.passed = true;
+        }.bind(context)
+      };
+
+      spyOn(callbacks, 'onclick').andCallThrough();
+
+      polyline = mapInstance.drawPolyline({
+        path : path,
+        strokeColor : '#131540',
+        strokeOpacity : 0.6,
+        strokeWeight : 6,
+        click : callbacks.onclick
+      });
+    });
+
+    it('should respond to click event and maintain method context', function() {
+      google.maps.event.trigger(polyline, 'click', {});
+      expect(callbacks.onclick).toHaveBeenCalled();
+      expect(context.passed).toBe(true);
+    });
+  });
+
+
+  describe('removal', function() {
     beforeEach(function() {
       // Continue to add polylines
       mapInstance.drawPolyline({
-        path : [[-12.0440, -77.0247], [-12.0544, -77.0302], [-12.0551, -77.0303], [-12.0759, -77.0276], [-12.0763, -77.0279], [-12.0768, -77.0289], [-12.0885, -77.0241], [-12.0908, -77.0227]],
+        path : path,
         strokeColor : '#131540',
         strokeOpacity : 0.6,
         strokeWeight : 6
@@ -49,8 +82,9 @@ describe('GMaps Polylines', function() {
     });
 
     it('should remove one polyline from collection w/ removePolyline', function() {
+      var originalLength = mapInstance.polylines.length;
       mapInstance.removePolyline(polyline);
-      expect(mapInstance.polylines.length).toEqual(1);
+      expect(mapInstance.polylines.length).toBeLessThan(originalLength);
       expect(polyline.getMap()).toBeNull();
     });
 

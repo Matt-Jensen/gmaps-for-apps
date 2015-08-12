@@ -38,6 +38,42 @@ describe('GMap circles', function() {
     });
   });
 
+  describe('Events', function() {
+    var callbacks, context;
+
+    beforeEach(function() {
+      context = { passed: false };
+      callbacks = {
+        onclick: function() {
+          this.passed = true;
+        }.bind(context)
+      };
+
+      spyOn(callbacks, 'onclick').andCallThrough();
+
+      circle = mapInstance.drawCircle({
+        lat : -12.040504866577001,
+        lng : -77.02024422636042,
+        radius : 350,
+        strokeColor : '#432070',
+        strokeOpacity : 1,
+        strokeWeight : 3,
+        fillColor : '#432070',
+        fillOpacity : 0.6,
+        details: {
+          id: 'rosebud'
+        },
+        click : callbacks.onclick
+      });
+    });
+
+    it('should respond to click event and maintain method context', function() {
+      google.maps.event.trigger(circle, 'click');
+      expect(callbacks.onclick).toHaveBeenCalled();
+      expect(context.passed).toBe(true);
+    });
+  });
+
   describe('Removing', function() {
     beforeEach(function() {
       circle = circle || mapInstance.drawCircle({
@@ -53,8 +89,9 @@ describe('GMap circles', function() {
     });
 
     it('should remove the circle from the circles collection', function() {
+      var originalLength = mapInstance.circles.length;
       mapInstance.removeCircle(circle);
-      expect(mapInstance.circles.length).toEqual(0);
+      expect(mapInstance.circles.length).toBeLessThan(originalLength);
       expect(circle.getMap()).toBeNull();
     });
   });

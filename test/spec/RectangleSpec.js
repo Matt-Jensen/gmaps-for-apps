@@ -10,7 +10,7 @@ describe('GMaps rectangles', function() {
     });
   });
 
-  describe('Creation', function() {
+  describe('creation', function() {
     beforeEach(function() {
       rectangle = rectangle || mapInstance.drawRectangle({
         bounds : [[-12.0303,-77.0237],[-12.0348,-77.0115]],
@@ -46,7 +46,40 @@ describe('GMaps rectangles', function() {
     });
   });
 
-  describe('Removal', function() {
+
+  describe('events', function() {
+    var callbacks, context;
+
+    beforeEach(function() {
+      context = { passed: false };
+      callbacks = {
+        onclick : function() {
+          this.passed = true;
+        }.bind(context)
+      };
+
+      spyOn(callbacks, 'onclick').andCallThrough();
+
+      rectangle = mapInstance.drawRectangle({
+        bounds : [[-12.0303,-77.0237],[-12.0348,-77.0115]],
+        strokeColor : '#BBD8E9',
+        strokeOpacity : 1,
+        strokeWeight : 3,
+        fillColor : '#BBD8E9',
+        fillOpacity : 0.6,
+        click: callbacks.onclick
+      });
+    });
+
+    it('should respond to click event and maintain method context', function() {
+      google.maps.event.trigger(rectangle, 'click', {});
+      expect(callbacks.onclick).toHaveBeenCalled();
+      expect(context.passed).toBe(true);
+    });
+  });
+
+
+  describe('removal', function() {
     beforeEach(function() {
       rectangle = rectangle || mapInstance.drawRectangle({
         bounds : [[-12.0303,-77.0237],[-12.0348,-77.0115]],
@@ -59,8 +92,9 @@ describe('GMaps rectangles', function() {
     });
 
     it('should remove the rectangle from the polygons collection', function() {
+      var originalLength = mapInstance.rectangles.length;
       mapInstance.removeRectangle(rectangle);
-      expect(mapInstance.rectangles.length).toEqual(0);
+      expect(mapInstance.rectangles.length).toBeLessThan(originalLength);
       expect(rectangle.getMap()).toBeNull();
     });
   });
