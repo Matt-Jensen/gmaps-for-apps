@@ -16,6 +16,9 @@
       $('#back').attr('disabled', 'disabled');
       $('#get_route').click(function(e){
         e.preventDefault();
+        if( map.markers.length !== 2 ) {
+          alert('Travel Routes requires 2 points to make the route. Click the map to add the points.');
+        }
         map.getRoutes({
           origin: [map.markers[0].getPosition().lat(), map.markers[0].getPosition().lng()],
           destination: [map.markers[map.markers.length-1].getPosition().lat(), map.markers[map.markers.length-1].getPosition().lng()],
@@ -53,6 +56,9 @@
         zoom: 16,
         height: '500px',
         click: function(e){
+          if(map.markers.length === 2) {
+            map.removeMarkers();
+          }
           map.addMarker({
             lat: e.latLng.lat(),
             lng: e.latLng.lng()
