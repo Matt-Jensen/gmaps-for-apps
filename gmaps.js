@@ -1216,12 +1216,12 @@ GMaps.prototype.removeMarkers = function (collection) {
 
 GMaps.prototype.drawOverlay = function(options) {
   var overlay = new google.maps.OverlayView(),
-      autoShow = true;
+      visible = true;
 
   overlay.setMap(this.map);
 
-  if (options.hasOwnProperty(autoShow)) {
-    autoShow = options.autoShow;
+  if (options.hasOwnProperty('visible')) {
+    visible = options.visible;
   }
 
   overlay.onAdd = function() {
@@ -1328,9 +1328,9 @@ GMaps.prototype.drawOverlay = function(options) {
         break;
     }
 
-    el.style.display = autoShow ? 'block' : 'none';
+    el.style.display = visible ? 'block' : 'none';
 
-    if (!autoShow && typeof options.show === 'function') {
+    if (!visible && typeof options.show === 'function') {
       options.show.apply(this, [el]);
     }
   };
