@@ -655,11 +655,8 @@ GMaps.prototype.drawCircle = function(options) {
 GMaps.prototype.removeCircle = function(circle) {
   for (var i = 0, l = this.circles.length; i < l; i++) {
     if (this.circles[i] === circle) {
-      this.circles[i].setMap(null);
+      this._teardownChild('circle', this.circles[i]);
       this.circles.splice(i, 1);
-
-      GMaps.fire('circle_removed', circle, this);
-
       return true;
     }
   }
@@ -670,11 +667,12 @@ GMaps.prototype.removeCircle = function(circle) {
 
 GMaps.prototype.removeCircles = function() {
   for (var i = 0, l = this.circles.length; i < l; i++) {
-    this.circles[i].setMap(null);
+    this._teardownChild('circle', this.circles[i]);
   }
 
   this.circles.length = 0;
 };
+
 /* globals extend_object: true, subcribeEvent: true, array_flat: true, array_map: true, arrayToLatLng: true */
 
 GMaps.prototype.drawPolygon = function(options) {
@@ -725,11 +723,8 @@ GMaps.prototype.drawPolygon = function(options) {
 GMaps.prototype.removePolygon = function(polygon) {
   for (var i = 0, l = this.polygons.length; i < l; i++) {
     if (this.polygons[i] === polygon) {
-      this.polygons[i].setMap(null);
+      this._teardownChild('polygon', this.polygons[i]);
       this.polygons.splice(i, 1);
-
-      GMaps.fire('polygon_removed', polygon, this);
-
       return true;
     }
   }
@@ -740,11 +735,12 @@ GMaps.prototype.removePolygon = function(polygon) {
 
 GMaps.prototype.removePolygons = function() {
   for (var i = 0, l = this.polygons.length; i < l; i++) {
-    this.polygons[i].setMap(null);
+    this._teardownChild('polygon', this.polygons[i]);
   }
 
   this.polygons.length = 0;
 };
+
 /* globals extend_object: true, subcribeEvent: true */
 
 GMaps.prototype.drawRectangle = function(options) {
@@ -784,11 +780,8 @@ GMaps.prototype.drawRectangle = function(options) {
 GMaps.prototype.removeRectangle = function(rectangle) {
   for (var i = 0, l = this.rectangles.length; i < l; i++) {
     if (this.rectangles[i] === rectangle) {
-      this.rectangles[i].setMap(null);
+      this._teardownChild('rectangle', this.rectangles[i]);
       this.rectangles.splice(i, 1);
-
-      GMaps.fire('rectangle_removed', rectangle, this);
-
       return true;
     }
   }
@@ -799,11 +792,12 @@ GMaps.prototype.removeRectangle = function(rectangle) {
 
 GMaps.prototype.removeRectangles = function() {
   for (var i = 0, l = this.rectangles.length; i < l; i++) {
-    this.rectangles[i].setMap(null);
+    this._teardownChild('rectangle', this.rectangles[i]);
   }
 
   this.rectangles.length = 0;
 };
+
 /* globals subcribeEvent: true */
 
 GMaps.prototype.drawPolyline = function(options) {
@@ -898,7 +892,7 @@ GMaps.prototype.removePolylines = function() {
   this.polylines.length = 0;
 };
 
-/* globals google: true, extend_object: true, subcribeEvent: true */
+/* globals extend_object: true, subcribeEvent: true */
 
 GMaps.prototype.addInfoWindow = function(options) {
   options = extend_object({
@@ -981,7 +975,7 @@ GMaps.prototype.addInfoWindow = function(options) {
 GMaps.prototype.removeInfoWindow = function(infoWindow) {
   for (var i = 0, l = this.infoWindows.length; i < l; i++) {
     if (this.infoWindows[i] === infoWindow) {
-      this._removeInfoWindow(this.infoWindows[i]);
+      this._teardownChild('info_window', this.infoWindows[i]);
       this.infoWindows.splice(i, 1);
       return true;
     }
@@ -993,25 +987,10 @@ GMaps.prototype.removeInfoWindow = function(infoWindow) {
 
 GMaps.prototype.removeInfoWindows = function() {
   for (var i = 0, l = this.infoWindows.length; i < l; i++) {
-    try { this._removeInfoWindow(this.infoWindows[i]); } catch(e) {} // for jasmine
-    this.infoWindows.splice(i, 1);
+    try { this._teardownChild('info_window', this.infoWindows[i]); } catch(e) {} // for jasmine
   }
 
   this.infoWindows.length = 0;
-};
-
-
-GMaps.prototype._removeInfoWindow = function(infoWindow) {
-  google.maps.event.clearInstanceListeners(infoWindow);
-
-  // Remove all event delegations
-  for(var i = 0, l = infoWindow.delegatedEvents.length; i < l; i++) {
-    infoWindow.delegatedEvents[i].remove();
-  }
-
-  infoWindow.setMap(null);
-
-  GMaps.fire('info_window_removed', infoWindow, this);
 };
 
 /* globals extend_object: true, subcribeEvent: true */
@@ -1196,6 +1175,7 @@ GMaps.prototype.removeMarkers = function (collection) {
     for (i = 0, l = this.markers.length; i < l; i++) {
       marker = this.markers[i];
       marker.setMap(null);
+      google.maps.event.clearInstanceListeners(marker);
 
       if(this.markerClusterer) {
         this.markerClusterer.removeMarker(marker);
@@ -1211,6 +1191,7 @@ GMaps.prototype.removeMarkers = function (collection) {
       if (index > -1) {
         marker = this.markers[index];
         marker.setMap(null);
+        google.maps.event.clearInstanceListeners(marker);
 
         if(this.markerClusterer) {
           this.markerClusterer.removeMarker(marker);
@@ -1374,7 +1355,7 @@ GMaps.prototype.drawOverlay = function(options) {
 GMaps.prototype.removeOverlay = function(overlay) {
   for (var i = 0, l = this.overlays.length; i < l; i++) {
     if (this.overlays[i] === overlay) {
-      this.overlays[i].setMap(null);
+      this._teardownChild('overlay', this.overlays[i]);
       this.overlays.splice(i, 1);
       return true;
     }
@@ -1385,7 +1366,7 @@ GMaps.prototype.removeOverlay = function(overlay) {
 
 GMaps.prototype.removeOverlays = function() {
   for (var i = 0, l = this.overlays.length; i < l; i++) {
-    this.overlays[i].setMap(null);
+    this._teardownChild('overlay', this.overlays[i]);
   }
 
   this.overlays.length = 0;
@@ -1545,7 +1526,8 @@ GMaps.prototype.removeLayer = function(layer) {
     curr = this.layers[i];
 
     if(this.layers[i] === layer || isStringLayer && this.singleLayers[layer] === curr) {
-      curr.setMap(null);
+      this._teardownChild('layer', this.layers[i]);
+
       if (isStringLayer) { delete this.singleLayers[layer]; }
       this.layers.splice(i, 1);
       return true;
@@ -1558,7 +1540,7 @@ GMaps.prototype.removeLayer = function(layer) {
 
 GMaps.prototype.removeLayers = function() {
   for (var i = 0, l = this.layers.length; i < l; i++) {
-    this.layers[i].setMap(null);
+    this._teardownChild('layer', this.layers[i]);
   }
 
   for(i in this.singleLayers) {
@@ -1638,7 +1620,7 @@ GMaps.prototype.getRoutes = function(options) {
 
 
 GMaps.prototype.removeRoutes = function() {
-  this.routes = [];
+  this.routes.length = 0;
 };
 
 
@@ -2437,6 +2419,21 @@ GMaps.prototype.uuid = (function() {
     return id++;
   }
 })();
+
+
+GMaps.prototype._teardownChild = function(type, child) {
+  google.maps.event.clearInstanceListeners(child);
+
+  // Remove all event delegations
+  if(child.delegatedEvents && child.delegatedEvents.length) {
+    for(var i = 0, l = child.delegatedEvents.length; i < l; i++) {
+      child.delegatedEvents[i].remove();
+    }
+  }
+
+  child.setMap(null);
+  GMaps.fire(type+'_removed', child, this);
+}
 
 //==========================
 // Polygon containsLatLng
