@@ -2,13 +2,15 @@
 
 [GMaps](https://github.com/hpneo/gmaps) is a fantasic abstraction for Google Maps. I'm a fan. However, after working with GMaps in the context of Single Page App, there are issues that make it problematic:
 
-- Context hijacking in map child events.
-- Inconsistent storing of map children.
-- Inconsistent location of lib methods in file structure.
-- No support for first class Info-Windows.
+- Context hijacking in map child events. √
+- Inconsistent storing of map children. √
+- Inconsistent location of lib methods in file structure. √
+- No support for first class Info-Windows. √
 - No support for a simple text element.
-- Performance optimizations concerns.
-- Fails common JShint configuration, no automated code hinting.
+- Performance optimizations concerns. √
+- Fails common JShint configuration, no automated code hinting. √
+- Expanded Unit Test Coverage √
+- General utility methods
 
 GMaps For Apps aims to solve all this as well as provide a consistent platform for future development. _Excelsior!_
 
