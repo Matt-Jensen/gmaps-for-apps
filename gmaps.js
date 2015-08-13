@@ -249,6 +249,7 @@ var GMaps = (function() {
     this.polylines = [];
     this.circles = [];
     this.rectangles = [];
+    this.infoWindows = [];
     this.layers = []; // array with kml/georss and fusiontables layers, can be as many
     this.singleLayers = {}; // object with the other layers, only one per layer
     this.markers = [];
@@ -307,15 +308,6 @@ var GMaps = (function() {
 
       var context_menu_items = context_menu_element.getElementsByTagName('a'),
           context_menu_items_count = context_menu_items.length;
-
-      // function menuItemActionHandler(context) {
-      //   return function(e) {
-      //     e.preventDefault();
-      //     console.log(id);
-      //     options[this.id.replace(control + '_', '')].action.apply(self, [e]);
-      //     self.hideContextMenu();
-      //   };
-      // }
 
       var assignMenuItemAction = function(ev){
         ev.preventDefault();
@@ -639,10 +631,10 @@ GMaps.prototype.drawCircle = function(options) {
   }, options);
 
   var circle = new google.maps.Circle(options);
-  var circle_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+  var circleEvents = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
 
-  for (var i = 0, l = circle_events.length, name; i < l; i++) {
-    name = circle_events[i];
+  for (var i = 0, l = circleEvents.length, name; i < l; i++) {
+    name = circleEvents[i];
 
     // If object has configured event
     if (options.hasOwnProperty(name)) {
@@ -904,6 +896,122 @@ GMaps.prototype.removePolylines = function() {
   }
 
   this.polylines.length = 0;
+};
+
+/* globals google: true, extend_object: true, subcribeEvent: true */
+
+GMaps.prototype.addInfoWindow = function(options) {
+  options = extend_object({
+    map: this.map,
+    position: new google.maps.LatLng(options.lat, options.lng)
+  }, options);
+
+  var infoWindowSelector = '__gmaps-info-window-'+ this.uuid() +'__';
+  options.content = options.content || '';
+  options.content = [
+    '<div id="',
+    infoWindowSelector,
+    '">',
+    options.content,
+    '</div>'
+  ].join('');
+
+  var infoWindow = new google.maps.InfoWindow(options);
+  infoWindow._map = this.map;
+  infoWindow._id = infoWindowSelector;
+  infoWindow.delegatedEvents = [];
+  var mouseEvents = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+
+  var i, l, name, removeDelegatedEvent;
+
+  for (i = 0, l = mouseEvents.length, name; i < l; i++) {
+    name = mouseEvents[i];
+
+    // If object has configured event
+    if (options.hasOwnProperty(name)) {
+
+      // delegate event to the info-window's content wrapper div
+      removeDelegatedEvent = this.addDelegatedEvent(
+        name,
+        '#'+infoWindowSelector,
+        subcribeEvent(options[name], infoWindow)
+      );
+      infoWindow.delegatedEvents.push(removeDelegatedEvent);
+    }
+  }
+
+  // Add default events
+  var classEvents = ['closeclick', 'content_changed', 'domready', 'position_changed', 'zindex_changed'];
+
+  for(i = 0, l = classEvents.length, name; i < l; i++) {
+    name = classEvents[i];
+
+    // If object has configured event
+    if (options.hasOwnProperty(name)) {
+      google.maps.event.addListener(
+        infoWindow,
+        name,
+        subcribeEvent(options[name], infoWindow)
+      );
+    }
+  }
+
+  infoWindow.visible = (options.hasOwnProperty('visible') ? options.visible : true);
+
+  if(!infoWindow.visible) {
+    infoWindow.close();
+  }
+
+  infoWindow.show = function() {
+    this.open(this._map);
+    this.visible = true;
+  };
+
+  infoWindow.hide = function() {
+    this.close();
+    this.visible = false;
+  };
+
+  this.infoWindows.push(infoWindow);
+
+  return infoWindow;
+};
+
+
+GMaps.prototype.removeInfoWindow = function(infoWindow) {
+  for (var i = 0, l = this.infoWindows.length; i < l; i++) {
+    if (this.infoWindows[i] === infoWindow) {
+      this._removeInfoWindow(this.infoWindows[i]);
+      this.infoWindows.splice(i, 1);
+      return true;
+    }
+  }
+
+  return false;
+};
+
+
+GMaps.prototype.removeInfoWindows = function() {
+  for (var i = 0, l = this.infoWindows.length; i < l; i++) {
+    try { this._removeInfoWindow(this.infoWindows[i]); } catch(e) {} // for jasmine
+    this.infoWindows.splice(i, 1);
+  }
+
+  this.infoWindows.length = 0;
+};
+
+
+GMaps.prototype._removeInfoWindow = function(infoWindow) {
+  google.maps.event.clearInstanceListeners(infoWindow);
+
+  // Remove all event delegations
+  for(var i = 0, l = infoWindow.delegatedEvents.length; i < l; i++) {
+    infoWindow.delegatedEvents[i].remove();
+  }
+
+  infoWindow.setMap(null);
+
+  GMaps.fire('info_window_removed', infoWindow, this);
 };
 
 /* globals extend_object: true, subcribeEvent: true */
@@ -2237,7 +2345,7 @@ GMaps.fire = function(event_name, object, scope) {
   }
 };
 
-GMaps.geolocate = function(options) {
+GMaps.geolocate = function geolocate(options) {
   var complete_callback = options.always || options.complete;
 
   if (navigator.geolocation) {
@@ -2264,7 +2372,8 @@ GMaps.geolocate = function(options) {
   }
 };
 
-GMaps.geocode = function(options) {
+
+GMaps.geocode = function geocode(options) {
   this.geocoder = new google.maps.Geocoder();
   var callback = options.callback;
   if (options.hasOwnProperty('lat') && options.hasOwnProperty('lng')) {
@@ -2279,6 +2388,55 @@ GMaps.geocode = function(options) {
     callback(results, status);
   });
 };
+
+
+GMaps.prototype.addDelegatedEvent = function addDelegated(eventName, delegate, callback) {
+  var self = this;
+
+  var delegateEventHandler = function delegateEventHandler(e) {
+    var trigger = self.el.querySelector(delegate);
+    var target = e ? e.target : window.event.srcElement;
+
+    if(!trigger || !target) { return false; }
+
+    // If delegated is target or parent of target invoke callback
+    if(trigger === target || self.isChildElement(trigger, target)) {
+      callback.apply(null, Array.prototype.slice.call(arguments));
+    }
+  };
+
+  this.el.addEventListener(eventName, delegateEventHandler, true);
+
+  return {
+    eventName: eventName,
+    remove: function removeDelegatedEvent() {
+      self.el.removeEventListener(eventName, delegateEventHandler);
+    }
+  };
+};
+
+
+GMaps.prototype.isChildElement = function isChildElement(parent, child) {
+  var node = child.parentNode;
+
+  // while there are parent nodes and parent node is not the root map element
+  while (node !== null && node !== this.el) {
+    if (node === parent) {
+      return true;
+    }
+    node = node.parentNode;
+   }
+   return false;
+};
+
+
+GMaps.prototype.uuid = (function() {
+  var id = 0;
+
+  return function() {
+    return id++;
+  }
+})();
 
 //==========================
 // Polygon containsLatLng

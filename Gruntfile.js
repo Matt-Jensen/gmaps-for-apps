@@ -29,6 +29,7 @@ module.exports = function(grunt) {
           'lib/gmaps.polygons.js',
           'lib/gmaps.rectangles.js',
           'lib/gmaps.polylines.js',
+          'lib/gmaps.info_windows.js',
           'lib/gmaps.markers.js',
           'lib/gmaps.overlays.js',
           'lib/gmaps.layers.js',
@@ -51,7 +52,8 @@ module.exports = function(grunt) {
         template: 'test/template/jasmine-gmaps.html',
         specs: 'test/spec/*.js',
         vendor: 'http://maps.google.com/maps/api/js?sensor=true',
-        styles: 'test/style.css'
+        styles: 'test/style.css',
+        force: true
       },
       src : ['<%= concat.dist.src %>']
     },
