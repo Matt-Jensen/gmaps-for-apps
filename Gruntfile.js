@@ -32,6 +32,7 @@ module.exports = function(grunt) {
           'lib/gmaps.info_windows.js',
           'lib/gmaps.markers.js',
           'lib/gmaps.overlays.js',
+          'lib/gmaps.texts.js',
           'lib/gmaps.layers.js',
           'lib/gmaps.routes.js',
           'lib/gmaps.geofences.js',
@@ -50,7 +51,7 @@ module.exports = function(grunt) {
     jasmine: {
       options: {
         template: 'test/template/jasmine-gmaps.html',
-        specs: 'test/spec/*.js',
+        specs: 'test/spec/**/*.js',
         vendor: 'http://maps.google.com/maps/api/js?sensor=true',
         styles: 'test/style.css',
         force: true

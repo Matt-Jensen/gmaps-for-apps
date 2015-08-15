@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GMaps.js &mdash; Texts</title>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+  <script type="text/javascript" src="../gmaps.js"></script>
+  <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="examples.css" />
+  <script type="text/javascript">
+    var map;
+    $(document).ready(function(){
+      map = new GMaps({
+        el: '#map',
+        lat: 30.258200146897565,
+        lng: -97.72729354910553,
+        zoom: 18,
+        click: function(e) {
+          console.log(e);
+        }
+      });
+
+      map.addText({
+        lat: 30.257806291133193,
+        lng: -97.72566276602447,
+        text: '&hearts;&hearts;&hearts; Excellent Tacos &hearts;&hearts;&hearts;'
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>GMaps.js &mdash; Texts</h1>
+  <div class="row">
+    <div class="span11">
+      <div id="map"></div>
+    </div>
+    <div class="span6">
+      <p>You can add text elements by:</p>
+      <pre>map.addText({
+  lat: 30.257806291133193,
+  lng: -97.72566276602447,
+  text: '&hearts;&hearts;&hearts; Most Excellent Tacos &hearts;&hearts;&hearts;'
+});</pre>
+      <p>You must define <strong>latitude</strong>, <strong>longitude</strong> and the <strong>text</strong> of the text.</p>
+      <p><span class="label notice">Note: </span>Also, you can define a <code>mouse event</code> callback methods, which will be triggered when the overlay's DOM element is interacted with.</p>
+    </div>
+  </div>
+</body>
+</html>
