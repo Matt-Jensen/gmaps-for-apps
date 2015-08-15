@@ -6,7 +6,7 @@
 - Inconsistent storing of map children. √
 - Inconsistent location of lib methods in file structure. √
 - No support for first class Info-Windows. √
-- No support for a simple text element.
+- No support for a simple text element. √
 - Performance optimizations concerns. √
 - Fails common JShint configuration, no automated code hinting. √
 - Expanded Unit Test Coverage √
