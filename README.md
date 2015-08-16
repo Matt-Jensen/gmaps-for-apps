@@ -5,6 +5,7 @@
 - Context hijacking in map child events. √
 - Inconsistent storing of map children. √
 - Inconsistent location of lib methods in file structure. √
+- Inconsistent method naming
 - No support for first class Info-Windows. √
 - No support for a simple text element.
 - Performance optimizations concerns. √

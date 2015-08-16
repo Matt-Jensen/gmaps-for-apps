@@ -12,7 +12,7 @@ describe('GMap circles', function() {
 
   describe('Creating', function() {
     beforeEach(function() {
-      circle = circle || mapInstance.drawCircle({
+      circle = circle || mapInstance.addCircle({
         lat : -12.040504866577001,
         lng : -77.02024422636042,
         radius : 350,
@@ -61,7 +61,7 @@ describe('GMap circles', function() {
       spyOn(callbacks, 'onmousemove').andCallThrough();
       spyOn(callbacks, 'onmouseout').andCallThrough();
 
-      circle = mapInstance.drawCircle({
+      circle = mapInstance.addCircle({
         lat : -12.040504866577001,
         lng : -77.02024422636042,
         radius : 350,
@@ -97,7 +97,7 @@ describe('GMap circles', function() {
   describe('Removing', function() {
     beforeEach(function() {
       // Continuously add circles
-      circle = mapInstance.drawCircle({
+      circle = mapInstance.addCircle({
         lat : -12.040504866577001,
         lng : -77.02024422636042,
         radius : 350,

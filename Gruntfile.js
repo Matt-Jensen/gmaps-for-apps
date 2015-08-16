@@ -42,6 +42,7 @@ module.exports = function(grunt) {
           'lib/gmaps.streetview.js',
           'lib/gmaps.events.js',
           'lib/gmaps.utils.js',
+          'lib/gmaps.instance_helpers.js',
           'lib/gmaps.native_extensions.js'
         ],
         dest: 'gmaps.js'
@@ -52,6 +53,7 @@ module.exports = function(grunt) {
       options: {
         template: 'test/template/jasmine-gmaps.html',
         specs: 'test/spec/**/*.js',
+        // specs: 'test/spec/InstanceHelpersSpec.js',
         vendor: 'http://maps.google.com/maps/api/js?sensor=true',
         styles: 'test/style.css',
         force: true

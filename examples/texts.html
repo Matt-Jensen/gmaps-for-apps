@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="examples.css" />
   <script type="text/javascript">
-    var map;
+    var map, text;
     $(document).ready(function(){
       map = new GMaps({
         el: '#map',
@@ -21,7 +21,7 @@
         }
       });
 
-      map.addText({
+      text = map.addText({
         lat: 30.257806291133193,
         lng: -97.72566276602447,
         text: '&hearts;&hearts;&hearts; Excellent Tacos &hearts;&hearts;&hearts;'
