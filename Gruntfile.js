@@ -52,13 +52,29 @@ module.exports = function(grunt) {
     jasmine: {
       options: {
         template: 'test/template/jasmine-gmaps.html',
-        specs: 'test/spec/**/*.js',
-        // specs: 'test/spec/InstanceHelpersSpec.js',
+        // specs: 'test/spec/**/*.js',
+        specs: 'test/spec/InstanceHelpersSpec.js',
         vendor: 'http://maps.google.com/maps/api/js?sensor=true',
         styles: 'test/style.css',
         force: true
       },
       src : ['<%= concat.dist.src %>']
+    },
+
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js',
+        // port: 9999,
+        // singleRun: true,
+        // browsers: ['Chrome'],
+        // logLevel: 'ERROR',
+        // options: {
+        //   files: [
+        //     '<%= concat.dist.src %>',
+        //     'test/spec/**/*.js'
+        //   ]
+        // }
+      }
     },
 
     watch : {
@@ -114,10 +130,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-umd');
 
   grunt.registerTask('test', ['jshint:test', 'jasmine']);
+  grunt.registerTask('ttt', ['karma:unit']);
   grunt.registerTask('dev', ['jshint:main', 'test', 'concat', 'umd', 'watch:dev']);
   grunt.registerTask('build', ['concat', 'umd', 'uglify']);
   grunt.registerTask('default', ['jshint:main', 'test', 'concat', 'umd', 'uglify']);

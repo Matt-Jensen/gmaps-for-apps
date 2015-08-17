@@ -1,15 +1,20 @@
 describe('Adding Map Styles', function() {
-  var map_with_styles;
+  var mapInstance, container;
 
-  beforeEach(function() {
-    map_with_styles = map_with_styles || new GMaps({
+  beforeAll(function() {
+    container = document.createElement('div');
+    container.id = 'map-with-styles';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    mapInstance = new GMaps({
       el : '#map-with-styles',
       lat : -12.0433,
       lng : -77.0283,
       zoom : 12
     });
 
-    map_with_styles.addStyle({
+    mapInstance.addStyle({
       styledMapName : {
         name : 'Lighter'
       },
@@ -32,12 +37,11 @@ describe('Adding Map Styles', function() {
   });
 
   it('should add a MapType to the current map', function() {
-    expect(map_with_styles.map.mapTypes.get('lighter')).toBeDefined();
+    expect(mapInstance.map.mapTypes.get('lighter')).toBeDefined();
   });
 
   it('should update the styles in the current map', function() {
-    map_with_styles.setStyle('lighter');
-
-    expect(map_with_styles.getMapTypeId()).toEqual('lighter');
+    mapInstance.setStyle('lighter');
+    expect(mapInstance.getMapTypeId()).toEqual('lighter');
   });
 });

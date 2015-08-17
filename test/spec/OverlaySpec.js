@@ -1,15 +1,20 @@
 describe('Overlays', function() {
-  var mapInstance, overlay;
+  var mapInstance, container, overlay;
 
-  beforeEach(function() {
-    mapInstance = mapInstance || new GMaps({
+  beforeAll(function() {
+    container = document.createElement('div');
+    container.id = 'map-with-overlays';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    mapInstance = new GMaps({
       el : '#map-with-overlays',
       lat : -12.0433,
       lng : -77.0283,
       zoom : 12
     });
 
-    overlay = overlay || mapInstance.drawOverlay({
+    overlay = mapInstance.drawOverlay({
       lat: mapInstance.getCenter().lat(),
       lng: mapInstance.getCenter().lng(),
       layer: 'overlayLayer',
@@ -31,7 +36,7 @@ describe('Overlays', function() {
   describe('events', function() {
     var callbacks, context, overlayWithClick;
 
-    beforeEach(function() {
+    beforeAll(function() {
       context = { passed: false };
       callbacks = {
         onclick: function() {
@@ -47,9 +52,9 @@ describe('Overlays', function() {
         }
       };
 
-      spyOn(callbacks, 'onclick').andCallThrough();
-      spyOn(callbacks, 'onmousemove').andCallThrough();
-      spyOn(callbacks, 'onrightclick').andCallThrough();
+      spyOn(callbacks, 'onclick').and.callThrough();
+      spyOn(callbacks, 'onmousemove').and.callThrough();
+      spyOn(callbacks, 'onrightclick').and.callThrough();
 
       overlayWithClick = mapInstance.drawOverlay({
         lat: mapInstance.getCenter().lat(),
@@ -61,37 +66,26 @@ describe('Overlays', function() {
       });
     });
 
-    it('should respond to click and maintain method context', function() {
-      var domIsReady = false;
-
+    it('should respond to click and maintain method context', function(done) {
       google.maps.event.addListenerOnce(overlayWithClick, 'ready', function () {
-        domIsReady = true;
-      });
-
-      waitsFor(function () {
-        return domIsReady;
-      }, 'the overlay\'s DOM element to be ready', 10000);
-
-      runs(function () {
         // responds to click event and maintain method context
         google.maps.event.trigger(overlayWithClick.el, 'click');
         expect(callbacks.onclick).toHaveBeenCalled();
         expect(context.passed).toBe(true);
-      });
 
-      runs(function() {
         // binds multiple events
         google.maps.event.trigger(overlayWithClick.el, 'mousemove', {});
         expect(callbacks.onmousemove).toHaveBeenCalled();
 
         google.maps.event.trigger(overlayWithClick.el, 'rightclick', {});
         expect(callbacks.onrightclick).toHaveBeenCalled();
+        done();
       });
-    });
+    }, 2000);
   });
 
   describe('removing', function() {
-    beforeEach(function() {
+    beforeAll(function() {
       // continually add overlays
       overlay = mapInstance.drawOverlay({
         lat: mapInstance.getCenter().lat(),

@@ -1,5 +1,5 @@
 describe('Creating event listeners', function() {
-  var map_events, marker, line, polygon, circle, rectangle, overlay, text, infoWindow;
+  var container, map_events, marker, line, polygon, circle, rectangle, overlay, text, infoWindow;
   var callbacks_native, callbacks_gmaps;
   var added_marker, added_line, added_polygon, added_circle, added_rectangle, added_overlay, added_text, added_info_window;
   var marker_added_event, marker_removed_event;
@@ -11,28 +11,33 @@ describe('Creating event listeners', function() {
   var text_added_event, text_removed_event;
   var info_window_added_event, info_window_removed_event;
 
-  beforeEach(function() {
-    map_events = map_events || new GMaps({
-      el : '#events',
+  beforeAll(function() {
+    container = document.createElement('div');
+    container.id = 'events-map';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    map_events = new GMaps({
+      el : '#events-map',
       lat : -12.0433,
       lng : -77.0283,
       zoom : 12
     });
 
-    marker = marker || map_events.addMarker({
+    marker = map_events.addMarker({
       lat : -12.0433,
       lng : -77.0283,
       title : 'New marker'
     });
 
-    line = line || map_events.drawPolyline({
+    line = map_events.drawPolyline({
       path : [[-12.0440, -77.0247], [-12.0544, -77.0302], [-12.0551, -77.0303], [-12.0759, -77.0276], [-12.0763, -77.0279], [-12.0768, -77.0289], [-12.0885, -77.0241], [-12.0908, -77.0227]],
       strokeColor : '#131540',
       strokeOpacity : 0.6,
       strokeWeight : 6
     });
 
-    polygon = polygon || map_events.drawPolygon({
+    polygon = map_events.drawPolygon({
       paths : [[-12.0403,-77.0337],[-12.0402,-77.0399],[-12.0500,-77.0244],[-12.0448,-77.0215]],
       strokeColor : '#25D359',
       strokeOpacity : 1,
@@ -41,29 +46,29 @@ describe('Creating event listeners', function() {
       fillOpacity : 0.6
     });
 
-    circle = circle || map_events.addCircle({
+    circle = map_events.addCircle({
       lat : -12.040504866577001,
       lng : -77.02024422636042,
       radius : 350
     });
 
-    rectangle = rectangle || map_events.drawRectangle({
+    rectangle = map_events.drawRectangle({
       bounds: [[-12.030397656836609,-77.02373871559225],[-12.034804866577001,-77.01154422636042]]
     });
 
-    overlay = overlay || map_events.drawOverlay({
+    overlay = map_events.drawOverlay({
       lat: -12.040504866577001,
       lng: -77.02024422636042,
       content: '<h1>testing</h1>'
     });
 
-    text = text || map_events.addText({
+    text = map_events.addText({
       lat: -12.040504866577001,
       lng: -77.02024422636042,
       text: 'testing'
     });
 
-    infoWindow = infoWindow || map_events.addInfoWindow({
+    infoWindow = map_events.addInfoWindow({
       lat: 34.54148095772571,
       lng: -112.47004508972168,
       content: 'info-window'
@@ -71,64 +76,64 @@ describe('Creating event listeners', function() {
   });
 
   describe('for google.maps events', function() {
-    beforeEach(function() {
-      callbacks_native = callbacks_native || {
+    beforeAll(function() {
+      callbacks_native = {
         map : {
           onclick : function() {
-            console.log('callbacks_native.map.onclick');
+            return true;
           }
         },
         marker : {
           onclick : function() {
-            console.log('callbacks_native.marker.onclick');
+            return true;
           }
         },
         line : {
           onclick : function() {
-            console.log('callbacks_native.line.onclick');
+            return true;
           }
         },
         polygon : {
           onclick : function() {
-            console.log('callbacks_native.polygon.onclick');
+            return true;
           }
         },
         circle : {
           onclick : function() {
-            console.log('callbacks_native.circle.onclick');
+            return true;
           }
         },
         rectangle : {
           onclick : function() {
-            console.log('callbacks_native.rectangle.onclick');
+            return true;
           }
         },
         overlay : {
           onclick : function() {
-            console.log('callbacks_native.overlay.onclick');
+            return true;
           }
         },
         text : {
           onclick : function() {
-            console.log('callbacks_native.text.onclick');
+            return true;
           }
         },
         infoWindow : {
           onclick : function() {
-            console.log('callbacks_native.infoWindow.onclick');
+            return true;
           }
         }
       };
 
-      spyOn(callbacks_native.map, 'onclick').andCallThrough();
-      spyOn(callbacks_native.marker, 'onclick').andCallThrough();
-      spyOn(callbacks_native.line, 'onclick').andCallThrough();
-      spyOn(callbacks_native.polygon, 'onclick').andCallThrough();
-      spyOn(callbacks_native.circle, 'onclick').andCallThrough();
-      spyOn(callbacks_native.rectangle, 'onclick').andCallThrough();
-      spyOn(callbacks_native.overlay, 'onclick').andCallThrough();
-      spyOn(callbacks_native.text, 'onclick').andCallThrough();
-      spyOn(callbacks_native.infoWindow, 'onclick').andCallThrough();
+      spyOn(callbacks_native.map, 'onclick').and.callThrough();
+      spyOn(callbacks_native.marker, 'onclick').and.callThrough();
+      spyOn(callbacks_native.line, 'onclick').and.callThrough();
+      spyOn(callbacks_native.polygon, 'onclick').and.callThrough();
+      spyOn(callbacks_native.circle, 'onclick').and.callThrough();
+      spyOn(callbacks_native.rectangle, 'onclick').and.callThrough();
+      spyOn(callbacks_native.overlay, 'onclick').and.callThrough();
+      spyOn(callbacks_native.text, 'onclick').and.callThrough();
+      spyOn(callbacks_native.infoWindow, 'onclick').and.callThrough();
     });
 
     describe('To a map', function() {
@@ -245,71 +250,71 @@ describe('Creating event listeners', function() {
     beforeEach(function() {
       callbacks_gmaps = {
         marker_added : function() {
-          console.log('callbacks_gmaps.marker_added called');
+          return true;
         },
         marker_removed : function() {
-          console.log('callbacks_gmaps.marker_removed called');
+          return true;
         },
         polyline_added : function() {
-          console.log('callbacks_gmaps.polyline_added called');
+          return true;
         },
         polyline_removed : function() {
-          console.log('callbacks_gmaps.polyline_removed called');
+          return true;
         },
         polygon_added : function() {
-          console.log('callbacks_gmaps.polygon_added called');
+          return true;
         },
         polygon_removed : function() {
-          console.log('callbacks_gmaps.polygon_removed called');
+          return true;
         },
         circle_added: function() {
-          console.log('callbacks_gmaps.circle_added called');
+          return true;
         },
         circle_removed: function() {
-          console.log('callbacks_gmaps.circle_added called');
+          return true;
         },
         rectangle_added: function() {
-          console.log('callbacks_gmaps.rectangle_added called');
+          return true;
         },
         rectangle_removed: function() {
-          console.log('callbacks_gmaps.rectangle_added called');
+          return true;
         },
         overlay_added: function() {
-          console.log('callbacks_gmaps.overlay_added called');
+          return true;
         },
         overlay_removed: function() {
-          console.log('callbacks_gmaps.overlay_added called');
+          return true;
         },
         text_added: function() {
-          console.log('callbacks_gmaps.text_added called');
+          return true;
         },
         text_removed: function() {
-          console.log('callbacks_gmaps.text_added called');
+          return true;
         },
         info_window_added: function() {
-          console.log('callbacks_gmaps.info_window_added called');
+          return true;
         },
         info_window_removed: function() {
-          console.log('callbacks_gmaps.info_window_added called');
+          return true;
         }
       };
 
-      spyOn(callbacks_gmaps, 'marker_added').andCallThrough();
-      spyOn(callbacks_gmaps, 'marker_removed').andCallThrough();
-      spyOn(callbacks_gmaps, 'polyline_added').andCallThrough();
-      spyOn(callbacks_gmaps, 'polyline_removed').andCallThrough();
-      spyOn(callbacks_gmaps, 'polygon_added').andCallThrough();
-      spyOn(callbacks_gmaps, 'polygon_removed').andCallThrough();
-      spyOn(callbacks_gmaps, 'circle_added').andCallThrough();
-      spyOn(callbacks_gmaps, 'circle_removed').andCallThrough();
-      spyOn(callbacks_gmaps, 'rectangle_added').andCallThrough();
-      spyOn(callbacks_gmaps, 'rectangle_removed').andCallThrough();
-      spyOn(callbacks_gmaps, 'overlay_added').andCallThrough();
-      spyOn(callbacks_gmaps, 'overlay_removed').andCallThrough();
-      spyOn(callbacks_gmaps, 'text_added').andCallThrough();
-      spyOn(callbacks_gmaps, 'text_removed').andCallThrough();
-      spyOn(callbacks_gmaps, 'info_window_added').andCallThrough();
-      spyOn(callbacks_gmaps, 'info_window_removed').andCallThrough();
+      spyOn(callbacks_gmaps, 'marker_added').and.callThrough();
+      spyOn(callbacks_gmaps, 'marker_removed').and.callThrough();
+      spyOn(callbacks_gmaps, 'polyline_added').and.callThrough();
+      spyOn(callbacks_gmaps, 'polyline_removed').and.callThrough();
+      spyOn(callbacks_gmaps, 'polygon_added').and.callThrough();
+      spyOn(callbacks_gmaps, 'polygon_removed').and.callThrough();
+      spyOn(callbacks_gmaps, 'circle_added').and.callThrough();
+      spyOn(callbacks_gmaps, 'circle_removed').and.callThrough();
+      spyOn(callbacks_gmaps, 'rectangle_added').and.callThrough();
+      spyOn(callbacks_gmaps, 'rectangle_removed').and.callThrough();
+      spyOn(callbacks_gmaps, 'overlay_added').and.callThrough();
+      spyOn(callbacks_gmaps, 'overlay_removed').and.callThrough();
+      spyOn(callbacks_gmaps, 'text_added').and.callThrough();
+      spyOn(callbacks_gmaps, 'text_removed').and.callThrough();
+      spyOn(callbacks_gmaps, 'info_window_added').and.callThrough();
+      spyOn(callbacks_gmaps, 'info_window_removed').and.callThrough();
     });
 
     describe('#marker_added', function() {

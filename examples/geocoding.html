@@ -18,7 +18,7 @@
       });
       $('#geocoding_form').submit(function(e){
         e.preventDefault();
-        GMaps.geocode({
+        map.geocode({
           address: $('#address').val().trim(),
           callback: function(results, status){
             if(status=='OK'){

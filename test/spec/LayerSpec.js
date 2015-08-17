@@ -1,8 +1,13 @@
 describe('Layers', function() {
-  var mapInstance, singleLayer, multipleLayers = [];
+  var container, mapInstance, singleLayer, multipleLayers = [];
 
-  beforeEach(function() {
-    mapInstance = mapInstance || new GMaps({
+  beforeAll(function() {
+    container = document.createElement('div');
+    container.id = 'map-with-layers';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    mapInstance = new GMaps({
       el : '#map-with-layers',
       lat: -12.0433,
       lng: -77.0283,
@@ -11,8 +16,8 @@ describe('Layers', function() {
   });
 
   describe('creating single', function() {
-    beforeEach(function() {
-      singleLayer = singleLayer || mapInstance.addLayer('traffic');
+    beforeAll(function() {
+      singleLayer = mapInstance.addLayer('traffic');
     })
 
     it('should be added in the current map', function() {
@@ -27,11 +32,9 @@ describe('Layers', function() {
   });
 
   describe('creating multiple', function() {
-    beforeEach(function() {
-      if (multipleLayers.length === 0) {
-        multipleLayers.push(mapInstance.addLayer('transit'));
-        multipleLayers.push(mapInstance.addLayer('bicycling'));
-      }
+    beforeAll(function() {
+      multipleLayers.push(mapInstance.addLayer('transit'));
+      multipleLayers.push(mapInstance.addLayer('bicycling'));
     });
 
     it('should be added in the current map', function() {

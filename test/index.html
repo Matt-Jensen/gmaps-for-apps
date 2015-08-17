@@ -4,51 +4,38 @@
   <title>gmaps.js test</title>
   <link rel="stylesheet" type="text/css" href="lib/jasmine.css" />
   <link rel="stylesheet" href="style.css" />
-  <script type="text/javascript" src="lib/jasmine.js"></script>
-  <script type="text/javascript" src="lib/jasmine-html.js"></script>
 
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
   <script type="text/javascript" src="../gmaps.js"></script>
 
-  <script type="text/javascript" src="spec/MapSpec.js"></script>
-  <script type="text/javascript" src="spec/MarkerSpec.js"></script>
-  <script type="text/javascript" src="spec/GeometrySpec.js"></script>
-  <script type="text/javascript" src="spec/LayerSpec.js"></script>
-  <script type="text/javascript" src="spec/OverlaySpec.js"></script>
-  <script type="text/javascript" src="spec/RouteSpec.js"></script>
-  <script type="text/javascript" src="spec/StyleSpec.js"></script>
-  <script type="text/javascript" src="spec/StreetViewSpec.js"></script>
-  <script type="text/javascript" src="spec/EventSpec.js"></script>
-  <script type="text/javascript" src="spec/ControlSpec.js"></script>
-
   <script type="text/javascript">
-    (function() {
-      var jasmineEnv = jasmine.getEnv();
-      jasmineEnv.updateInterval = 1000;
+    // (function() {
+    //   var jasmineEnv = jasmine.getEnv();
+    //   jasmineEnv.updateInterval = 1000;
 
-      var htmlReporter = new jasmine.HtmlReporter();
+    //   var htmlReporter = new jasmine.HtmlReporter();
 
-      jasmineEnv.addReporter(htmlReporter);
+    //   jasmineEnv.addReporter(htmlReporter);
 
-      jasmineEnv.specFilter = function(spec) {
-        return htmlReporter.specFilter(spec);
-      };
+    //   jasmineEnv.specFilter = function(spec) {
+    //     return htmlReporter.specFilter(spec);
+    //   };
 
-      var currentWindowOnload = window.onload;
+    //   var currentWindowOnload = window.onload;
 
-      window.onload = function() {
-        if (currentWindowOnload) {
-          currentWindowOnload();
-        }
+    //   window.onload = function() {
+    //     if (currentWindowOnload) {
+    //       currentWindowOnload();
+    //     }
 
-        execJasmine();
-      };
+    //     execJasmine();
+    //   };
 
-      function execJasmine() {
-        jasmineEnv.execute();
-      }
+    //   function execJasmine() {
+    //     jasmineEnv.execute();
+    //   }
 
-    })();
+    // })();
   </script>
 </head>
 <body>

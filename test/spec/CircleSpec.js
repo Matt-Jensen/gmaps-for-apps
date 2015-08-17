@@ -1,8 +1,13 @@
 describe('GMap circles', function() {
-  var mapInstance, circle;
+  var mapInstance, container, circle;
 
-  beforeEach(function() {
-    mapInstance = mapInstance || new GMaps({
+  beforeAll(function() {
+    container = document.createElement('div');
+    container.id = 'map-with-circles';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    mapInstance = new GMaps({
       el : '#map-with-circles',
       lat : -12.0433,
       lng : -77.0283,
@@ -11,8 +16,8 @@ describe('GMap circles', function() {
   });
 
   describe('Creating', function() {
-    beforeEach(function() {
-      circle = circle || mapInstance.addCircle({
+    beforeAll(function() {
+      circle = mapInstance.addCircle({
         lat : -12.040504866577001,
         lng : -77.02024422636042,
         radius : 350,
@@ -41,7 +46,7 @@ describe('GMap circles', function() {
   describe('Events', function() {
     var callbacks, context;
 
-    beforeEach(function() {
+    beforeAll(function() {
       context = { passed: false };
       callbacks = {
         onclick: function() {
@@ -57,9 +62,9 @@ describe('GMap circles', function() {
         }
       };
 
-      spyOn(callbacks, 'onclick').andCallThrough();
-      spyOn(callbacks, 'onmousemove').andCallThrough();
-      spyOn(callbacks, 'onmouseout').andCallThrough();
+      spyOn(callbacks, 'onclick').and.callThrough();
+      spyOn(callbacks, 'onmousemove').and.callThrough();
+      spyOn(callbacks, 'onmouseout').and.callThrough();
 
       circle = mapInstance.addCircle({
         lat : -12.040504866577001,

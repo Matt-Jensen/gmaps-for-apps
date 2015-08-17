@@ -1,8 +1,13 @@
-var map_with_routes;
+describe('Routes', function() {
+  var mapInstance, container;
 
-describe('Drawing a route', function() {
-  beforeEach(function() {
-    map_with_routes = map_with_routes || new GMaps({
+  beforeAll(function() {
+    container = document.createElement('div');
+    container.id = 'map-with-routes';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    mapInstance = new GMaps({
       el : '#map-with-routes',
       lat : -12.0433,
       lng : -77.0283,
@@ -10,13 +15,9 @@ describe('Drawing a route', function() {
     });
   });
 
-  it('should add a line in the current map', function() {
-    var route_flag;
-
-    runs(function() {
-      route_flag = false;
-
-      map_with_routes.drawRoute({
+  describe('Drawing a route', function() {
+    it('should add a line in the current map', function(done) {
+      mapInstance.drawRoute({
         origin : [-12.044012922866312, -77.02470665341184],
         destination : [-12.090814532191756, -77.02271108990476],
         travelMode : 'driving',
@@ -24,63 +25,45 @@ describe('Drawing a route', function() {
         strokeOpacity : 0.6,
         strokeWeight : 6,
         callback : function() {
-          route_flag = true;
+          return true;
         }
       });
-    });
 
-    waitsFor(function() {
-      return route_flag;
-    }, 'The drawn route should create a line in the current map', 3500);
-
-    runs(function() {
-      expect(map_with_routes.polylines.length).toEqual(1);
-      expect(map_with_routes.polylines[0].get('strokeColor')).toEqual('#131540');
-      expect(map_with_routes.polylines[0].get('strokeOpacity')).toEqual(0.6);
-      expect(map_with_routes.polylines[0].getMap()).toEqual(map_with_routes.map);
-    });
-  });
-});
-
-describe('Getting routes', function() {
-  beforeEach(function() {
-    map_with_routes = map_with_routes || new GMaps({
-      el : '#map-with-routes',
-      lat : -12.0433,
-      lng : -77.0283,
-      zoom : 12
-    });
+      window.setTimeout(function() {
+        expect(mapInstance.polylines.length).toEqual(1);
+        expect(mapInstance.polylines[0].get('strokeColor')).toEqual('#131540');
+        expect(mapInstance.polylines[0].get('strokeOpacity')).toEqual(0.6);
+        expect(mapInstance.polylines[0].getMap()).toEqual(mapInstance.map);
+        done();
+      }, 300);
+    }, 1000);
   });
 
-  it('should return an array of routes', function() {
-    var routes, routes_flag;
+  describe('Getting routes', function() {
+    var container;
 
-    runs(function() {
-      routes_flag = false;
+    it('should return an array of routes', function(done) {
+      var routes;
 
-      map_with_routes.getRoutes({
+      mapInstance.getRoutes({
         origin : 'grand central station, new york, ny',
         destination : '350 5th Ave, New York, NY, 10118',
         callback : function(r) {
           routes = r;
-
-          routes_flag = true;
         }
       });
-    });
 
-    waitsFor(function() {
-      return routes_flag;
-    }, '#getRoutes should return the found routes as an argument', 3500);
+      window.setTimeout(function() {
+        expect(routes).toBeDefined();
+        expect(mapInstance.routes).toEqual(routes);
 
-    runs(function() {
-      expect(routes).toBeDefined();
-      expect(map_with_routes.routes).toEqual(routes);
+        if (routes.length > 0) {
+          expect(routes[0].legs[0].distance).toBeDefined();
+          expect(routes[0].legs[0].duration).toBeDefined();
+        }
 
-      if (routes.length > 0) {
-        expect(routes[0].legs[0].distance).toBeDefined();
-        expect(routes[0].legs[0].duration).toBeDefined();
-      }
-    });
+        done();
+      }, 300);
+    }, 1000);
   });
 });

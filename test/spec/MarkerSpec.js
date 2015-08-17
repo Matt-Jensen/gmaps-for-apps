@@ -1,8 +1,13 @@
 describe('Marker', function() {
-  var mapInstance, marker;
+  var mapInstance, container;
 
-  beforeEach(function() {
-    mapInstance = mapInstance || new GMaps({
+  beforeAll(function() {
+    container = document.createElement('div');
+    container.id = 'map-with-markers';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    mapInstance = new GMaps({
       el : '#map-with-markers',
       lat : -12.0533,
       lng: -77.0293,
@@ -12,7 +17,9 @@ describe('Marker', function() {
 
 
   describe('creating', function() {
-    beforeEach(function() {
+    var maker;
+
+    beforeAll(function() {
       marker = mapInstance.addMarker({
         lat : -12.0533,
         lng: -77.0293,
@@ -34,9 +41,9 @@ describe('Marker', function() {
 
 
   describe('events', function() {
-    var callbacks, context;
+    var callbacks, context, marker;
 
-    beforeEach(function() {
+    beforeAll(function() {
       context = { passed: false };
       callbacks = {
         onclick: function() {
@@ -52,9 +59,9 @@ describe('Marker', function() {
         }
       };
 
-      spyOn(callbacks, 'onclick').andCallThrough();
-      spyOn(callbacks, 'onmouseover').andCallThrough();
-      spyOn(callbacks, 'ondrag').andCallThrough();
+      spyOn(callbacks, 'onclick').and.callThrough();
+      spyOn(callbacks, 'onmouseover').and.callThrough();
+      spyOn(callbacks, 'ondrag').and.callThrough();
 
       marker = mapInstance.addMarker({
         lat : -12.0533,
@@ -78,13 +85,12 @@ describe('Marker', function() {
 
       google.maps.event.trigger(marker, 'drag', {});
       expect(callbacks.ondrag).toHaveBeenCalled();
-    })
+    });
   });
 
 
   describe('removing', function() {
     beforeEach(function() {
-
       mapInstance.removeMarkers();
 
       mapInstance.addMarkers([{
@@ -108,14 +114,12 @@ describe('Marker', function() {
 
     it('should remove a marker from the markers collection', function() {
       mapInstance.removeMarker(mapInstance.markers[0]);
-
       expect(mapInstance.markers.length).toEqual(3);
     });
 
     it('should remove an array of markers from the markers collection', function() {
       var markers = [mapInstance.markers[0], mapInstance.markers[2]];
       mapInstance.removeMarkers(markers);
-
       expect(mapInstance.markers.length).toEqual(2);
     });
   });

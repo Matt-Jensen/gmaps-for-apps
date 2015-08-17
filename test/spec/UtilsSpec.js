@@ -1,8 +1,13 @@
 describe('Utils', function () {
-  var mapInstance, result;
+  var mapInstance, container, result;
 
   beforeEach(function() {
-    mapInstance = mapInstance || new GMaps({
+    container = document.createElement('div');
+    container.id = 'basic-map';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    mapInstance = new GMaps({
       el : '#basic-map',
       lat: -12.0433,
       lng: -77.0283,
@@ -33,89 +38,6 @@ describe('Utils', function () {
       obj3 = { test: 'three' };
       result = mapInstance.utils.merge(obj1, obj2, obj3);
       expect(result.test).toBe('three');
-    });
-  });
-
-
-  describe('geolocate', function() {
-    var callbacks;
-    it('should invoke notSupported & complete callbacks in PhantomJS', function() {
-      callbacks = {
-        notSupported: function() {
-          return true;
-        },
-        complete: function() {
-          return true;
-        }
-      };
-
-      spyOn(callbacks, 'complete').andCallThrough();
-      spyOn(callbacks, 'notSupported').andCallThrough();
-
-      mapInstance.utils.geolocate({
-        complete: callbacks.complete,
-        notSupported: callbacks.notSupported
-      });
-    });
-
-    it('should invoke success and complete when mocking sucess', function() {
-      navigator.geolocation = {
-        getCurrentPosition: function(successCallback) {
-          return successCallback(true);
-        }
-      };
-
-      callbacks = {
-        success: function() {
-          return true;
-        },
-        complete: function() {
-          return true;
-        }
-      };
-
-      spyOn(callbacks, 'complete').andCallThrough();
-      spyOn(callbacks, 'success').andCallThrough();
-
-      mapInstance.utils.geolocate({
-        success: callbacks.success,
-        complete: callbacks.complete
-      });
-
-      runs(function() {
-        expect(callbacks.success).toHaveBeenCalled();
-        expect(callbacks.complete).toHaveBeenCalled();
-      });
-    });
-
-    it('should invoke error and complete when mocking fail', function() {
-      navigator.geolocation = {
-        getCurrentPosition: function(successCallback, errorCallback) {
-          return errorCallback(true);
-        }
-      };
-
-      callbacks = {
-        error: function() {
-          return true;
-        },
-        complete: function() {
-          return true;
-        }
-      };
-
-      spyOn(callbacks, 'complete').andCallThrough();
-      spyOn(callbacks, 'error').andCallThrough();
-
-      mapInstance.utils.geolocate({
-        error: callbacks.error,
-        complete: callbacks.complete
-      });
-
-      runs(function() {
-        expect(callbacks.error).toHaveBeenCalled();
-        expect(callbacks.complete).toHaveBeenCalled();
-      });
     });
   });
 

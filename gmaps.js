@@ -24,7 +24,7 @@
 /*jshint unused:false*/
 
 if (!(typeof window.google === 'object' && window.google.maps)) {
-  throw 'Google Maps API is required. Please register the following JavaScript library http://maps.google.com/maps/api/js?sensor=true.'
+  throw new Error('Google Maps API is required. Please register the following JavaScript library http://maps.google.com/maps/api/js?sensor=true.');
 }
 
 var GMaps = (function() {
@@ -94,8 +94,8 @@ var GMaps = (function() {
         }
       }
 
-    if (typeof(this.el) === 'undefined' || this.el === null) {
-      throw 'No element defined.';
+    if (typeof this.el === 'undefined' || this.el === null) {
+      throw new Error('No element defined.');
     }
 
     window.context_menu = window.context_menu || {};
@@ -902,10 +902,12 @@ GMaps.prototype.createMarker = function(options) {
     return function(me) {
       if(!me.pixel){
         me.pixel = map.getProjection();
-        me.pixel = (me.pixel &&
-          me.pixel.fromLatLngToPoint &&
-          me.pixel.fromLatLngToPoint(me.latLng)
-        );
+        if(me.pixel && me.latLng) {
+          me.pixel = (me.pixel &&
+            me.pixel.fromLatLngToPoint &&
+            me.pixel.fromLatLngToPoint(me.latLng)
+          );
+        }
       }
 
       callback(me, this);
@@ -2592,39 +2594,45 @@ GMaps.prototype.utils.subcribeEvent = function subcribeEvent(callback, obj) {
  * @param  {[object]} options [accepts properties lat, lng, and callback]
  * @return {[Geocoder]}       [instance of Geocoder]
  */
-GMaps.prototype.geocode = function geocode(options) {
-  this.geocoder = new google.maps.Geocoder();
+GMaps.prototype.geocode = (function() {
 
-  var callback = options.callback;
-  if (options.hasOwnProperty('lat') && options.hasOwnProperty('lng')) {
-    options.latLng = new google.maps.LatLng(options.lat, options.lng);
+  var geocoder = new google.maps.Geocoder();
+
+  return function geocode(options) {
+    if(!options || !options.callback) {
+      throw new Error('geocode requires an options object with a callback');
+    }
+
+    var callback = options.callback;
+
+    if (options.hasOwnProperty('lat') && options.hasOwnProperty('lng')) {
+      options.latLng = new google.maps.LatLng(options.lat, options.lng);
+    }
+
+    delete options.lat;
+    delete options.lng;
+    delete options.callback;
+    
+    geocoder.geocode(options, function(results, status) {
+      callback(results, status);
+    });
   }
-
-  delete options.lat;
-  delete options.lng;
-  delete options.callback;
-  
-  this.geocoder.geocode(options, function(results, status) {
-    callback(results, status);
-  });
-
-  return this.geocoder;
-};
+})();
 
 
 /**
  * [addDelegatedEvent creates an event listener on the root map element that triggers a
  * callback when a delegate (or a child) element is source of the event]
  * @param {[string]}   eventName [eventm name to listen for]
- * @param {[selector]} delegate  [string selector to pass to querySelector]
+ * @param {[selector]} delegateSelector  [string selector to pass to querySelector]
  * @param {Function} callback    [function to invoke if delegate is source]
  * @returns { object } [to remove delegated event listener]
  */
-GMaps.prototype.addDelegatedEvent = function addDelegated(eventName, delegate, callback) {
+GMaps.prototype.addDelegatedEvent = function addDelegated(eventName, delegateSelector, callback) {
   var self = this;
 
   var delegateEventHandler = function delegateEventHandler(e) {
-    var trigger = self.el.querySelector(delegate);
+    var trigger = self.el.querySelector(delegateSelector);
     var target = e ? e.target : window.event.srcElement;
 
     if(!trigger || !target) { return false; }
@@ -2635,12 +2643,12 @@ GMaps.prototype.addDelegatedEvent = function addDelegated(eventName, delegate, c
     }
   };
 
-  this.el.addEventListener(eventName, delegateEventHandler, true);
+  self.el.addEventListener(eventName, delegateEventHandler, true);
 
   return {
     eventName: eventName,
     remove: function removeDelegatedEvent() {
-      self.el.removeEventListener(eventName, delegateEventHandler);
+      self.el.removeEventListener(eventName, delegateEventHandler, true);
     }
   };
 };
@@ -2652,7 +2660,7 @@ GMaps.prototype.addDelegatedEvent = function addDelegated(eventName, delegate, c
  * @param  {[string]}  type  [identifier for a map store]
  * @return {Boolean}         [true if has the child false if not]
  */
-GMaps.prototype.hasMapChild = function(child, type) {
+GMaps.prototype.hasChild = function(child, type) {
 
   // support dasherized types
   type = this.utils.toCamelCase(type);
@@ -2689,7 +2697,7 @@ GMaps.prototype.hasMapChild = function(child, type) {
   // search by instance
   else if(typeof child === 'object') {
     for(; i < l; i++ ) {
-      if(model[i].details.id === id) {
+      if(model[i] === child) {
         return true;
       }
     }
@@ -2715,6 +2723,7 @@ GMaps.prototype._teardownChild = function teardownChild(type, child) {
     for(var i = 0, l = child.delegatedEvents.length; i < l; i++) {
       child.delegatedEvents[i].remove();
     }
+    child.delegatedEvents.length = 0;
   }
 
   child.setMap(null);
