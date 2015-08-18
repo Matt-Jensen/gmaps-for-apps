@@ -1,8 +1,13 @@
 describe('GMap Info Window', function() {
-  var mapInstance, infoWindow;
+  var mapInstance, infoWindow, container;
 
-  beforeEach(function() {
-    mapInstance = mapInstance || new GMaps({
+  beforeAll(function() {
+    container = document.createElement('div');
+    container.id = 'map-with-info-windows';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    mapInstance = new GMaps({
       el : '#map-with-info-windows',
       lat : -12.0433,
       lng : -77.0283,
@@ -10,11 +15,15 @@ describe('GMap Info Window', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('Creating', function() {
-    beforeEach(function() {
+    beforeAll(function() {
 
      // Add one info window
-     infoWindow = infoWindow || mapInstance.addInfoWindow({
+     infoWindow = mapInstance.addInfoWindow({
         lat: 34.54148095772571,
         lng: -112.47004508972168
       });
@@ -53,9 +62,9 @@ describe('GMap Info Window', function() {
         }.bind(context)
       };
 
-      spyOn(callbacks, 'onclick').andCallThrough();
-      spyOn(callbacks, 'onmousemove').andCallThrough();
-      spyOn(callbacks, 'oncloseclick').andCallThrough();
+      spyOn(callbacks, 'onclick').and.callThrough();
+      spyOn(callbacks, 'onmousemove').and.callThrough();
+      spyOn(callbacks, 'oncloseclick').and.callThrough();
 
       infoWindow = mapInstance.addInfoWindow({
         lat: 34.54148095772571,
@@ -72,15 +81,16 @@ describe('GMap Info Window', function() {
       expect(context.passed).toBe(true);
     });
 
-    it('should bind delegated events', function() {
+    it('should bind delegated events', function(done) {
       infoWindow.click();
       infoWindow.mousemove();
-      runs(function () {
+      window.setTimeout(function () {
         expect(infoWindow.delegatedEvents.length).toBe(2);
         expect(callbacks.onmousemove).toHaveBeenCalled();
         expect(callbacks.onclick).toHaveBeenCalled();
+        done();
       });
-    });
+    }, 100);
   });
 
   describe('Removing', function() {
@@ -92,7 +102,7 @@ describe('GMap Info Window', function() {
       });
     });
 
-    it('should remove the info window + delegated events from the info window store', function() {
+    it('should remove info window + delegated events from store', function() {
       var originalLength = mapInstance.infoWindows.length;
       mapInstance.removeInfoWindow(infoWindow);
       expect(mapInstance.infoWindows.length).toBeLessThan(originalLength);
@@ -100,11 +110,12 @@ describe('GMap Info Window', function() {
       expect(infoWindow.delegatedEvents.length).toBe(0);
     });
 
-    it('should remove all the info windows from the infoWindows store', function() {
+    it('should remove all info windows from infoWindows store', function(done) {
       mapInstance.removeInfoWindows();
-      runs(function() {
+      window.setTimeout(function() {
         expect(mapInstance.infoWindows.length).toBe(0);
+        done();
       });
-    });
+    }, 100);
   });
 });

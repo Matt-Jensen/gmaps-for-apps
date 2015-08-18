@@ -24,146 +24,8 @@
 /*jshint unused:false*/
 
 if (!(typeof window.google === 'object' && window.google.maps)) {
-  throw 'Google Maps API is required. Please register the following JavaScript library http://maps.google.com/maps/api/js?sensor=true.'
+  throw new Error('Google Maps API is required. Please register the following JavaScript library http://maps.google.com/maps/api/js?sensor=true.');
 }
-
-var extend_object = function(obj, new_obj) {
-  var name;
-
-  for (name in new_obj) {
-    if(new_obj.hasOwnProperty(name)) {
-      obj[name] = new_obj[name];
-    }
-  }
-
-  return obj;
-};
-
-var replace_object = function(obj, replace) {
-  var name;
-
-  if (obj === replace) {
-    return obj;
-  }
-
-  for (name in replace) {
-    if (obj.hasOwnProperty(name)) {
-      obj[name] = replace[name];
-    }
-  }
-
-  return obj;
-};
-
-var array_map = function(array, callback) {
-  var original_callback_params = Array.prototype.slice.call(arguments, 2),
-      array_return = [],
-      array_length = array.length,
-      i,
-      callback_params;
-
-  if (Array.prototype.map && array.map === Array.prototype.map) {
-    array_return = Array.prototype.map.call(array, function(item) {
-      callback_params = original_callback_params.slice(0);
-      callback_params.splice(0, 0, item);
-
-      return callback.apply(this, callback_params);
-    });
-  }
-  else {
-    for (i = 0; i < array_length; i++) {
-      callback_params = original_callback_params;
-      callback_params.splice(0, 0, array[i]);
-      array_return.push(callback.apply(this, callback_params));
-    }
-  }
-
-  return array_return;
-};
-
-var array_flat = function(array) {
-  var new_array = [];
-  var i, l;
-
-  for (i = 0, l = array.length; i < l; i++) {
-    new_array = new_array.concat(array[i]);
-  }
-
-  return new_array;
-};
-
-var coordsToLatLngs = function(coords, useGeoJSON) {
-  var first_coord = coords[0],
-      second_coord = coords[1];
-
-  if (useGeoJSON) {
-    first_coord = coords[1];
-    second_coord = coords[0];
-  }
-
-  return new google.maps.LatLng(first_coord, second_coord);
-};
-
-var arrayToLatLng = function(coords, useGeoJSON) {
-  for (var i = 0, l = coords.length; i < l; i++) {
-    if (!(coords[i] instanceof google.maps.LatLng)) {
-      if (coords[i].length > 0 && typeof(coords[i][0]) === 'object') {
-        coords[i] = arrayToLatLng(coords[i], useGeoJSON);
-      }
-      else {
-        coords[i] = coordsToLatLngs(coords[i], useGeoJSON);
-      }
-    }
-  }
-
-  return coords;
-};
-
-
-var getElementsByClassName = function (class_name, context) {
-    var element,
-        _class = class_name.replace('.', '');
-
-    if ('jQuery' in this && context) {
-        element = $('.' + _class, context)[0];
-    } else {
-        element = document.getElementsByClassName(_class)[0];
-    }
-    return element;
-};
-
-var getElementById = function(id, context) {
-  var element;
-  id = id.replace('#', '');
-
-  if ('jQuery' in window && context) {
-    element = $('#' + id, context)[0];
-  } else {
-    element = document.getElementById(id);
-  }
-
-  return element;
-};
-
-var findAbsolutePosition = function(obj)  {
-  var curleft = 0,
-      curtop = 0;
-
-  if (obj.offsetParent) {
-    do {
-      curleft += obj.offsetLeft;
-      curtop += obj.offsetTop;
-    } while (obj = obj.offsetParent);
-  }
-
-  return [curleft, curtop];
-};
-
-var subcribeEvent = function(callback, obj) {
-  return function(e) {
-    return callback(e, (obj || this));
-  };
-};
 
 var GMaps = (function() {
   'use strict';
@@ -224,20 +86,16 @@ var GMaps = (function() {
           overviewMapControl: overviewMapControl
         };
 
-      if (typeof(options.el) === 'string' || typeof(options.div) === 'string') {
+      if (typeof identifier === 'string') {
+        this.el = document.querySelector(identifier);
 
-          if (identifier.indexOf('#') > -1) {
-              this.el = getElementById(identifier, options.context);
-          } else {
-              this.el = getElementsByClassName.apply(this, [identifier, options.context]);
-          }
-
-      } else {
-          this.el = identifier;
+        if(!this.el) {
+          throw new Error('no element was found via querySelector using: ', identifier);
+        }
       }
 
-    if (typeof(this.el) === 'undefined' || this.el === null) {
-      throw 'No element defined.';
+    if (typeof this.el === 'undefined' || this.el === null) {
+      throw new Error('No element defined.');
     }
 
     window.context_menu = window.context_menu || {};
@@ -258,7 +116,7 @@ var GMaps = (function() {
     this.infoWindow = null;
     this.overlay_el = null;
     this.zoom = options.zoom;
-    this.registered_events = {};
+    this.registeredEvents = {};
 
     this.el.style.width = options.width || this.el.scrollWidth || this.el.offsetWidth;
     this.el.style.height = options.height || this.el.scrollHeight || this.el.offsetHeight;
@@ -270,10 +128,10 @@ var GMaps = (function() {
     }
 
     if(options.disableDefaultUI !== true) {
-      map_base_options = extend_object(map_base_options, map_controls_options);
+      map_base_options = this.utils.merge(map_base_options, map_controls_options);
     }
 
-    map_options = extend_object(map_base_options, options);
+    map_options = this.utils.merge(map_base_options, options);
 
     for (i = 0; i < events_that_hide_context_menu.length; i++) {
       delete map_options[events_that_hide_context_menu[i]];
@@ -301,9 +159,9 @@ var GMaps = (function() {
         }
       }
 
-      if (!getElementById('gmaps_context_menu')) { return; }
+      if (!document.getElementById('gmaps_context_menu')) { return; }
 
-      var context_menu_element = getElementById('gmaps_context_menu');
+      var context_menu_element = document.getElementById('gmaps_context_menu');
       
       context_menu_element.innerHTML = html;
 
@@ -328,9 +186,9 @@ var GMaps = (function() {
         );
       }
 
-      var position = findAbsolutePosition.apply(this, [self.el]),
-          left = position[0] + e.pixel.x - 15,
-          top = position[1] + e.pixel.y- 15;
+      var position = self.utils.findAbsolutePosition(self.el);
+      var left = position[0] + e.pixel.x - 15;
+      var top = position[1] + e.pixel.y- 15;
 
       context_menu_element.style.left = left + 'px';
       context_menu_element.style.top = top + 'px';
@@ -362,9 +220,9 @@ var GMaps = (function() {
     this.setContextMenu = function(options) {
       window.context_menu[self.el.id][options.control] = {};
 
-      var i,
-          ul = doc.createElement('ul');
+      var ul = doc.createElement('ul');
 
+      var i;
       for (i in options.options) {
         if (options.options.hasOwnProperty(i)) {
           var option = options.options[i];
@@ -387,7 +245,7 @@ var GMaps = (function() {
 
       doc.body.appendChild(ul);
 
-      var context_menu_element = getElementById('gmaps_context_menu')
+      var context_menu_element = document.getElementById('gmaps_context_menu')
 
       google.maps.event.addDomListener(context_menu_element, 'mouseout', function(ev) {
         if (!ev.relatedTarget || !this.contains(ev.relatedTarget)) {
@@ -399,7 +257,7 @@ var GMaps = (function() {
     };
 
     this.hideContextMenu = function() {
-      var context_menu_element = getElementById('gmaps_context_menu');
+      var context_menu_element = document.getElementById('gmaps_context_menu');
 
       if (context_menu_element) {
         context_menu_element.style.display = 'none';
@@ -528,8 +386,6 @@ var GMaps = (function() {
   return GMaps;
 })();
 
-/* globals subcribeEvent: true */
-
 GMaps.prototype.createControl = function(options) {
   var control = document.createElement('div');
 
@@ -577,7 +433,7 @@ GMaps.prototype.createControl = function(options) {
       google.maps.event.addDomListener(
         control,
         ev,
-        subcribeEvent(options.events[ev])
+        this.utils.subcribeEvent(options.events[ev])
       );
     }
   }
@@ -623,10 +479,8 @@ GMaps.prototype.removeControl = function(control) {
   return control;
 };
 
-/* globals extend_object: true, subcribeEvent: true */
-
-GMaps.prototype.drawCircle = function(options) {
-  options = extend_object({
+GMaps.prototype.addCircle = function(options) {
+  options = this.utils.merge({
     map: this.map,
     center: new google.maps.LatLng(options.lat, options.lng)
   }, options);
@@ -642,12 +496,13 @@ GMaps.prototype.drawCircle = function(options) {
       google.maps.event.addListener(
         circle,
         name,
-        subcribeEvent(options[name], circle)
+        this.utils.subcribeEvent(options[name], circle)
       );
     }
   }
 
   this.circles.push(circle);
+  GMaps.fire('circle_added', circle, this);
 
   return circle;
 };
@@ -674,10 +529,9 @@ GMaps.prototype.removeCircles = function() {
   this.circles.length = 0;
 };
 
-/* globals extend_object: true, subcribeEvent: true, array_flat: true, array_map: true, arrayToLatLng: true */
-
 GMaps.prototype.drawPolygon = function(options) {
   var useGeoJSON = false;
+  var self = this;
 
   if(options.hasOwnProperty('useGeoJSON')) {
     useGeoJSON = options.useGeoJSON;
@@ -685,7 +539,7 @@ GMaps.prototype.drawPolygon = function(options) {
 
   delete options.useGeoJSON;
 
-  options = extend_object({
+  options = this.utils.merge({
     map: this.map
   }, options);
 
@@ -695,7 +549,12 @@ GMaps.prototype.drawPolygon = function(options) {
 
   if (options.paths.length > 0) {
     if (options.paths[0] && options.paths[0].length > 0) {
-      options.paths = array_flat(array_map(options.paths, arrayToLatLng, useGeoJSON));
+      options.paths = this.utils.arrayFlat(
+        this.utils.arrayMap(
+          options.paths,
+          function(p) { return self.utils.arrayToLatLng(p, useGeoJSON); }
+        )
+      );
     }
   }
 
@@ -708,7 +567,7 @@ GMaps.prototype.drawPolygon = function(options) {
       google.maps.event.addListener(
         polygon,
         name,
-        subcribeEvent(options[name], polygon)
+        this.utils.subcribeEvent(options[name], polygon)
       );
     }
   }
@@ -742,10 +601,8 @@ GMaps.prototype.removePolygons = function() {
   this.polygons.length = 0;
 };
 
-/* globals extend_object: true, subcribeEvent: true */
-
 GMaps.prototype.drawRectangle = function(options) {
-  options = extend_object({
+  options = this.utils.merge({
     map: this.map
   }, options);
 
@@ -765,13 +622,12 @@ GMaps.prototype.drawRectangle = function(options) {
       google.maps.event.addListener(
         rectangle,
         name,
-        subcribeEvent(options[name], rectangle)
+        this.utils.subcribeEvent(options[name], rectangle)
       );
     }
   }
 
   this.rectangles.push(rectangle);
-
   GMaps.fire('rectangle_added', rectangle, this);
 
   return rectangle;
@@ -798,8 +654,6 @@ GMaps.prototype.removeRectangles = function() {
 
   this.rectangles.length = 0;
 };
-
-/* globals subcribeEvent: true */
 
 GMaps.prototype.drawPolyline = function(options) {
   var path = [],
@@ -857,7 +711,7 @@ GMaps.prototype.drawPolyline = function(options) {
       google.maps.event.addListener(
         polyline,
         name,
-        subcribeEvent(options[name], polyline)
+        this.utils.subcribeEvent(options[name], polyline)
       );
     }
   }
@@ -893,15 +747,13 @@ GMaps.prototype.removePolylines = function() {
   this.polylines.length = 0;
 };
 
-/* globals extend_object: true, subcribeEvent: true */
-
 GMaps.prototype.addInfoWindow = function(options) {
-  options = extend_object({
+  options = this.utils.merge({
     map: this.map,
     position: new google.maps.LatLng(options.lat, options.lng)
   }, options);
 
-  var infoWindowSelector = '__gmaps-info-window-'+ this.uuid() +'__';
+  var infoWindowSelector = '__gmaps-info-window-'+ this.utils.uuid() +'__';
   options.content = options.content || '';
   options.content = [
     '<div id="',
@@ -929,7 +781,7 @@ GMaps.prototype.addInfoWindow = function(options) {
       removeDelegatedEvent = this.addDelegatedEvent(
         name,
         '#'+infoWindowSelector,
-        subcribeEvent(options[name], infoWindow)
+        this.utils.subcribeEvent(options[name], infoWindow)
       );
       infoWindow.delegatedEvents.push(removeDelegatedEvent);
     }
@@ -946,7 +798,7 @@ GMaps.prototype.addInfoWindow = function(options) {
       google.maps.event.addListener(
         infoWindow,
         name,
-        subcribeEvent(options[name], infoWindow)
+        this.utils.subcribeEvent(options[name], infoWindow)
       );
     }
   }
@@ -968,6 +820,7 @@ GMaps.prototype.addInfoWindow = function(options) {
   };
 
   this.infoWindows.push(infoWindow);
+  GMaps.fire('info_window_added', infoWindow, this);
 
   return infoWindow;
 };
@@ -994,24 +847,21 @@ GMaps.prototype.removeInfoWindows = function() {
   this.infoWindows.length = 0;
 };
 
-/* globals extend_object: true, subcribeEvent: true */
-
 GMaps.prototype.createMarker = function(options) {
   if (typeof options.lat === 'undefined' && typeof options.lng === 'undefined' && options.position === 'undefined') {
     throw 'No latitude or longitude defined.';
   }
 
-  var self = this,
-      details = options.details,
-      fences = options.fences,
-      outside = options.outside,
-      base_options = {
-        position: new google.maps.LatLng(options.lat, options.lng),
-        map: null
-      },
-      marker_options = extend_object(base_options, options);
-
-  var marker = new google.maps.Marker(marker_options);
+  var self = this;
+  var details = options.details;
+  var fences = options.fences;
+  var outside = options.outside;
+  var baseOptions = {
+    position: new google.maps.LatLng(options.lat, options.lng),
+    map: null
+  };
+  var markerOptions = this.utils.merge(baseOptions, options);
+  var marker = new google.maps.Marker(markerOptions);
   var ev, l, name;
 
   marker.fences = fences;
@@ -1027,23 +877,23 @@ GMaps.prototype.createMarker = function(options) {
         google.maps.event.addListener(
           marker.infoWindow,
           name,
-          subcribeEvent(options.infoWindow[name], marker.infoWindow)
+          this.utils.subcribeEvent(options.infoWindow[name], marker.infoWindow)
         );
       }
     }
   }
 
-  var marker_events = ['animation_changed', 'clickable_changed', 'cursor_changed', 'draggable_changed', 'flat_changed', 'icon_changed', 'position_changed', 'shadow_changed', 'shape_changed', 'title_changed', 'visible_changed', 'zindex_changed'];
+  var markerEvents = ['animation_changed', 'clickable_changed', 'cursor_changed', 'draggable_changed', 'flat_changed', 'icon_changed', 'position_changed', 'shadow_changed', 'shape_changed', 'title_changed', 'visible_changed', 'zindex_changed'];
 
-  var marker_events_with_mouse = ['dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseout', 'mouseover', 'mouseup'];
+  var markerEventsWithMouse = ['dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseout', 'mouseover', 'mouseup'];
 
-  for (ev = 0, l = marker_events.length; ev < l; ev++) {
-    name = marker_events[ev];
+  for (ev = 0, l = markerEvents.length; ev < l; ev++) {
+    name = markerEvents[ev];
     if (options.hasOwnProperty(name)) {
       google.maps.event.addListener(
         marker,
         name,
-        subcribeEvent(marker[name], marker)
+        this.utils.subcribeEvent(marker[name], marker)
       );
     }
   }
@@ -1052,18 +902,20 @@ GMaps.prototype.createMarker = function(options) {
     return function(me) {
       if(!me.pixel){
         me.pixel = map.getProjection();
-        me.pixel = (me.pixel &&
-          me.pixel.fromLatLngToPoint &&
-          me.pixel.fromLatLngToPoint(me.latLng)
-        );
+        if(me.pixel) {
+          me.pixel = (me.pixel &&
+            me.pixel.fromLatLngToPoint &&
+            me.pixel.fromLatLngToPoint(me.latLng)
+          );
+        }
       }
 
       callback(me, this);
     };
   }
 
-  for (ev = 0; ev < marker_events_with_mouse.length; ev++) {
-    name = marker_events_with_mouse[ev];
+  for (ev = 0; ev < markerEventsWithMouse.length; ev++) {
+    name = markerEventsWithMouse[ev];
     if (options.hasOwnProperty(name)) {
       google.maps.event.addListener(marker, name, subscribeMouseEvent(options[name], marker, this.map));
     }
@@ -1213,11 +1065,10 @@ GMaps.prototype.removeMarkers = function (collection) {
   return this.markers = new_markers;
 };
 
-/* globals subcribeEvent: true */
-
 GMaps.prototype.drawOverlay = function(options) {
-  var overlay = new google.maps.OverlayView(),
-      visible = true;
+  var self = this;
+  var overlay = new google.maps.OverlayView();
+  var visible = true;
 
   overlay.setMap(this.map);
 
@@ -1283,7 +1134,7 @@ GMaps.prototype.drawOverlay = function(options) {
         google.maps.event.addDomListener(
           overlay.el,
           name,
-          subcribeEvent(options[name], overlay)
+          self.utils.subcribeEvent(options[name], overlay)
         );
       }
     }
@@ -1292,16 +1143,16 @@ GMaps.prototype.drawOverlay = function(options) {
   };
 
   overlay.draw = function() {
-    var projection = this.getProjection(),
-        pixel = projection.fromLatLngToDivPixel(new google.maps.LatLng(options.lat, options.lng));
+    var projection = this.getProjection();
+    var pixel = projection.fromLatLngToDivPixel(new google.maps.LatLng(options.lat, options.lng));
 
     options.horizontalOffset = options.horizontalOffset || 0;
     options.verticalOffset = options.verticalOffset || 0;
 
-    var el = overlay.el,
-        content = el.children[0],
-        contentHeight = content.clientHeight,
-        contentWidth = content.clientWidth;
+    var el = overlay.el;
+    var content = el.children[0];
+    var contentHeight = content.clientHeight;
+    var contentWidth = content.clientWidth;
 
     switch (options.verticalAlign) {
       case 'top':
@@ -1349,6 +1200,7 @@ GMaps.prototype.drawOverlay = function(options) {
   };
 
   this.overlays.push(overlay);
+  GMaps.fire('overlay_added', overlay, this);
 
   return overlay;
 };
@@ -1372,8 +1224,6 @@ GMaps.prototype.removeOverlays = function() {
 
   this.overlays.length = 0;
 };
-
-/* globals subcribeEvent: true */
 
 GMaps.prototype.addText = function(options) {
   var self = this;
@@ -1399,7 +1249,7 @@ GMaps.prototype.addText = function(options) {
     el.style.opacity = 0; // Don't show until element has been adjusted
     el.style.display = 'block';
     el.style.zIndex = options.zIndex || 100;
-    el.innerHTML = '<strong>'+ self.stripHTML(options.text) +'</strong>';
+    el.innerHTML = '<strong>'+ self.utils.stripHTML(options.text) +'</strong>';
 
     overlayText.el = el;
 
@@ -1445,7 +1295,7 @@ GMaps.prototype.addText = function(options) {
         google.maps.event.addDomListener(
           overlayText.el,
           name,
-          subcribeEvent(options[name], overlayText)
+          self.utils.subcribeEvent(options[name], overlayText)
         );
       }
     }
@@ -1481,6 +1331,7 @@ GMaps.prototype.addText = function(options) {
   };
 
   this.texts.push(overlayText);
+  GMaps.fire('text_added', overlayText, this);
 
   return overlayText;
 };
@@ -1489,7 +1340,7 @@ GMaps.prototype.addText = function(options) {
 GMaps.prototype.removeText = function(overlayText) {
   for (var i = 0, l = this.texts.length; i < l; i++) {
     if (this.texts[i] === overlayText) {
-      this._teardownChild('overlayText', this.texts[i]);
+      this._teardownChild('text', this.texts[i]);
       this.texts.splice(i, 1);
       return true;
     }
@@ -1507,8 +1358,6 @@ GMaps.prototype.removeTexts = function() {
   this.texts.length = 0;
 };
 
-/* globals subcribeEvent: true */
-
 GMaps.prototype.getFromFusionTables = function(options) {
   var events = options.events;
 
@@ -1522,7 +1371,7 @@ GMaps.prototype.getFromFusionTables = function(options) {
       google.maps.event.addListener(
         layer,
         ev,
-        subcribeEvent(events[ev], layer)
+        this.utils.subcribeEvent(events[ev], layer)
       );
     }
   }
@@ -1551,7 +1400,7 @@ GMaps.prototype.getFromKML = function(options) {
       google.maps.event.addListener(
         layer,
         ev,
-        subcribeEvent(events[ev], layer)
+        this.utils.subcribeEvent(events[ev], layer)
       );
     }
   }
@@ -1687,8 +1536,6 @@ GMaps.prototype.removeLayers = function() {
   this.layers.length = 0;
 };
 
-/* globals extend_object: true, array_flat: true, array_map: true, arrayToLatLng: true */
-
 GMaps.prototype.getRoutes = function(options) {
   var travelMode, unitSystem;
 
@@ -1720,7 +1567,7 @@ GMaps.prototype.getRoutes = function(options) {
         optimizeWaypoints: false,
         waypoints: []
       },
-      request_options =  extend_object(base_options, options);
+      request_options =  this.utils.merge(base_options, options);
 
   request_options.origin = /string/.test(typeof options.origin) ? options.origin : new google.maps.LatLng(options.origin[0], options.origin[1]);
   request_options.destination = /string/.test(typeof options.destination) ? options.destination : new google.maps.LatLng(options.destination[0], options.destination[1]);
@@ -1760,7 +1607,8 @@ GMaps.prototype.removeRoutes = function() {
 
 
 GMaps.prototype.getElevations = function(options) {
-  options = extend_object({
+  var self = this;
+  options = this.utils.merge({
     locations: [],
     path : false,
     samples : 256
@@ -1768,7 +1616,12 @@ GMaps.prototype.getElevations = function(options) {
 
   if (options.locations.length > 0) {
     if (options.locations[0].length > 0) {
-      options.locations = array_flat(array_map([options.locations], arrayToLatLng,  false));
+      options.locations = this.utils.arrayFlat(
+        this.utils.arrayMap(
+          [options.locations],
+          function(c) { return self.utils.arrayToLatLng(c, false); }
+        )
+      );
     }
   }
 
@@ -2358,16 +2211,13 @@ GMaps.prototype.setStyle = function(mapTypeId) {
   this.map.setMapTypeId(mapTypeId);
 };
 
-/* globals getElementById: true, extend_object: true, subcribeEvent: true */
-
-
-GMaps.prototype.createPanorama = function(streetview_options) {
-  if (!streetview_options.hasOwnProperty('lat') || !streetview_options.hasOwnProperty('lng')) {
-    streetview_options.lat = this.getCenter().lat();
-    streetview_options.lng = this.getCenter().lng();
+GMaps.prototype.createPanorama = function(streetviewOptions) {
+  if (!streetviewOptions.hasOwnProperty('lat') || !streetviewOptions.hasOwnProperty('lng')) {
+    streetviewOptions.lat = this.getCenter().lat();
+    streetviewOptions.lng = this.getCenter().lng();
   }
 
-  this.panorama = GMaps.createPanorama(streetview_options);
+  this.panorama = GMaps.createPanorama(streetviewOptions);
 
   this.map.setStreetView(this.panorama);
 
@@ -2376,7 +2226,7 @@ GMaps.prototype.createPanorama = function(streetview_options) {
 
 
 GMaps.createPanorama = function(options) {
-  var el = getElementById(options.el, options.context);
+  var el = document.getElementById(options.el);
 
   options.position = new google.maps.LatLng(options.lat, options.lng);
 
@@ -2385,23 +2235,23 @@ GMaps.createPanorama = function(options) {
   delete options.lat;
   delete options.lng;
 
-  var streetview_events = ['closeclick', 'links_changed', 'pano_changed', 'position_changed', 'pov_changed', 'resize', 'visible_changed'],
-      streetview_options = extend_object({visible : true}, options);
+  var streetviewEvents = ['closeclick', 'links_changed', 'pano_changed', 'position_changed', 'pov_changed', 'resize', 'visible_changed'];
+  var streetviewOptions = GMaps.prototype.utils.merge({visible : true}, options);
 
-  for (var i = 0, l = streetview_events.length; i < l; i++) {
-    delete streetview_options[streetview_events[i]];
+  for (var i = 0, l = streetviewEvents.length; i < l; i++) {
+    delete streetviewOptions[streetviewEvents[i]];
   }
 
-  var panorama = new google.maps.StreetViewPanorama(el, streetview_options);
+  var panorama = new google.maps.StreetViewPanorama(el, streetviewOptions);
   var name;
 
-  for (i = 0, l = streetview_events.length; i < l; i++) {
-    name = streetview_events[i];
+  for (i = 0, l = streetviewEvents.length; i < l; i++) {
+    name = streetviewEvents[i];
     if (options.hasOwnProperty(name)) {
       google.maps.event.addListener(
         panorama,
         name,
-        subcribeEvent(options[name], panorama)
+        GMaps.prototype.utils.subcribeEvent(options[name], panorama)
       );
     }
   }
@@ -2409,52 +2259,79 @@ GMaps.createPanorama = function(options) {
   return panorama;
 };
 
-GMaps.prototype.on = function(event_name, handler) {
-  return GMaps.on(event_name, this, handler);
+GMaps.prototype.on = function(eventName, handler) {
+  return GMaps.on(eventName, this, handler);
 };
 
-GMaps.prototype.off = function(event_name) {
-  GMaps.off(event_name, this);
+
+GMaps.prototype.off = function(eventName) {
+  GMaps.off(eventName, this);
 };
 
-GMaps.custom_events = ['marker_added', 'marker_removed', 'polyline_added', 'polyline_removed', 'polygon_added', 'polygon_removed', 'geolocated', 'geolocation_failed'];
 
-GMaps.on = function(event_name, object, handler) {
-  if (GMaps.custom_events.indexOf(event_name) === -1) {
+GMaps.customEvents = [
+  'marker_added',
+  'marker_removed',
+  'polyline_added',
+  'polyline_removed',
+  'polygon_added',
+  'polygon_removed',
+  'circle_added',
+  'circle_removed',
+  'rectangle_added',
+  'rectangle_removed',
+  'overlay_added',
+  'overlay_removed',
+  'text_added',
+  'text_removed',
+  'info_window_added',
+  'info_window_removed',
+  'geolocated',
+  'geolocation_failed'
+];
+
+
+GMaps.on = function(eventName, object, handler) {
+  var registeredEvent;
+
+  // Non-supported custom event
+  if (GMaps.customEvents.indexOf(eventName) === -1) {
     if(object instanceof GMaps) { object = object.map; }
-    return google.maps.event.addListener(object, event_name, handler);
+    return google.maps.event.addListener(object, eventName, handler);
+  }
+
+  // Supported custom event
+  registeredEvent = {
+    handler : handler,
+    eventName : eventName
+  };
+
+  object.registeredEvents[eventName] = object.registeredEvents[eventName] || [];
+  object.registeredEvents[eventName].push(registeredEvent);
+
+  return registeredEvent;
+};
+
+
+GMaps.off = function(eventName, object) {
+  if (GMaps.customEvents.indexOf(eventName) === -1) {
+    if(object instanceof GMaps) { object = object.map; }
+    google.maps.event.clearListeners(object, eventName);
   }
   else {
-    var registered_event = {
-      handler : handler,
-      eventName : event_name
-    };
-
-    object.registered_events[event_name] = object.registered_events[event_name] || [];
-    object.registered_events[event_name].push(registered_event);
-
-    return registered_event;
+    object.registeredEvents[eventName] = [];
   }
 };
 
-GMaps.off = function(event_name, object) {
-  if (GMaps.custom_events.indexOf(event_name) === -1) {
-    if(object instanceof GMaps) { object = object.map; }
-    google.maps.event.clearListeners(object, event_name);
-  }
-  else {
-    object.registered_events[event_name] = [];
-  }
-};
 
-GMaps.fire = function(event_name, object, scope) {
+GMaps.fire = function(eventName, object, scope) {
   var firing_events;
 
-  if (GMaps.custom_events.indexOf(event_name) === -1) {
-    google.maps.event.trigger(object, event_name, Array.prototype.slice.apply(arguments).slice(2));
+  if (GMaps.customEvents.indexOf(eventName) === -1) {
+    google.maps.event.trigger(object, eventName, Array.prototype.slice.apply(arguments).slice(2));
   }
-  else if(scope.registered_events && scope.registered_events.hasOwnProperty(event_name)) {
-    firing_events = scope.registered_events[event_name];
+  else if(scope.registeredEvents && scope.registeredEvents.hasOwnProperty(eventName)) {
+    firing_events = scope.registeredEvents[eventName];
 
     for(var i = 0, l = firing_events.length; i < l; i++) {
       firing_events[i]['handler'].apply(scope, [object]);
@@ -2462,78 +2339,83 @@ GMaps.fire = function(event_name, object, scope) {
   }
 };
 
-GMaps.geolocate = function geolocate(options) {
-  var complete_callback = options.always || options.complete;
+/**
+ * [utils namespace for all utility methods]
+ */
+GMaps.prototype.utils = Object.create(null);
+
+
+/**
+ * [merge description combines an indeterminate # of objects into a single object, giving preferece to the last arguement given]
+ * @param  {[object]} dest [an orginal object]
+ * @return {[object]}      [all merged objects]
+ */
+GMaps.prototype.utils.merge = function merge(dest) {
+  var merging = Array.prototype.slice.call(arguments, 1);
+
+  var target, p;
+  while (merging.length) {
+    target = merging.shift();
+
+    // Only merge objects
+    if (target instanceof Object === false) { continue; }
+
+    for (p in target) {
+      if (target.hasOwnProperty(p)) {
+        if (target[p] instanceof Object && dest[p] instanceof Object) {
+          // Recursively merge objects
+          dest[p] = GMaps.prototype.utils.merge(dest[p], target[p]);
+        }
+        else {
+          dest[p] = target[p];
+        }
+      }
+    }
+  }
+
+  return dest;
+};
+
+
+/**
+ * [geolocate service to request and access a navigators geolocation]
+ * @param  {[object]} options [accepts callbacks always|complete, success, error, notSupported]
+ */
+GMaps.prototype.utils.geolocate = function geolocate(options) {
+  var completeCallback = options.always || options.complete;
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
       options.success(position);
 
-      if (complete_callback) {
-        complete_callback();
+      if (completeCallback) {
+        completeCallback();
       }
     }, function(error) {
       options.error(error);
 
-      if (complete_callback) {
-        complete_callback();
+      if (completeCallback) {
+        completeCallback();
       }
     }, options.options);
   }
   else {
-    options.not_supported();
+    options.notSupported();
 
-    if (complete_callback) {
-      complete_callback();
+    if (completeCallback) {
+      completeCallback();
     }
   }
 };
 
 
-GMaps.geocode = function geocode(options) {
-  this.geocoder = new google.maps.Geocoder();
-  var callback = options.callback;
-  if (options.hasOwnProperty('lat') && options.hasOwnProperty('lng')) {
-    options.latLng = new google.maps.LatLng(options.lat, options.lng);
-  }
-
-  delete options.lat;
-  delete options.lng;
-  delete options.callback;
-  
-  this.geocoder.geocode(options, function(results, status) {
-    callback(results, status);
-  });
-};
-
-
-GMaps.prototype.addDelegatedEvent = function addDelegated(eventName, delegate, callback) {
-  var self = this;
-
-  var delegateEventHandler = function delegateEventHandler(e) {
-    var trigger = self.el.querySelector(delegate);
-    var target = e ? e.target : window.event.srcElement;
-
-    if(!trigger || !target) { return false; }
-
-    // If delegated is target or parent of target invoke callback
-    if(trigger === target || self.isChildElement(trigger, target)) {
-      callback.apply(null, Array.prototype.slice.call(arguments));
-    }
-  };
-
-  this.el.addEventListener(eventName, delegateEventHandler, true);
-
-  return {
-    eventName: eventName,
-    remove: function removeDelegatedEvent() {
-      self.el.removeEventListener(eventName, delegateEventHandler);
-    }
-  };
-};
-
-
-GMaps.prototype.isChildElement = function isChildElement(parent, child) {
+/**
+ * [isChildElement returns true if childs parentNode's === parent]
+ * @param  {[Node]}  parent [parent element to compare child.parentNode's to]
+ * @param  {[Node]}  child  [child element to begin comparison]
+ * @return {Boolean}        [true if child is desendent of parent]
+ */
+GMaps.prototype.utils.isChildElement = function isChildElement(parent, child) {
   var node = child.parentNode;
 
   // while there are parent nodes and parent node is not the root map element
@@ -2542,12 +2424,16 @@ GMaps.prototype.isChildElement = function isChildElement(parent, child) {
       return true;
     }
     node = node.parentNode;
-   }
-   return false;
+  }
+  return false;
 };
 
 
-GMaps.prototype.uuid = (function() {
+/**
+ * [uuid returns a unique number for each invokation]
+ * @return {[number]}   [a unique number]
+ */
+GMaps.prototype.utils.uuid = (function() {
   var id = 0;
 
   return function() {
@@ -2556,7 +2442,280 @@ GMaps.prototype.uuid = (function() {
 })();
 
 
-GMaps.prototype._teardownChild = function(type, child) {
+/**
+ * [Removes all HTML tags from a string, returning only text content]
+ * @param  {[str]}    [String to remove HTML tags from]
+ * @return {[string]} [text content of html]
+ */
+GMaps.prototype.utils.stripHTML = (function() {
+  var htmlRE = /(<([^>]+)>)/ig;
+
+  return function stripHTML(str) {
+    return (str+'').replace(htmlRE, '');
+  };
+})();
+
+
+/**
+ * [converts a dasherized strings to camel cased string]
+ * @return {[string]}   [camel cased string]
+ */
+GMaps.prototype.utils.toCamelCase = (function() {
+  var ccRE = /-([a-z])/g;
+
+  return function toCamelCase(str) {
+    return (str+'').replace(ccRE, function (g) { return g[1].toUpperCase(); });
+  };
+})();
+
+
+/**
+ * [arrayMap polyfill for Array.prototype.map]
+ * @param  {[Array]}  array   
+ * @param  {Function} callback [recieves (array[i], i, array)]
+ * @param  {[object]} context  [optional context for callback]
+ * @return {[type]}            [description]
+ */
+GMaps.prototype.utils.arrayMap = function arrayMap(array, callback) {
+  var params = Array.prototype.slice.call(arguments, 1);
+  var arrayReturn = [];
+  var i, l;
+
+  if (Array.prototype.map && array.map === Array.prototype.map) {
+    arrayReturn = array.map.apply(array, params);
+  }
+  else {
+    for (i = 0, l = array.length; i < l; i++) {
+      arrayReturn.push(callback.apply(params[2] || this, [array[i], i, array]));
+    }
+  }
+
+  return arrayReturn;
+};
+
+
+/**
+ * [arrayFlat converts an array of arrays into a single level array]
+ * @param  {[Array]} array [multi level array]
+ * @return {[Array]}       [single level array]
+ */
+GMaps.prototype.utils.arrayFlat = function arrayFlat(array) {
+  var newArray = [];
+  var i, l;
+
+  for (i = 0, l = array.length; i < l; i++) {
+    newArray = newArray.concat(array[i]);
+  }
+
+  return newArray;
+};
+
+
+/**
+ * [arrayToLatLng replaces array items with response from `coordsToLatLngs`]
+ * @param  {[Array]} coords       [array of array coordinates]
+ * @param  {[Boolean]} useGeoJSON [changes coordsToLatLngs behavior]
+ * @return {[Array]}              [Array of google LatLng instances]
+ */
+GMaps.prototype.utils.arrayToLatLng = function arrayToLatLng(coords, useGeoJSON) {
+  for (var i = 0, l = coords.length; i < l; i++) {
+    if (!(coords[i] instanceof google.maps.LatLng)) {
+      if (coords[i].length > 0 && typeof coords[i][0] === 'object') {
+        coords[i] = GMaps.prototype.utils.arrayToLatLng(coords[i], useGeoJSON);
+      }
+      else {
+        coords[i] = GMaps.prototype.utils.coordsToLatLngs(coords[i], useGeoJSON);
+      }
+    }
+  }
+
+  return coords;
+};
+
+
+/**
+ * [coordsToLatLngs returns an instance of google.mapsLatLng based on an array of coords]
+ * @param  {[array]} coords    [[lat,lng]]
+ * @param  {[Boolean]} useGeoJSON [changes to [lng,lat]]
+ * @return {[LatLng]}            [google.maps.LatLng instance]
+ */
+GMaps.prototype.utils.coordsToLatLngs = function coordsToLatLngs(coords, useGeoJSON) {
+  var firstCoord = coords[0],
+      secondCoord = coords[1];
+
+  if (useGeoJSON) {
+    firstCoord = coords[1];
+    secondCoord = coords[0];
+  }
+
+  return new google.maps.LatLng(firstCoord, secondCoord);
+};
+
+
+/**
+ * [findAbsolutePosition calculates the total absolute position left + top relative to the viewport]
+ * @param  {[node]} node [Live node element]
+ * @return {[Array]}     [[from-left, from-top]]
+ */
+GMaps.prototype.utils.findAbsolutePosition = function findAbsolutePosition(node)  {
+  var curleft = 0;
+  var curtop = 0;
+
+  if (node.offsetParent) {
+    do {
+      curleft += node.offsetLeft;
+      curtop += node.offsetTop;
+    } while (node = node.offsetParent);
+  }
+
+  return [curleft, curtop];
+};
+
+/**
+ * [subcribeEvent returns a funciton that provides an event to a callback, with opt params]
+ * @param  {Function} callback [called on event]
+ * @param  {[context]}   obj   [provided to callback]
+ * @return {[Function]}        [return function to be invoked as an event callback]
+ */
+GMaps.prototype.utils.subcribeEvent = function subcribeEvent(callback, obj) {
+  return function(e) {
+    return callback(e, (obj || this));
+  };
+};
+
+// ********************************************************
+// Instance Helpers are utility methods
+// with logic reliant upon a GMaps instance dynamic scope
+// ********************************************************
+
+
+/**
+ * [geocode instantiates a google.maps Geocoder]
+ * @param  {[object]} options [accepts properties lat, lng, and callback]
+ * @return {[Geocoder]}       [instance of Geocoder]
+ */
+GMaps.prototype.geocode = (function() {
+
+  var geocoder = new google.maps.Geocoder();
+
+  return function geocode(options) {
+    if(!options || !options.callback) {
+      throw new Error('geocode requires an options object with a callback');
+    }
+
+    var callback = options.callback;
+
+    if (options.hasOwnProperty('lat') && options.hasOwnProperty('lng')) {
+      options.latLng = new google.maps.LatLng(options.lat, options.lng);
+    }
+
+    delete options.lat;
+    delete options.lng;
+    delete options.callback;
+    
+    geocoder.geocode(options, function(results, status) {
+      callback(results, status);
+    });
+  }
+})();
+
+
+/**
+ * [addDelegatedEvent creates an event listener on the root map element that triggers a
+ * callback when a delegate (or a child) element is source of the event]
+ * @param {[string]}   eventName [eventm name to listen for]
+ * @param {[selector]} delegateSelector  [string selector to pass to querySelector]
+ * @param {Function} callback    [function to invoke if delegate is source]
+ * @returns { object } [to remove delegated event listener]
+ */
+GMaps.prototype.addDelegatedEvent = function addDelegated(eventName, delegateSelector, callback) {
+  var self = this;
+
+  var delegateEventHandler = function delegateEventHandler(e) {
+    var trigger = self.el.querySelector(delegateSelector);
+    var target = e ? e.target : window.event.srcElement;
+
+    if(!trigger || !target) { return false; }
+
+    // If delegated is target or parent of target invoke callback
+    if(trigger === target || self.utils.isChildElement(trigger, target)) {
+      callback.apply(null, Array.prototype.slice.call(arguments));
+    }
+  };
+
+  self.el.addEventListener(eventName, delegateEventHandler, true);
+
+  return {
+    eventName: eventName,
+    remove: function removeDelegatedEvent() {
+      self.el.removeEventListener(eventName, delegateEventHandler, true);
+    }
+  };
+};
+
+
+/**
+ * [hasMapChild returns true if a map has a child instance and false if not]
+ * @param  {[string|object]}  child [child instance or id to a child element]
+ * @param  {[string]}  type  [identifier for a map store]
+ * @return {Boolean}         [true if has the child false if not]
+ */
+GMaps.prototype.hasChild = function(child, type) {
+
+  // support dasherized types
+  type = this.utils.toCamelCase(type);
+
+  // support singular types
+  var map = {
+    marker: 'markers',
+    polyline: 'polylines',
+    polygon: 'polygons',
+    circle: 'circles',
+    rectangle: 'rectangles',
+    overlay: 'overlays',
+    text: 'texts',
+    infoWindow: 'infoWindows'
+  };
+
+  var model = (map.hasOwnProperty(type) ? this[map[type]] : this[type]);
+
+  if(typeof model === 'undefined') {
+    throw new Error('hasMapChild requires a name to valid GMap model array');
+  }
+
+  var id, i = 0, l = model.length;
+
+  // search by id
+  if(typeof child === 'string') {
+    id = child;
+    for(; i < l; i++ ) {
+      if(model[i].details && model[i].details.id === id) {
+        return true;
+      }
+    }
+  }
+  // search by instance
+  else if(typeof child === 'object') {
+    for(; i < l; i++ ) {
+      if(model[i] === child) {
+        return true;
+      }
+    }
+  }
+  else {
+    console.warn('invalid child argument to hasMapChild, requires an id or map child instance');
+  }
+  
+  return false;
+};
+
+
+/**
+ * [_teardownChild internal method to remove a map child's listeners, delegatedEvents, map]
+ * @param  {[string]} type  [used for global notifications]
+ * @param  {[ChildInstance]} child [an instance of a map child]
+ */
+GMaps.prototype._teardownChild = function teardownChild(type, child) {
   google.maps.event.clearInstanceListeners(child);
 
   // Remove all event delegations
@@ -2564,20 +2723,12 @@ GMaps.prototype._teardownChild = function(type, child) {
     for(var i = 0, l = child.delegatedEvents.length; i < l; i++) {
       child.delegatedEvents[i].remove();
     }
+    child.delegatedEvents.length = 0;
   }
 
   child.setMap(null);
   GMaps.fire(type+'_removed', child, this);
 }
-
-
-GMaps.prototype.stripHTML = (function() {
-  var htmlRE = /(<([^>]+)>)/ig;
-
-  return function(str) {
-    return (str+'').replace(htmlRE, '');
-  };
-})();
 
 //==========================
 // Polygon containsLatLng

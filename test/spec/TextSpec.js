@@ -1,20 +1,28 @@
 describe('Text Elements', function() {
-  var mapInstance, textElement;
+  var mapInstance, container, textElement;
 
-  beforeEach(function() {
-    mapInstance = mapInstance || new GMaps({
-      el : '#map-with-overlays',
+  beforeAll(function() {
+    container = document.createElement('div');
+    container.id = 'map-with-texts';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    mapInstance = new GMaps({
+      el : '#map-with-texts',
       lat : -12.0433,
       lng : -77.0283,
       zoom : 12
     });
 
-    // Add one text element
-    textElement = textElement || mapInstance.addText({
+    textElement = mapInstance.addText({
       lat: 30.257806291133193,
       lng: -97.72566276602447,
-      text: 'Wild Stallions'
+      text: 'Wild Stallions!'
     });
+  });
+
+  afterAll(function() {
+    document.body.removeChild(container);
   });
 
   it('should add the text to the texts store', function() {
@@ -29,7 +37,7 @@ describe('Text Elements', function() {
   describe('events', function() {
     var callbacks, context, textWithEvents;
 
-    beforeEach(function() {
+    beforeAll(function() {
       context = { passed: false };
       callbacks = {
         onclick: function() {
@@ -45,9 +53,9 @@ describe('Text Elements', function() {
         }
       };
 
-      spyOn(callbacks, 'onclick').andCallThrough();
-      spyOn(callbacks, 'onmousemove').andCallThrough();
-      spyOn(callbacks, 'onrightclick').andCallThrough();
+      spyOn(callbacks, 'onclick').and.callThrough();
+      spyOn(callbacks, 'onmousemove').and.callThrough();
+      spyOn(callbacks, 'onrightclick').and.callThrough();
 
       textWithEvents = mapInstance.addText({
         lat: mapInstance.getCenter().lat(),
@@ -60,24 +68,12 @@ describe('Text Elements', function() {
     });
 
     it('should respond to click and maintain method context', function() {
-      var domIsReady = false;
-
       google.maps.event.addListenerOnce(textWithEvents, 'ready', function () {
-        domIsReady = true;
-      });
-
-      waitsFor(function () {
-        return domIsReady;
-      }, 'the overlay\'s DOM element to be ready', 10000);
-
-      runs(function () {
         // responds to click event and maintain method context
         google.maps.event.trigger(textWithEvents.el, 'click');
         expect(callbacks.onclick).toHaveBeenCalled();
         expect(context.passed).toBe(true);
-      });
 
-      runs(function() {
         // binds multiple events
         google.maps.event.trigger(textWithEvents.el, 'mousemove', {});
         expect(callbacks.onmousemove).toHaveBeenCalled();

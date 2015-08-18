@@ -4,6 +4,98 @@
 		"selected_items":
 		[
 			[
+				"content",
+				"contentWidth"
+			],
+			[
+				"client",
+				"clientWidth"
+			],
+			[
+				"prot",
+				"prototype"
+			],
+			[
+				"de",
+				"delegatedEvents"
+			],
+			[
+				"info",
+				"infoWindow"
+			],
+			[
+				"even",
+				"eventName"
+			],
+			[
+				"eve",
+				"eventName"
+			],
+			[
+				"del",
+				"delegateID"
+			],
+			[
+				"inf",
+				"infoWindow"
+			],
+			[
+				"conten",
+				"context_menu_items"
+			],
+			[
+				"onmous",
+				"onmouseover"
+			],
+			[
+				"onmou",
+				"onmouseover"
+			],
+			[
+				"on",
+				"onmouseover"
+			],
+			[
+				"lay",
+				"layers"
+			],
+			[
+				"sin",
+				"singleLayer"
+			],
+			[
+				"right",
+				"rightclick"
+			],
+			[
+				"o",
+				"overlayLayer"
+			],
+			[
+				"ov",
+				"overlayEvents"
+			],
+			[
+				"fen",
+				"fence"
+			],
+			[
+				"and",
+				"andCallThrough"
+			],
+			[
+				"rec",
+				"rectangles"
+			],
+			[
+				"map",
+				"mapInstance"
+			],
+			[
+				"ci",
+				"circles"
+			],
+			[
 				"filt",
 				"filterConfigs"
 			],
@@ -184,16 +276,8 @@
 				"colorWellArea"
 			],
 			[
-				"de",
-				"decorate"
-			],
-			[
 				"coor",
 				"coordTwo"
-			],
-			[
-				"map",
-				"mapBounds"
 			],
 			[
 				"conn",
@@ -310,10 +394,6 @@
 			[
 				"proj",
 				"project_id"
-			],
-			[
-				"client",
-				"clientID"
 			],
 			[
 				"pe",
@@ -434,96 +514,32 @@
 			[
 				"tme",
 				"timestamps"
-			],
-			[
-				"dur",
-				"duration"
-			],
-			[
-				"redu",
-				"reduced"
-			],
-			[
-				"open",
-				"openTimestamp"
-			],
-			[
-				"tas",
-				"taskRequests"
-			],
-			[
-				"pr",
-				"previous"
-			],
-			[
-				"ph",
-				"phrase"
-			],
-			[
-				"tr",
-				"triggerPhrase"
-			],
-			[
-				"inlin",
-				"inline-block"
-			],
-			[
-				"_time",
-				"_timeout"
-			],
-			[
-				"sec",
-				"seconds"
-			],
-			[
-				"mi",
-				"minutes"
-			],
-			[
-				"times",
-				"timestamps"
-			],
-			[
-				"mod",
-				"modelFor"
-			],
-			[
-				"clients",
-				"clientsProjects"
-			],
-			[
-				"do",
-				"doneAction"
-			],
-			[
-				"R",
-				"ReorderTasks"
-			],
-			[
-				"clie",
-				"clientID"
-			],
-			[
-				"editPro",
-				"editProjectForm"
-			],
-			[
-				"clien",
-				"clientID"
-			],
-			[
-				"di",
-				"dirtyRecord"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "README.md",
+			"file": "examples/texts.html",
 			"settings":
 			{
-				"buffer_size": 11799,
+				"buffer_size": 1732,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "test/index.html",
+			"settings":
+			{
+				"buffer_size": 2989,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "test/spec/TextSpec.js",
+			"settings":
+			{
+				"buffer_size": 3216,
 				"line_ending": "Unix"
 			}
 		},
@@ -531,15 +547,55 @@
 			"file": "Gruntfile.js",
 			"settings":
 			{
-				"buffer_size": 2817,
+				"buffer_size": 3081,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "gmaps-for-apps.sublime-project",
+			"file": "lib/gmaps.texts.js",
 			"settings":
 			{
-				"buffer_size": 960,
+				"buffer_size": 3779,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 11871,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "bower.json",
+			"settings":
+			{
+				"buffer_size": 447,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "package.json",
+			"settings":
+			{
+				"buffer_size": 793,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "gmaps.min.js",
+			"settings":
+			{
+				"buffer_size": 36652,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "lib/gmaps.core.js",
+			"settings":
+			{
+				"buffer_size": 14150,
 				"line_ending": "Unix"
 			}
 		}
@@ -551,10 +607,14 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 151.0,
-		"last_filter": "project",
+		"height": 191.0,
+		"last_filter": "hint",
 		"selected_items":
 		[
+			[
+				"hint",
+				"JSHint"
+			],
 			[
 				"project",
 				"Project: Save As"
@@ -636,7 +696,7 @@
 				"Colorsublime: Install Theme"
 			]
 		],
-		"width": 449.0
+		"width": 503.0
 	},
 	"console":
 	{
@@ -657,12 +717,67 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/matt/dev/forks/gmaps-for-apps"
+		"/Users/matt/dev/forks/gmaps-for-apps/"
 	],
 	"file_history":
 	[
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/TextSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/index.html",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.overlays.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.utils.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/examples/overlays.html",
+		"/Users/matt/dev/forks/gmaps-for-apps/examples/layers_places.html",
+		"/Users/matt/dev/forks/gmaps-for-apps/examples/marker_clusterer.html",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.markers.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.layers.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.info_windows.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.circles.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.polygons.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.rectangles.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.streetview.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.styles.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.routes.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.geofences.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/README.md",
+		"/Users/matt/dev/forks/gmaps-for-apps/Gruntfile.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.events.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/examples/info_windows.html",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/InfoWindowSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.core.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/examples/geometry.html",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/template/jasmine-gmaps.html",
+		"/Users/matt/dev/forks/gmaps-for-apps/bower.json",
 		"/Users/matt/dev/forks/gmaps-for-apps/package.json",
+		"/Users/matt/dev/forks/gmaps-for-apps/examples/travel_route.html",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/PolygonSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/PolylineSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/RectangleSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/StreetViewSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/StyleSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/RouteSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/MapSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/LayerSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.static.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/CircleSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/OverlaySpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/MarkerSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.polylines.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/examples/layers.html",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.native_extensions.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.map_types.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.controls.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/ControlSpec.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/gmaps-for-apps.sublime-project",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/GeometrySpec.js",
+		"/Users/matt/dev/forks/Gmaps-For-Apps/lib/gmaps.circles.js",
+		"/Users/matt/dev/forks/Gmaps-For-Apps/lib/gmaps.controls.js",
+		"/Users/matt/dev/forks/Gmaps-For-Apps/lib/gmaps.layers.js",
+		"/Users/matt/dev/forks/Gmaps-For-Apps/lib/gmaps.markers.js",
+		"/Users/matt/dev/forks/Gmaps-For-Apps/lib/gmaps.polygons.js",
+		"/Users/matt/dev/forks/Gmaps-For-Apps/lib/gmaps.streetview.js",
+		"/Users/matt/dev/forks/gmaps-for-apps/lib/gmaps.geometry.js",
 		"/Users/matt/dev/forks/gmaps-for-apps/test/.jshintrc",
+		"/Users/matt/dev/forks/gmaps-for-apps/test/spec/EventSpec.js",
 		"/Users/matt/dev/forks/gmaps-for-apps/.jshintrc",
 		"/Users/matt/oag/mct-prototype/client/app/initializers/highcharts.js",
 		"/Users/matt/oag/mct-prototype/client/app/models/filter-config.js",
@@ -733,62 +848,7 @@
 		"/Users/matt/dev/tracket_v0.3/server/test/unit/models/user.unit.js",
 		"/Users/matt/dev/tracket_v0.3/server/src/models/user.js",
 		"/Users/matt/dev/tracket_v0.3/server/src/controllers/authenticate.js",
-		"/Users/matt/dev/tracket_v0.3/server/test/unit/controllers/authenticate.unit.js",
-		"/Users/matt/dev/tracket_v0.3/server/src/routes.js",
-		"/Users/matt/oag/mct-prototype/client/app/services/libraries.js",
-		"/Users/matt/oag/mct-prototype/client/app/services/highcharts.js",
-		"/Users/matt/oag/mct-prototype/client/app/mixins/highcharts-options.js",
-		"/Users/matt/oag/mct-prototype/client/server/mocks/highcharts.js",
-		"/Users/matt/oag/mct-prototype/client/app/models/highchart-group.js",
-		"/Users/matt/oag/mct-prototype/client/app/adapters/highchart-group.js",
-		"/Users/matt/oag/mct-prototype/client/app/styles/layouts/_flex.scss",
-		"/Users/matt/oag/mct-prototype/client/app/styles/helpers/_padding.scss",
-		"/Users/matt/oag/mct-prototype/client/app/styles/helpers/_misc.scss",
-		"/Users/matt/oag/mct-prototype/client/Brocfile.js",
-		"/Users/matt/oag/mct-prototype/client/node_modules/ember-highcharts/addon/components/high-charts.js",
-		"/Users/matt/oag/mct-prototype/client/app/styles/components/form/_overlay-input.scss",
-		"/Users/matt/oag/mct-prototype/client/app/styles/layouts/_associated-panel.scss",
-		"/Users/matt/oag/mct-prototype/client/app/styles/extensions/_zf-panel.scss",
-		"/Users/matt/oag/mct-prototype/client/app/helpers/dedasherize.js",
-		"/Users/matt/dev/tracket_v0.3/server/.jshintrc",
-		"/Users/matt/dev/tracket_v0.3/server/src/routes/user.js",
-		"/Users/matt/dev/tracket_v0.3/server/src/utils.js",
-		"/Users/matt/dev/tracket_v0.3/server/src/errors/not-found-error.js",
-		"/Users/matt/dev/tracket_v0.3/server/fake.js",
-		"/Users/matt/dev/tracket_v0.3/server/src/errors/internal-server-error.js",
-		"/Users/matt/oag/mct-prototype/client/server/utils/well.js",
-		"/Users/matt/oag/mct-prototype/client/api_data/OAG_Bakken_2015-03-25_Integrated.json",
-		"/Users/matt/oag/mct-prototype/client/app/mixins/gmap-events.js",
-		"/Users/matt/oag/mct-prototype/client/app/services/google-maps-on.js",
-		"/Users/matt/oag/mct-prototype/client/dist/assets/client.js",
-		"/Users/matt/oag/mct-prototype/client/tests/unit/helpers/get-first-keys-test.js",
-		"/Users/matt/oag/mct-prototype/client/tests/unit/helpers/to-hash-test.js",
-		"/Users/matt/oag/mct-prototype/client/tests/unit/mixins/gmap-styles-test.js",
-		"/Users/matt/oag/mct-prototype/client/app/mixins/gmap-styles.js",
-		"/Users/matt/oag/mct-prototype/client/app/pods/index/route.js",
-		"/Users/matt/oag/mct-prototype/client/app/adapters/well-area.js",
-		"/Users/matt/oag/mct-prototype/client/server/utils/well-areas.js",
-		"/Users/matt/oag/mct-prototype/client/server/mocks/well-area.js",
-		"/Users/matt/oag/mct-prototype/client/app/mixins/gmap-proxy.js",
-		"/Users/matt/oag/mct-prototype/client/tests/unit/mixins/gmap-proxy-test.js",
-		"/Users/matt/oag/mct-prototype/client/tests/.jshintrc",
-		"/Users/matt/dev/tracket_v0.3/server/test/helpers/default-get-options.js",
-		"/Users/matt/dev/tracket_v0.3/server/src/models/client.js",
-		"/Users/matt/dev/tracket_v0.3/server/.gitignore",
-		"/Users/matt/dev/tracket_v0.3/server/test/karma.conf.js",
-		"/Users/matt/dev/tracket_v0.3/server/package.json",
-		"/Users/matt/dev/tracket_v0.3/server/test/unit/app.js",
-		"/Users/matt/dev/tracket_v0.3/server/test/unit/karma.conf.js",
-		"/Users/matt/dev/tracket_v0.3/server/test/app.spec.js",
-		"/Users/matt/dev/tracket_v0.3/server/output.json",
-		"/Users/matt/oag/mct-prototype/client/app/components/zf-accordion.js",
-		"/Users/matt/oag/mct-prototype/client/app/templates/components/zf-accordion-item.hbs",
-		"/Users/matt/oag/mct-prototype/client/app/styles/extensions/_zf-accordion.scss",
-		"/Users/matt/oag/mct-prototype/client/app/templates/components/zf-accordion-item-title.hbs",
-		"/Users/matt/oag/mct-prototype/client/app/helpers/filter-out-by.js",
-		"/Users/matt/oag/mct-prototype/client/server/mocks/filter-configs.js",
-		"/Users/matt/oag/mct-prototype/client/app/adapters/filter-configs.js",
-		"/Users/matt/oag/mct-prototype/client/app/transforms/filter-value.js"
+		"/Users/matt/dev/tracket_v0.3/server/test/unit/controllers/authenticate.unit.js"
 	],
 	"find":
 	{
@@ -799,6 +859,8 @@
 		"height": 99.0,
 		"where_history":
 		[
+			"/Users/matt/dev/forks/Gmaps-For-Apps/lib",
+			"/Users/matt/dev/forks/gmaps-for-apps/lib",
 			"/Users/matt/dev/forks/gmaps-for-apps/test",
 			"/Users/matt/dev/forks/gmaps-for-apps",
 			"/Users/matt/oag/mct-prototype/client/app",
@@ -839,134 +901,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"test",
-			"false",
-			"falsde",
-			"waits",
-			"false",
-			"spyOn",
-			"false",
-			"watch",
-			"replace_object",
-			"jshint",
-			"all",
-			".map",
-			"map",
-			"callbacks",
-			"bind",
-			"highchartOptions",
-			"Highcharts",
-			"_internalModel",
-			"isLoaded",
-			"fetchWellAreaMarkers",
-			"markers",
-			"fetchWellAreaMarkers",
-			"wellbore",
-			"lng",
-			":",
-			",",
-			":",
-			",",
-			"oag_id",
-			"wells",
-			"getChartOptions",
-			"contentDidChange",
-			"highchartOptionsChange",
-			"console.log",
-			"highchartOptionsChange",
-			"contentDidChange",
-			"idx",
-			"_parseSeriesData",
-			"noData",
-			"_parseSeriesData",
-			"series",
-			"isLoaded",
-			"highchartOptionsChange",
-			"drawLater",
-			"draw",
-			"buildOptions",
-			"getChartOptions",
-			"_getDefaultCircles",
-			"chartConfig",
-			"filter",
-			"map",
-			"highCart",
-			"defaultMapSettings",
-			"wellAreas",
-			"_setDefaultCircles",
-			"zoom",
-			"_wasModelUpdated",
-			"model",
-			"Model",
-			"model",
-			"Model",
-			"model",
-			"Model",
-			"model",
-			"this",
-			"_setDefaultCircles",
-			"markers",
-			"this",
-			"bind",
-			"fetchWellAreaMarkers",
-			"hash",
-			"source",
-			" integrationData.data",
-			"lat",
-			"dimensions",
-			"fetchWellAreaMarkers",
-			"route",
-			"coords",
-			"apply",
-			"getProperties",
-			"ucWords",
-			"deDasherize",
-			"getMapDimensions",
-			"googleMapsOn",
-			"gMapProxy",
-			"google",
-			"'client/mixins/gmap-proxy'",
-			"\"ember-cli-release\"",
-			"\"ember-cli-htmlbars-inline-precompile\"",
-			"markers",
-			"console.log",
-			"circles",
-			"merge",
-			"red",
-			"extendMap",
+			"using",
+			"cons",
+			"cons]",
+			"cons",
+			"consoel",
+			"textElement",
+			"originalLength",
+			"textElement",
+			"overlays",
+			"Overlays",
+			"overlays",
+			"map-with-text",
+			"spec",
+			"log",
+			"textElement",
+			"info",
+			"mapInstance",
+			"texts",
+			"overlayWithClick",
+			"content",
+			"collection",
+			"Lima",
+			"overlays",
+			"text",
+			"overlay",
+			"panes",
+			"Panes",
+			"panes",
+			"content",
+			"contentHeight",
+			"content",
+			"firstChild",
+			"contentHeight",
+			"content",
+			"overlays",
+			"Overlays",
+			"stop_overlay_events",
+			"overlayLayer",
+			"content_width",
+			"content_height",
+			"content_width",
+			"content_height",
+			"overlay",
+			"autoShow",
+			"strong",
+			"h1",
+			"el",
+			"top",
+			"span",
+			"top",
+			"strong",
+			"tolp",
+			"width",
+			"consl",
+			"autoShow",
+			"liveEl",
+			"el",
+			"autoShow",
+			"div",
+			"remove",
+			"_teardownOverlay",
+			"_teardownLayer",
+			"_teardown",
+			"infoWindow",
+			"circle",
+			"_teardownCircle",
+			"prototype",
+			"_teardownChild",
 			"polygon",
+			"circle",
+			"markeoverlayr",
+			"overlay",
+			"fire",
+			"_removeInfoWindow",
+			"circles[i]",
+			"_teardownCircle",
+			"====",
+			"==",
+			"cons",
+			"_removeInfoWindow",
+			"collection",
+			"circles",
+			"collection",
+			"circles",
+			"ready",
+			"domIsReady",
+			"return",
+			"delegatedEvents",
+			"var",
+			"trigger",
+			"this.infoWindows[i]",
+			"ll",
+			"ii",
+			"onmouseout",
+			"350",
+			"circles",
+			"collection",
+			"polygons",
+			"strong",
+			"With new and improved event handlers!",
+			"event is handled",
+			"eventName",
+			"circle",
+			"this.infoWindows[i]",
+			"subcribeEvent",
 			"extend_object",
-			"model",
-			"mapItem",
-			"addedItem",
-			"AddedItem",
-			"addedItem",
-			"model",
-			"GMapCircles",
-			"markers",
-			"polygons",
-			"mouseover",
+			"isDescendantElement",
+			"_event",
+			"circle_events",
+			"events",
+			"trigger",
+			"document",
+			"delegateID",
+			"id",
+			"removeDelegatedEvent",
+			"delegateEventHandler",
+			"eventName",
+			"selector",
+			"getElementsByClassName",
+			"el",
+			"on =",
+			"infoWindowSelector",
+			"circle",
+			"visible",
+			"infoWindow",
 			"false",
-			"}]",
-			"lat",
-			"[{",
-			"polygons",
-			"},",
-			",",
-			"isTaken",
-			"name",
-			"register",
-			"mapTilesLoaded",
-			"mapIdle",
-			"function",
-			"areCoordsEqual",
-			"this",
-			"model",
-			"true",
-			"this",
-			"_prevLength",
-			"_lastMarkersLength",
-			"_lastMarkerLength"
+			"isOpen",
+			"false"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -986,24 +1048,180 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 7,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "README.md",
+					"file": "examples/texts.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11799,
+						"buffer_size": 1732,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								10595,
-								10595
+								498,
+								498
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Flatland_Monokai.tmTheme",
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "test/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2989,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2386,
+								2386
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Flatland_Monokai.tmTheme",
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 963.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "test/spec/TextSpec.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3216,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2520,
+								2520
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Flatland_Monokai.tmTheme",
+							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JavaScriptNext.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1523.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Gruntfile.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3081,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1442,
+								1442
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Flatland_Monokai.tmTheme",
+							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JavaScriptNext.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1787.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "lib/gmaps.texts.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3779,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								584,
+								584
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Flatland_Monokai.tmTheme",
+							"open_with_edit": true,
+							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JavaScriptNext.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "README.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11871,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								627,
+								627
 							]
 						],
 						"settings":
@@ -1021,20 +1239,109 @@
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "Gruntfile.js",
+					"buffer": 6,
+					"file": "bower.json",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2817,
+						"buffer_size": 447,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								561,
-								561
+								72,
+								72
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Flatland_Monokai.tmTheme",
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "package.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 793,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								267,
+								312
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Flatland_Monokai.tmTheme",
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "gmaps.min.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 36652,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								622,
+								622
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Flatland_Monokai.tmTheme",
+							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JavaScriptNext.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "lib/gmaps.core.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14150,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6246,
+								6251
 							]
 						],
 						"settings":
@@ -1045,40 +1352,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 354.0,
+						"translation.y": 4822.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "gmaps-for-apps.sublime-project",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 960,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								960
-							]
-						],
-						"settings":
-						{
-							"color_scheme": "Packages/User/Color Highlighter/themes/Flatland_Monokai.tmTheme",
-							"open_with_edit": true,
-							"syntax": "Packages/JavaScript/JSON.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
+					"stack_index": 9,
 					"type": "text"
 				}
 			]

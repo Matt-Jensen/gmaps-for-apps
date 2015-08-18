@@ -1,10 +1,16 @@
 var paths = [[-12.0403,-77.0337],[-12.040248585302038,-77.03993927003302],[-12.050047116528843,-77.02448169303511],[-12.044804866577001,-77.02154422636042]];
+var container;
 
 describe('Polygons', function() {
   var mapInstance, polygon;
 
-  beforeEach(function() {
-    mapInstance = mapInstance || new GMaps({
+  beforeAll(function() {
+    container = document.createElement('div');
+    container.id = 'map-with-polygons';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    mapInstance = new GMaps({
       el : '#map-with-polygons',
       lat : -12.0433,
       lng : -77.0283,
@@ -12,10 +18,13 @@ describe('Polygons', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('creating', function() {
-    beforeEach(function() {
-      // Add one polygon
-      polygon = polygon || mapInstance.drawPolygon({
+    beforeAll(function() {
+      polygon = mapInstance.drawPolygon({
         paths : paths,
         strokeColor : '#25D359',
         strokeOpacity : 1,
@@ -46,7 +55,7 @@ describe('Polygons', function() {
   describe('events', function() {
     var callbacks, context;
 
-    beforeEach(function() {
+    beforeAll(function() {
       context = { passed: false };
       callbacks = {
         onclick : function() {
@@ -62,9 +71,9 @@ describe('Polygons', function() {
         }
       };
 
-      spyOn(callbacks, 'onclick').andCallThrough();
-      spyOn(callbacks, 'onmousedown').andCallThrough();
-      spyOn(callbacks, 'onmousemove').andCallThrough();
+      spyOn(callbacks, 'onclick').and.callThrough();
+      spyOn(callbacks, 'onmousedown').and.callThrough();
+      spyOn(callbacks, 'onmousemove').and.callThrough();
 
       polygon = mapInstance.drawPolygon({
         paths : paths,

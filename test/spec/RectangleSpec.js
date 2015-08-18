@@ -1,8 +1,13 @@
 describe('GMaps rectangles', function() {
-  var mapInstance, rectangle;
+  var mapInstance, container, rectangle;
 
-  beforeEach(function() {
-    mapInstance = mapInstance || new GMaps({
+  beforeAll(function() {
+    container = document.createElement('div');
+    container.id = 'map-with-rectangles';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    mapInstance = new GMaps({
       el : '#map-with-rectangles',
       lat : -12.0433,
       lng : -77.0283,
@@ -10,9 +15,13 @@ describe('GMaps rectangles', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('creation', function() {
-    beforeEach(function() {
-      rectangle = rectangle || mapInstance.drawRectangle({
+    beforeAll(function() {
+      rectangle = mapInstance.drawRectangle({
         bounds : [[-12.0303,-77.0237],[-12.0348,-77.0115]],
         strokeColor : '#BBD8E9',
         strokeOpacity : 1,
@@ -22,7 +31,7 @@ describe('GMaps rectangles', function() {
       });
     });
 
-    it('should add the rectangle to the polygons collection', function() {
+    it('should add the rectangle to the rectangles store', function() {
       expect(mapInstance.rectangles.length).toEqual(1);
       expect(mapInstance.rectangles[0]).toEqual(rectangle);
     });
@@ -50,7 +59,7 @@ describe('GMaps rectangles', function() {
   describe('events', function() {
     var callbacks, context;
 
-    beforeEach(function() {
+    beforeAll(function() {
       context = { passed: false };
       callbacks = {
         onclick : function() {
@@ -66,9 +75,9 @@ describe('GMaps rectangles', function() {
         }
       };
 
-      spyOn(callbacks, 'onclick').andCallThrough();
-      spyOn(callbacks, 'onmousedown').andCallThrough();
-      spyOn(callbacks, 'onmouseover').andCallThrough();
+      spyOn(callbacks, 'onclick').and.callThrough();
+      spyOn(callbacks, 'onmousedown').and.callThrough();
+      spyOn(callbacks, 'onmouseover').and.callThrough();
 
       rectangle = mapInstance.drawRectangle({
         bounds : [[-12.0303,-77.0237],[-12.0348,-77.0115]],
@@ -100,8 +109,8 @@ describe('GMaps rectangles', function() {
 
 
   describe('removal', function() {
-    beforeEach(function() {
-      rectangle = rectangle || mapInstance.drawRectangle({
+    beforeAll(function() {
+      rectangle = mapInstance.drawRectangle({
         bounds : [[-12.0303,-77.0237],[-12.0348,-77.0115]],
         strokeColor : '#BBD8E9',
         strokeOpacity : 1,

@@ -1,8 +1,13 @@
 describe('Create a Street View Panorama', function() {
-  var map_with_streetview, attached_panorama, standalone_panorama, panorama_with_events;
+  var mapWithStreetview, container, attachedPanorama, standalonePanorama, panoramaWithEvents;
 
-  beforeEach(function() {
-    map_with_streetview = map_with_streetview || new GMaps({
+  beforeAll(function() {
+    container = document.createElement('div');
+    container.id = 'map-with-streetview';
+    container.className = 'map';
+    document.body.appendChild(container);
+
+    mapWithStreetview = new GMaps({
       el : '#map-with-streetview',
       lat : 42.3455,
       lng : -71.0983,
@@ -10,9 +15,13 @@ describe('Create a Street View Panorama', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('Standalone', function() {
-    beforeEach(function() {
-      standalone_panorama = standalone_panorama || GMaps.createPanorama({
+    beforeAll(function() {
+      standalonePanorama = GMaps.createPanorama({
         el : '#streetview-standalone-panorama',
         lat : 42.3455,
         lng : -71.0983,
@@ -25,13 +34,13 @@ describe('Create a Street View Panorama', function() {
     });
 
     it('should create a Street View panorama', function() {
-      expect(standalone_panorama).toBeDefined();
+      expect(standalonePanorama).toBeDefined();
     });
   });
 
   describe('Attached to the current map', function() {
-    beforeEach(function() {
-      attached_panorama = attached_panorama || map_with_streetview.createPanorama({
+    beforeAll(function() {
+      attachedPanorama = attachedPanorama || mapWithStreetview.createPanorama({
         el : '#streetview-panorama',
         pov : {
           heading : 60,
@@ -42,23 +51,23 @@ describe('Create a Street View Panorama', function() {
     });
 
     it('should be equal to the current map Street View panorama', function() {
-      expect(map_with_streetview.getStreetView()).toEqual(attached_panorama);
+      expect(mapWithStreetview.getStreetView()).toEqual(attachedPanorama);
     });
   });
 
   describe('With events', function() {
     var callbacks;
 
-    beforeEach(function() {
+    beforeAll(function() {
       callbacks = {
         onpovchanged : function() {
-          console.log(this);
+          return true;
         }
       };
 
-      spyOn(callbacks, 'onpovchanged').andCallThrough();
+      spyOn(callbacks, 'onpovchanged').and.callThrough();
 
-      panorama_with_events = panorama_with_events || GMaps.createPanorama({
+      panoramaWithEvents = GMaps.createPanorama({
         el : '#streetview-with-events',
         lat : 42.3455,
         lng : -71.0983,
@@ -72,7 +81,7 @@ describe('Create a Street View Panorama', function() {
     });
 
     it('should respond to pov_changed event', function() {
-      panorama_with_events.setPov({
+      panoramaWithEvents.setPov({
         heading : 80,
         pitch : -10,
         zoom : 1

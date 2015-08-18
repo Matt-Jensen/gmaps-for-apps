@@ -9,9 +9,8 @@
     "expect"     : true,
     "beforeEach" : true,
     "afterEach"  : true,
-    "waits"      : true,
-    "waitsFor"   : true,
-    "runs"       : true
+    "beforeAll"  : true,
+    "afterAll"   : true
   },
 
   "asi"       : true,

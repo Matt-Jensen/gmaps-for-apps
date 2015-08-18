@@ -1,40 +1,58 @@
 describe('Creating a map', function() {
-  var basic_map, advanced_map, map_with_events, map_with_custom_controls;
+  var basicMap, advancedMap, mapWithEvents, mapWithCustomControls;
 
   it('should throw an error if element is not defined', function() {
     expect(function() { new GMaps({}); }).toThrow(new Error('No element defined.'));
   });
 
   describe('With basic options', function() {
-    beforeEach(function() {
-      basic_map = basic_map || new GMaps({
-        el : '#basic-map',
+    var container;
+
+    beforeAll(function() {
+      container = document.createElement('div');
+      container.id = 'marker-map';
+      container.className = 'map';
+      document.body.appendChild(container);
+
+      basicMap = new GMaps({
+        el : '#marker-map',
         lat: -12.0433,
         lng: -77.0283,
         zoom: 12
       });
     });
 
+    afterAll(function() {
+      document.body.removeChild(container);
+    });
+
     it('should create a GMaps object', function() {
-      expect(basic_map).toBeDefined();
+      expect(basicMap).toBeDefined();
     });
 
     it('should have centered the map at the initial coordinates', function() {
-      var lat = basic_map.getCenter().lat();
-      var lng = basic_map.getCenter().lng();
+      var lat = basicMap.getCenter().lat();
+      var lng = basicMap.getCenter().lng();
 
       expect(lat).toEqual(-12.0433);
       expect(lng).toEqual(-77.0283);
     });
 
     it('should have the correct zoom', function() {
-      expect(basic_map.getZoom()).toEqual(12);
+      expect(basicMap.getZoom()).toEqual(12);
     });
   });
 
   describe('With advanced controls', function() {
-    beforeEach(function() {
-      advanced_map = advanced_map || new GMaps({
+    var container;
+
+    beforeAll(function() {
+      container = document.createElement('div');
+      container.id = 'advanced-map';
+      container.className = 'map';
+      document.body.appendChild(container);
+
+      advancedMap = new GMaps({
         el : '#advanced-map',
         lat: -12.0433,
         lng: -77.0283,
@@ -46,45 +64,52 @@ describe('Creating a map', function() {
       });
     });
 
+    afterAll(function() {
+      document.body.removeChild(container);
+    });
+
     it('should show the defined controls', function() {
-      expect(advanced_map.map.zoomControl).toBeTruthy();
-      expect(advanced_map.map.panControl).toBeFalsy();
-      expect(advanced_map.map.streetViewControl).toBeFalsy();
-      expect(advanced_map.map.mapTypeControl).toBeFalsy();
-      expect(advanced_map.map.overviewMapControl).toBeFalsy();
+      expect(advancedMap.map.zoomControl).toBeTruthy();
+      expect(advancedMap.map.panControl).toBeFalsy();
+      expect(advancedMap.map.streetViewControl).toBeFalsy();
+      expect(advancedMap.map.mapTypeControl).toBeFalsy();
+      expect(advancedMap.map.overviewMapControl).toBeFalsy();
     });
   });
 
   describe('With events', function() {
-    var callbacks, current_zoom = 0, current_center = null;
+    var callbacks, container, currentZoom = 0, currentCenter = null;
 
-    beforeEach(function() {
+    beforeAll(function() {
       callbacks = {
         onclick : function(e) {
           var lat = e.latLng.lat();
           var lng = e.latLng.lng();
 
-          map_with_events.addMarker({
+          mapWithEvents.addMarker({
             lat : lat,
             lng : lng,
             title : 'New Marker'
           });
         },
         onzoomchanged : function() {
-          console.log('onzoomchanged');
-          current_zoom = this.getZoom();
+          currentZoom = this.getZoom();
         },
         oncenterchanged : function() {
-          console.log('oncenterchanged');
-          current_center = this.getCenter();
+          currentCenter = this.getCenter();
         }
       };
 
-      spyOn(callbacks, 'onclick').andCallThrough();
-      spyOn(callbacks, 'onzoomchanged').andCallThrough();
-      spyOn(callbacks, 'oncenterchanged').andCallThrough();
+      spyOn(callbacks, 'onclick').and.callThrough();
+      spyOn(callbacks, 'onzoomchanged').and.callThrough();
+      spyOn(callbacks, 'oncenterchanged').and.callThrough();
 
-      map_with_events = map_with_events || new GMaps({
+      container = document.createElement('div');
+      container.id = 'map-with-events';
+      container.className = 'map';
+      document.body.appendChild(container);
+
+      mapWithEvents = new GMaps({
         el : '#map-with-events',
         lat : -12.0433,
         lng : -77.0283,
@@ -94,19 +119,23 @@ describe('Creating a map', function() {
       });
     });
 
+    afterAll(function() {
+      document.body.removeChild(container);
+    });
+
     it('should respond to zoom_changed event', function() {
-      map_with_events.map.setZoom(16);
+      mapWithEvents.map.setZoom(16);
 
       expect(callbacks.onzoomchanged).toHaveBeenCalled();
-      expect(current_zoom).toEqual(16);
+      expect(currentZoom).toEqual(16);
     });
 
     it('should respond to center_changed event', function() {
-      map_with_events.map.setCenter(new google.maps.LatLng(-12.0907, -77.0227));
+      mapWithEvents.map.setCenter(new google.maps.LatLng(-12.0907, -77.0227));
 
       // Fix for floating-point bug
-      var lat = parseFloat(current_center.lat().toFixed(4));
-      var lng = parseFloat(current_center.lng().toFixed(4));
+      var lat = parseFloat(currentCenter.lat().toFixed(4));
+      var lng = parseFloat(currentCenter.lng().toFixed(4));
 
       expect(callbacks.oncenterchanged).toHaveBeenCalled();
       expect(lat).toEqual(-12.0907);
@@ -114,42 +143,47 @@ describe('Creating a map', function() {
     });
 
     it('should respond to click event', function() {
-      google.maps.event.trigger(map_with_events.map, 'click', {
+      google.maps.event.trigger(mapWithEvents.map, 'click', {
         latLng : new google.maps.LatLng(-12.0433, -77.0283)
       });
 
       expect(callbacks.onclick).toHaveBeenCalled();
-      expect(map_with_events.markers.length).toEqual(1);
+      expect(mapWithEvents.markers.length).toEqual(1);
     });
 
-    afterEach(function() {
+    afterAll(function() {
       document.getElementById('map-with-events').innerHTML = '';
-      map_with_events = null;
+      mapWithEvents = null;
     });
   });
 
   describe('With custom controls', function() {
-    var callbacks;
+    var callbacks, container;
 
-    beforeEach(function() {
+    beforeAll(function() {
       callbacks = {
         onclick : function() {
-          map_with_custom_controls.addMarker({
-            lat : map_with_custom_controls.getCenter().lat(),
-            lng : map_with_custom_controls.getCenter().lng()
+          mapWithCustomControls.addMarker({
+            lat : mapWithCustomControls.getCenter().lat(),
+            lng : mapWithCustomControls.getCenter().lng()
           });
         }
       }
 
-      spyOn(callbacks, 'onclick').andCallThrough();
+      spyOn(callbacks, 'onclick').and.callThrough();
 
-      map_with_custom_controls = new GMaps({
+      container = document.createElement('div');
+      container.id = 'map-with-custom-controls';
+      container.className = 'map';
+      document.body.appendChild(container);
+
+      mapWithCustomControls = new GMaps({
         el : '#map-with-custom-controls',
         lat : -12.0433,
         lng : -77.0283
       });
 
-      map_with_custom_controls.addControl({
+      mapWithCustomControls.addControl({
         position : 'top_right',
         content : 'Add marker at the center',
         style : {
@@ -164,15 +198,19 @@ describe('Creating a map', function() {
       });
     });
 
+    afterAll(function() {
+      document.body.removeChild(container);
+    });
+
     it('should add the control to the controls collection', function() {
-      expect(map_with_custom_controls.controls.length).toEqual(1);
+      expect(mapWithCustomControls.controls.length).toEqual(1);
     });
 
     it('should respond to click event attached to the custom control', function() {
-      google.maps.event.trigger(map_with_custom_controls.controls[0], 'click');
+      google.maps.event.trigger(mapWithCustomControls.controls[0], 'click');
 
       expect(callbacks.onclick).toHaveBeenCalled();
-      expect(map_with_custom_controls.markers.length).toEqual(1);
+      expect(mapWithCustomControls.markers.length).toEqual(1);
     });
   });
 });

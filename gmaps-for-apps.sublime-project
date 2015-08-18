@@ -27,6 +27,7 @@
                 "*.sublime-workspace",
                 ".ghignore",
                 ".gitignore",
+                ".grunt",
                 "_SpecRunner.html"
             ]
         }
