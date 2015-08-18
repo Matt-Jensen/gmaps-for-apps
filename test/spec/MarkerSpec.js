@@ -15,9 +15,13 @@ describe('Marker', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
 
   describe('creating', function() {
-    var maker;
+    var marker;
 
     beforeAll(function() {
       marker = mapInstance.addMarker({

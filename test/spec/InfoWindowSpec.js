@@ -15,6 +15,10 @@ describe('GMap Info Window', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('Creating', function() {
     beforeAll(function() {
 

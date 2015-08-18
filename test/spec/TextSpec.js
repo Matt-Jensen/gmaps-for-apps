@@ -3,12 +3,12 @@ describe('Text Elements', function() {
 
   beforeAll(function() {
     container = document.createElement('div');
-    container.id = 'map-with-overlays';
+    container.id = 'map-with-texts';
     container.className = 'map';
     document.body.appendChild(container);
 
     mapInstance = new GMaps({
-      el : '#map-with-overlays',
+      el : '#map-with-texts',
       lat : -12.0433,
       lng : -77.0283,
       zoom : 12
@@ -19,6 +19,10 @@ describe('Text Elements', function() {
       lng: -97.72566276602447,
       text: 'Wild Stallions!'
     });
+  });
+
+  afterAll(function() {
+    document.body.removeChild(container);
   });
 
   it('should add the text to the texts store', function() {

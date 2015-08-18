@@ -15,6 +15,10 @@ describe('GMaps rectangles', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('creation', function() {
     beforeAll(function() {
       rectangle = mapInstance.drawRectangle({

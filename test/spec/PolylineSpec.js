@@ -17,6 +17,10 @@ describe('GMaps Polylines', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('creation', function() {
     beforeAll(function() {
       polyline = mapInstance.drawPolyline({

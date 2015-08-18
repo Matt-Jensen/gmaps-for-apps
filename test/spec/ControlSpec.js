@@ -15,6 +15,10 @@ describe('Creating custom map controls', function () {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   it('should add default styles for the control', function () {
     mapInstance.addControl({
       position: 'top_right',

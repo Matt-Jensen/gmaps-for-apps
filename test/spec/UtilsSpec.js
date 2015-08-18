@@ -1,18 +1,22 @@
 describe('Utils', function () {
   var mapInstance, container, result;
 
-  beforeEach(function() {
+  beforeAll(function() {
     container = document.createElement('div');
-    container.id = 'basic-map';
+    container.id = 'utils-map';
     container.className = 'map';
     document.body.appendChild(container);
 
     mapInstance = new GMaps({
-      el : '#basic-map',
+      el : '#utils-map',
       lat: -12.0433,
       lng: -77.0283,
       zoom: 12
     });
+  });
+
+  afterAll(function() {
+    document.body.removeChild(container);
   });
 
   describe('merge', function() {
@@ -123,7 +127,7 @@ describe('Utils', function () {
       expect(result[0] instanceof google.maps.LatLng).toBe(true);
       expect(result[1] instanceof google.maps.LatLng).toBe(true);
     });
-  })
+  });
 
   describe('coordsToLatLngs', function() {
     it('should accept an array and return a google.maps.LatLng instance', function() {

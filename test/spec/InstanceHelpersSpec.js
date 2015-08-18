@@ -4,18 +4,21 @@ describe('Instance Helpers', function () {
 
   beforeAll(function() {
     container = document.createElement('div');
-    container.id = 'basic-map';
+    container.id = 'instance-helpers-map';
     container.className = 'map';
     document.body.appendChild(container);
 
-    mapInstance = mapInstance || new GMaps({
-      el : '#basic-map',
+    mapInstance = new GMaps({
+      el : '#instance-helpers-map',
       lat: -12.0433,
       lng: -77.0283,
       zoom: 12
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
 
   describe('geocode', function() {
     it('should call callback once geocode returns results & status', function(done) {
@@ -59,11 +62,14 @@ describe('Instance Helpers', function () {
     });
 
     it('should add an event listener to the base map element', function(done) {
-      document.getElementById(infoWindow._id).click();
       window.setTimeout(function() {
-        expect(callbacks.onclick).toHaveBeenCalled();
-        done();
-      }, 10);
+        document.getElementById(infoWindow._id).click();
+
+        window.setTimeout(function() {
+          expect(callbacks.onclick).toHaveBeenCalled();
+          done();
+        });
+      }, 100);
     }, 5000);
 
     it('should provide a method that removes delegated event', function(done) {

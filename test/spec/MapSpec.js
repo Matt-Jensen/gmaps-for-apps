@@ -10,16 +10,20 @@ describe('Creating a map', function() {
 
     beforeAll(function() {
       container = document.createElement('div');
-      container.id = 'basic-map';
+      container.id = 'marker-map';
       container.className = 'map';
       document.body.appendChild(container);
 
       basicMap = new GMaps({
-        el : '#basic-map',
+        el : '#marker-map',
         lat: -12.0433,
         lng: -77.0283,
         zoom: 12
       });
+    });
+
+    afterAll(function() {
+      document.body.removeChild(container);
     });
 
     it('should create a GMaps object', function() {
@@ -58,6 +62,10 @@ describe('Creating a map', function() {
         mapTypeControl: false,
         overviewMapControl: false
       });
+    });
+
+    afterAll(function() {
+      document.body.removeChild(container);
     });
 
     it('should show the defined controls', function() {
@@ -109,6 +117,10 @@ describe('Creating a map', function() {
         zoom_changed : callbacks.onzoomchanged,
         center_changed : callbacks.oncenterchanged
       });
+    });
+
+    afterAll(function() {
+      document.body.removeChild(container);
     });
 
     it('should respond to zoom_changed event', function() {
@@ -184,6 +196,10 @@ describe('Creating a map', function() {
           click: callbacks.onclick
         }
       });
+    });
+
+    afterAll(function() {
+      document.body.removeChild(container);
     });
 
     it('should add the control to the controls collection', function() {

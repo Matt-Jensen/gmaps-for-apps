@@ -902,7 +902,7 @@ GMaps.prototype.createMarker = function(options) {
     return function(me) {
       if(!me.pixel){
         me.pixel = map.getProjection();
-        if(me.pixel && me.latLng) {
+        if(me.pixel) {
           me.pixel = (me.pixel &&
             me.pixel.fromLatLngToPoint &&
             me.pixel.fromLatLngToPoint(me.latLng)
@@ -1143,16 +1143,16 @@ GMaps.prototype.drawOverlay = function(options) {
   };
 
   overlay.draw = function() {
-    var projection = this.getProjection(),
-        pixel = projection.fromLatLngToDivPixel(new google.maps.LatLng(options.lat, options.lng));
+    var projection = this.getProjection();
+    var pixel = projection.fromLatLngToDivPixel(new google.maps.LatLng(options.lat, options.lng));
 
     options.horizontalOffset = options.horizontalOffset || 0;
     options.verticalOffset = options.verticalOffset || 0;
 
-    var el = overlay.el,
-        content = el.children[0],
-        contentHeight = content.clientHeight,
-        contentWidth = content.clientWidth;
+    var el = overlay.el;
+    var content = el.children[0];
+    var contentHeight = content.clientHeight;
+    var contentWidth = content.clientWidth;
 
     switch (options.verticalAlign) {
       case 'top':

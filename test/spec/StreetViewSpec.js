@@ -15,6 +15,10 @@ describe('Create a Street View Panorama', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('Standalone', function() {
     beforeAll(function() {
       standalonePanorama = GMaps.createPanorama({

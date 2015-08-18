@@ -15,6 +15,10 @@ describe('Layers', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('creating single', function() {
     beforeAll(function() {
       singleLayer = mapInstance.addLayer('traffic');

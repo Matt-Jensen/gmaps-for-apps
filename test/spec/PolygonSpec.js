@@ -18,6 +18,10 @@ describe('Polygons', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('creating', function() {
     beforeAll(function() {
       polygon = mapInstance.drawPolygon({

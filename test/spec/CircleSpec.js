@@ -15,6 +15,10 @@ describe('GMap circles', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('Creating', function() {
     beforeAll(function() {
       circle = mapInstance.addCircle({

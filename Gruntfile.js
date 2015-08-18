@@ -49,38 +49,58 @@ module.exports = function(grunt) {
       }
     },
 
-    jasmine: {
-      options: {
-        template: 'test/template/jasmine-gmaps.html',
-        // specs: 'test/spec/**/*.js',
-        specs: 'test/spec/InstanceHelpersSpec.js',
-        vendor: 'http://maps.google.com/maps/api/js?sensor=true',
-        styles: 'test/style.css',
-        force: true
-      },
-      src : ['<%= concat.dist.src %>']
-    },
-
     karma: {
-      unit: {
+      base: {
         configFile: 'karma.conf.js',
-        // port: 9999,
-        // singleRun: true,
-        // browsers: ['Chrome'],
-        // logLevel: 'ERROR',
-        // options: {
-        //   files: [
-        //     '<%= concat.dist.src %>',
-        //     'test/spec/**/*.js'
-        //   ]
-        // }
+        options: {
+          files: [
+            'http://maps.google.com/maps/api/js?sensor=true',
+            './gmaps.js',
+            'test/spec/CircleSpec.js',
+            'test/spec/ControlSpec.js',
+            'test/spec/EventSpec.js',
+            'test/spec/InfoWindowSpec.js',
+            'test/spec/InstanceHelpersSpec.js',
+            'test/spec/LayerSpec.js',
+            'test/spec/MapSpec.js',
+            'test/spec/PolygonSpec.js',
+            'test/spec/PolylineSpec.js',
+            'test/spec/RectangleSpec.js',
+            'test/spec/RouteSpec.js',
+            'test/spec/StreetViewSpec.js',
+            'test/spec/StyleSpec.js',
+            'test/spec/TextSpec.js'
+          ]
+        }
+      },
+      overlays: {
+        configFile: 'karma.conf.js',
+        port: 9877,
+        options: {
+          files: [
+            'http://maps.google.com/maps/api/js?sensor=true',
+            './gmaps.js',
+            'test/spec/OverlaySpec.js'
+          ]
+        }
+      },
+      utils: {
+        configFile: 'karma.conf.js',
+        port: 9878,
+        options: {
+          files: [
+            'http://maps.google.com/maps/api/js?sensor=true',
+            './gmaps.js',
+            'test/spec/UtilsSpec.js'
+          ]
+        }
       }
     },
 
     watch : {
       dev: {
-        files : ['Gruntfile.js', '<%= concat.dist.src %>'],
-        tasks : ['jshint:main', 'test', 'concat', 'umd']
+        files : ['Gruntfile.js', '<%= concat.dist.src %>', 'test/spec/**/*.js'],
+        tasks : ['jshint:main', 'concat', 'umd', 'test-dev']
       }
     },
 
@@ -129,14 +149,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-umd');
 
-  grunt.registerTask('test', ['jshint:test', 'jasmine']);
-  grunt.registerTask('ttt', ['karma:unit']);
-  grunt.registerTask('dev', ['jshint:main', 'test', 'concat', 'umd', 'watch:dev']);
+  grunt.registerTask('test-dev', ['jshint:test', 'karma:base']);
+  grunt.registerTask('test-all', ['jshint:test', 'karma:base', 'karma:overlays', 'karma:utils']);
+  grunt.registerTask('dev', ['jshint:main', 'concat', 'umd', 'test-dev', 'watch:dev']);
   grunt.registerTask('build', ['concat', 'umd', 'uglify']);
-  grunt.registerTask('default', ['jshint:main', 'test', 'concat', 'umd', 'uglify']);
+  grunt.registerTask('default', ['jshint:main', 'concat', 'umd', 'uglify', 'test-all']);
 };

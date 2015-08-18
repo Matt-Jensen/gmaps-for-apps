@@ -24,6 +24,10 @@ describe('Overlays', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   it('should add the overlay to the overlays collection', function() {
     expect(mapInstance.overlays.length).toEqual(1);
     expect(mapInstance.overlays[0]).toEqual(overlay);

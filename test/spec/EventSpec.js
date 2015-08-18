@@ -75,6 +75,10 @@ describe('Creating event listeners', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('for google.maps events', function() {
     beforeAll(function() {
       callbacks_native = {

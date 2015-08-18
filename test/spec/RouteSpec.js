@@ -15,6 +15,10 @@ describe('Routes', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   describe('Drawing a route', function() {
     it('should add a line in the current map', function(done) {
       mapInstance.drawRoute({
@@ -25,45 +29,33 @@ describe('Routes', function() {
         strokeOpacity : 0.6,
         strokeWeight : 6,
         callback : function() {
-          return true;
+          expect(mapInstance.polylines.length).toEqual(1);
+          expect(mapInstance.polylines[0].get('strokeColor')).toEqual('#131540');
+          expect(mapInstance.polylines[0].get('strokeOpacity')).toEqual(0.6);
+          expect(mapInstance.polylines[0].getMap()).toEqual(mapInstance.map);
+          done();
         }
       });
-
-      window.setTimeout(function() {
-        expect(mapInstance.polylines.length).toEqual(1);
-        expect(mapInstance.polylines[0].get('strokeColor')).toEqual('#131540');
-        expect(mapInstance.polylines[0].get('strokeOpacity')).toEqual(0.6);
-        expect(mapInstance.polylines[0].getMap()).toEqual(mapInstance.map);
-        done();
-      }, 300);
-    }, 1000);
+    }, 2000);
   });
 
   describe('Getting routes', function() {
-    var container;
-
     it('should return an array of routes', function(done) {
-      var routes;
-
       mapInstance.getRoutes({
         origin : 'grand central station, new york, ny',
         destination : '350 5th Ave, New York, NY, 10118',
-        callback : function(r) {
-          routes = r;
+        callback : function(routes) {
+          expect(routes).toBeDefined();
+          expect(mapInstance.routes).toEqual(routes);
+
+          if (routes.length > 0) {
+            expect(routes[0].legs[0].distance).toBeDefined();
+            expect(routes[0].legs[0].duration).toBeDefined();
+          }
+
+          done();
         }
       });
-
-      window.setTimeout(function() {
-        expect(routes).toBeDefined();
-        expect(mapInstance.routes).toEqual(routes);
-
-        if (routes.length > 0) {
-          expect(routes[0].legs[0].distance).toBeDefined();
-          expect(routes[0].legs[0].duration).toBeDefined();
-        }
-
-        done();
-      }, 300);
-    }, 1000);
+    }, 2000);
   });
 });

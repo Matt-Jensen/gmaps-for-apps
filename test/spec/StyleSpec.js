@@ -36,6 +36,10 @@ describe('Adding Map Styles', function() {
     });
   });
 
+  afterAll(function() {
+    document.body.removeChild(container);
+  });
+
   it('should add a MapType to the current map', function() {
     expect(mapInstance.map.mapTypes.get('lighter')).toBeDefined();
   });
