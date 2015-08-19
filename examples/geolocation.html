@@ -17,7 +17,7 @@
         lng: -77.028333
       });
 
-      GMaps.geolocate({
+      map.utils.geolocate({
         success: function(position){
           map.setCenter(position.coords.latitude, position.coords.longitude);
         },

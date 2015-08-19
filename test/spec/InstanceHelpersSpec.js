@@ -56,14 +56,14 @@ describe('Instance Helpers', function () {
 
       delegatedEvent = mapInstance.addDelegatedEvent(
         'click',
-        '#'+infoWindow._id,
+        '#'+infoWindow._DOMid,
         callbacks.onclick
       );
     });
 
     it('should add an event listener to the base map element', function(done) {
       window.setTimeout(function() {
-        document.getElementById(infoWindow._id).click();
+        document.getElementById(infoWindow._DOMid).click();
 
         window.setTimeout(function() {
           expect(callbacks.onclick).toHaveBeenCalled();
@@ -77,11 +77,11 @@ describe('Instance Helpers', function () {
       delegatedEvent.remove();
       /////////////////////////
 
-      document.getElementById(infoWindow._id).click();
+      document.getElementById(infoWindow._DOMid).click();
       window.setTimeout(function() {
         expect(callbacks.onclick.calls.count()).toBe(1);
         done();
-      }, 10);
+      }, 100);
     }, 5000);
   });
 

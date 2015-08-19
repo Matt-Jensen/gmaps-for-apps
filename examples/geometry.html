@@ -38,6 +38,8 @@
       var lat = -12.040504866577001;
       var lng = -77.02024422636042;
       circle = map.addCircle({
+        _id: '_circle_id',
+        id: 'circle-id',
         lat: lat,
         lng: lng,
         radius: 350,
@@ -47,6 +49,7 @@
         fillColor: '#432070',
         fillOpacity: 0.6
       });
+      console.log(circle._id, circle.id);
       for(var i in paths){
         bounds.push(paths[i]);
       }

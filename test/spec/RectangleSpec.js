@@ -22,6 +22,7 @@ describe('GMaps rectangles', function() {
   describe('creation', function() {
     beforeAll(function() {
       rectangle = mapInstance.drawRectangle({
+        id: 'rectangle-id',
         bounds : [[-12.0303,-77.0237],[-12.0348,-77.0115]],
         strokeColor : '#BBD8E9',
         strokeOpacity : 1,
@@ -52,6 +53,10 @@ describe('GMaps rectangles', function() {
       expect(SWLng).toEqual(-77.0237);
       expect(NELat).toEqual(-12.0348);
       expect(NELng).toEqual(-77.0115);
+    });
+
+    it('should have the configured id', function() {
+      expect(rectangle.id).toEqual('rectangle-id');
     });
   });
 

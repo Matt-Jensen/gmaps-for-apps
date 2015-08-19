@@ -42,64 +42,63 @@ var GMaps = (function() {
       return value === undefined ? defaultValue : value;
     };
 
-    var self = this,
-        i,
-        events_that_hide_context_menu = [
-          'bounds_changed', 'center_changed', 'click', 'dblclick', 'drag',
-          'dragend', 'dragstart', 'idle', 'maptypeid_changed', 'projection_changed',
-          'resize', 'tilesloaded', 'zoom_changed'
-        ],
-        events_that_doesnt_hide_context_menu = ['mousemove', 'mouseout', 'mouseover'],
-        options_to_be_deleted = ['el', 'lat', 'lng', 'mapType', 'width', 'height', 'markerClusterer', 'enableNewStyle'],
-        identifier = options.el || options.div,
-        markerClustererFunction = options.markerClusterer,
-        mapType = google.maps.MapTypeId[options.mapType.toUpperCase()],
-        map_center = new google.maps.LatLng(options.lat, options.lng),
-        zoomControl = valueOrDefault(options.zoomControl, true),
-        zoomControlOpt = options.zoomControlOpt || {
-          style: 'DEFAULT',
-          position: 'TOP_LEFT'
-        },
-        zoomControlStyle = zoomControlOpt.style || 'DEFAULT',
-        zoomControlPosition = zoomControlOpt.position || 'TOP_LEFT',
-        panControl = valueOrDefault(options.panControl, true),
-        mapTypeControl = valueOrDefault(options.mapTypeControl, true),
-        scaleControl = valueOrDefault(options.scaleControl, true),
-        streetViewControl = valueOrDefault(options.streetViewControl, true),
-        overviewMapControl = valueOrDefault(overviewMapControl, true),
-        map_options = {},
-        map_base_options = {
-          zoom: this.zoom,
-          center: map_center,
-          mapTypeId: mapType
-        },
-        map_controls_options = {
-          panControl: panControl,
-          zoomControl: zoomControl,
-          zoomControlOptions: {
-            style: google.maps.ZoomControlStyle[zoomControlStyle],
-            position: google.maps.ControlPosition[zoomControlPosition]
-          },
-          mapTypeControl: mapTypeControl,
-          scaleControl: scaleControl,
-          streetViewControl: streetViewControl,
-          overviewMapControl: overviewMapControl
-        };
+    var self = this;
+    var eventsThatHideContextMenu = [
+      'bounds_changed', 'center_changed', 'click', 'dblclick', 'drag',
+      'dragend', 'dragstart', 'idle', 'maptypeid_changed', 'projection_changed',
+      'resize', 'tilesloaded', 'zoom_changed'
+    ];
+    var eventsThatDoesntHideContextMenu = ['mousemove', 'mouseout', 'mouseover'];
+    var optionsToBeDeleted = ['el', 'lat', 'lng', 'mapType', 'width', 'height', 'markerClusterer', 'enableNewStyle'];
+    var identifier = options.el || options.div;
+    var markerClustererFunction = options.markerClusterer;
+    var mapType = google.maps.MapTypeId[options.mapType.toUpperCase()];
+    var mapCenter = new google.maps.LatLng(options.lat, options.lng);
+    var zoomControl = valueOrDefault(options.zoomControl, true);
+    var zoomControlOpt = options.zoomControlOpt || {
+      style: 'DEFAULT',
+      position: 'TOP_LEFT'
+    };
+    var zoomControlStyle = zoomControlOpt.style || 'DEFAULT';
+    var zoomControlPosition = zoomControlOpt.position || 'TOP_LEFT';
+    var panControl = valueOrDefault(options.panControl, true);
+    var mapTypeControl = valueOrDefault(options.mapTypeControl, true);
+    var scaleControl = valueOrDefault(options.scaleControl, true);
+    var streetViewControl = valueOrDefault(options.streetViewControl, true);
+    var overviewMapControl = valueOrDefault(overviewMapControl, true);
+    var mapOptions = {};
+    var mapBaseOptions = {
+      zoom: this.zoom,
+      center: mapCenter,
+      mapTypeId: mapType
+    };
+    var mapControlsOptions = {
+      panControl: panControl,
+      zoomControl: zoomControl,
+      zoomControlOptions: {
+        style: google.maps.ZoomControlStyle[zoomControlStyle],
+        position: google.maps.ControlPosition[zoomControlPosition]
+      },
+      mapTypeControl: mapTypeControl,
+      scaleControl: scaleControl,
+      streetViewControl: streetViewControl,
+      overviewMapControl: overviewMapControl
+    };
 
-      if (typeof identifier === 'string') {
-        this.el = document.querySelector(identifier);
+    if (typeof identifier === 'string') {
+      this.el = document.querySelector(identifier);
 
-        if(!this.el) {
-          throw new Error('no element was found via querySelector using: ', identifier);
-        }
+      if(!this.el) {
+        throw new Error('no element was found via querySelector using: ', identifier);
       }
+    }
 
     if (typeof this.el === 'undefined' || this.el === null) {
       throw new Error('No element defined.');
     }
 
-    window.context_menu = window.context_menu || {};
-    window.context_menu[self.el.id] = {};
+    window.contextMenu = window.contextMenu || {};
+    window.contextMenu[self.el.id] = {};
 
     this.controls = [];
     this.overlays = [];
@@ -123,35 +122,37 @@ var GMaps = (function() {
 
     google.maps.visualRefresh = options.enableNewStyle;
 
-    for (i = 0; i < options_to_be_deleted.length; i++) {
-      delete options[options_to_be_deleted[i]];
+    var i, l;
+    for (i = 0, l = optionsToBeDeleted.length; i < l; i++) {
+      delete options[optionsToBeDeleted[i]];
     }
 
     if(options.disableDefaultUI !== true) {
-      map_base_options = this.utils.merge(map_base_options, map_controls_options);
+      mapBaseOptions = this.utils.merge(mapBaseOptions, mapControlsOptions);
     }
 
-    map_options = this.utils.merge(map_base_options, options);
+    mapOptions = this.utils.merge(mapBaseOptions, options);
 
-    for (i = 0; i < events_that_hide_context_menu.length; i++) {
-      delete map_options[events_that_hide_context_menu[i]];
+    for (i = 0, l = eventsThatHideContextMenu.length; i < l; i++) {
+      delete mapOptions[eventsThatHideContextMenu[i]];
     }
 
-    for (i = 0; i < events_that_doesnt_hide_context_menu.length; i++) {
-      delete map_options[events_that_doesnt_hide_context_menu[i]];
+    for (i = 0, l = eventsThatDoesntHideContextMenu.length; i < l; i++) {
+      delete mapOptions[eventsThatDoesntHideContextMenu[i]];
     }
 
-    this.map = new google.maps.Map(this.el, map_options);
+    this.map = new google.maps.Map(this.el, mapOptions);
 
     if (markerClustererFunction) {
       this.markerClusterer = markerClustererFunction.apply(this, [this.map]);
     }
 
-    var buildContextMenuHTML = function(control, e) {
-      var html = '',
-          options = window.context_menu[self.el.id][control];
+    var buildContextMenuHTML = function buildContextMenuHTML(control, e) {
+      var html = '';
+      var options = window.contextMenu[self.el.id][control];
 
-      for (var i in options){
+      var i, l;
+      for (i in options){
         if (options.hasOwnProperty(i)) {
           var option = options[i];
 
@@ -159,14 +160,13 @@ var GMaps = (function() {
         }
       }
 
-      if (!document.getElementById('gmaps_context_menu')) { return; }
+      if (!document.getElementById('gmaps-context-menu')) { return; }
 
-      var context_menu_element = document.getElementById('gmaps_context_menu');
+      var contextMenuElement = document.getElementById('gmaps-context-menu');
       
-      context_menu_element.innerHTML = html;
+      contextMenuElement.innerHTML = html;
 
-      var context_menu_items = context_menu_element.getElementsByTagName('a'),
-          context_menu_items_count = context_menu_items.length;
+      var contextMenuItems = contextMenuElement.getElementsByTagName('a');
 
       var assignMenuItemAction = function(ev){
         ev.preventDefault();
@@ -175,11 +175,11 @@ var GMaps = (function() {
         self.hideContextMenu();
       };
 
-      for (i = 0; i < context_menu_items_count; i++) {
-        var context_menu_item = context_menu_items[i];
-        google.maps.event.clearListeners(context_menu_item, 'click');
+      for (i = 0, l = contextMenuItems.length; i < l; i++) {
+        var contextMenuItem = contextMenuItems[i];
+        google.maps.event.clearListeners(contextMenuItem, 'click');
         google.maps.event.addDomListenerOnce(
-          context_menu_item,
+          contextMenuItem,
           'click',
           assignMenuItemAction,
           false
@@ -190,13 +190,13 @@ var GMaps = (function() {
       var left = position[0] + e.pixel.x - 15;
       var top = position[1] + e.pixel.y- 15;
 
-      context_menu_element.style.left = left + 'px';
-      context_menu_element.style.top = top + 'px';
+      contextMenuElement.style.left = left + 'px';
+      contextMenuElement.style.top = top + 'px';
 
-      context_menu_element.style.display = 'block';
+      contextMenuElement.style.display = 'block';
     };
 
-    this.buildContextMenu = function(control, e) {
+    this.buildContextMenu = function buildContextMenu(control, e) {
       if (control === 'marker') {
         e.pixel = {};
 
@@ -204,8 +204,8 @@ var GMaps = (function() {
         overlay.setMap(self.map);
         
         overlay.draw = function() {
-          var projection = overlay.getProjection(),
-              position = e.marker.getPosition();
+          var projection = overlay.getProjection();
+          var position = e.marker.getPosition();
           
           e.pixel = projection.fromLatLngToContainerPixel(position);
 
@@ -217,8 +217,8 @@ var GMaps = (function() {
       }
     };
 
-    this.setContextMenu = function(options) {
-      window.context_menu[self.el.id][options.control] = {};
+    this.setContextMenu = function setContextMenu(options) {
+      window.contextMenu[self.el.id][options.control] = {};
 
       var ul = doc.createElement('ul');
 
@@ -227,14 +227,14 @@ var GMaps = (function() {
         if (options.options.hasOwnProperty(i)) {
           var option = options.options[i];
 
-          window.context_menu[self.el.id][options.control][option.name] = {
+          window.contextMenu[self.el.id][options.control][option.name] = {
             title: option.title,
             action: option.action
           };
         }
       }
 
-      ul.id = 'gmaps_context_menu';
+      ul.id = 'gmaps-context-menu';
       ul.style.display = 'none';
       ul.style.position = 'absolute';
       ul.style.minWidth = '100px';
@@ -245,26 +245,26 @@ var GMaps = (function() {
 
       doc.body.appendChild(ul);
 
-      var context_menu_element = document.getElementById('gmaps_context_menu')
+      var contextMenuElement = document.getElementById('gmaps-context-menu')
 
-      google.maps.event.addDomListener(context_menu_element, 'mouseout', function(ev) {
+      google.maps.event.addDomListener(contextMenuElement, 'mouseout', function(ev) {
         if (!ev.relatedTarget || !this.contains(ev.relatedTarget)) {
           window.setTimeout(function(){
-            context_menu_element.style.display = 'none';
+            contextMenuElement.style.display = 'none';
           }, 400);
         }
       }, false);
     };
 
-    this.hideContextMenu = function() {
-      var context_menu_element = document.getElementById('gmaps_context_menu');
+    this.hideContextMenu = function hideContextMenu() {
+      var contextMenuElement = document.getElementById('gmaps-context-menu');
 
-      if (context_menu_element) {
-        context_menu_element.style.display = 'none';
+      if (contextMenuElement) {
+        contextMenuElement.style.display = 'none';
       }
     };
 
-    var setupListener = function(object, name) {
+    var setupListener = function setupListener(object, name) {
       google.maps.event.addListener(object, name, function(e){
         if (typeof e === 'undefined') {
           e = this;
@@ -276,21 +276,20 @@ var GMaps = (function() {
       });
     };
 
-    //google.maps.event.addListener(this.map, 'idle', this.hideContextMenu);
     google.maps.event.addListener(this.map, 'zoom_changed', this.hideContextMenu);
 
-    var ev, name;
+    var name;
 
-    for (ev = 0; ev < events_that_hide_context_menu.length; ev++) {
-      name = events_that_hide_context_menu[ev];
+    for (i = 0, l = eventsThatHideContextMenu.length; i < l; i++) {
+      name = eventsThatHideContextMenu[i];
 
       if (name in options) {
         setupListener(this.map, name);
       }
     }
 
-    for (ev = 0; ev < events_that_doesnt_hide_context_menu.length; ev++) {
-      name = events_that_doesnt_hide_context_menu[ev];
+    for (i = 0, l = eventsThatDoesntHideContextMenu.length; i < l; i++) {
+      name = eventsThatDoesntHideContextMenu[i];
 
       if (name in options) {
         setupListener(this.map, name);
@@ -302,21 +301,19 @@ var GMaps = (function() {
         options.rightclick.apply(this, [e]);
       }
 
-      if(typeof window.context_menu[self.el.id]['map'] !== 'undefined') {
+      if(typeof window.contextMenu[self.el.id]['map'] !== 'undefined') {
         self.buildContextMenu('map', e);
       }
     });
 
-    this.refresh = function() {
+    this.refresh = function refresh() {
       google.maps.event.trigger(this.map, 'resize');
     };
 
-    this.fitZoom = function() {
-      var latLngs = [],
-          markers_length = this.markers.length,
-          i;
+    this.fitZoom = function fitZoom() {
+      var latLngs = [];
 
-      for (i = 0; i < markers_length; i++) {
+      for (var i = 0, l = this.markers.length; i < l; i++) {
         if(typeof this.markers[i].visible === 'boolean' && this.markers[i].visible) {
           latLngs.push(this.markers[i].getPosition());
         }
@@ -325,61 +322,57 @@ var GMaps = (function() {
       this.fitLatLngBounds(latLngs);
     };
 
-    this.fitLatLngBounds = function(latLngs) {
-      var total = latLngs.length,
-          bounds = new google.maps.LatLngBounds(),
-          i;
+    this.fitLatLngBounds = function fitLatLngBounds(latLngs) {
+      var bounds = new google.maps.LatLngBounds();
 
-      for(i = 0; i < total; i++) {
+      for(var i = 0, l = latLngs.length; i < l; i++) {
         bounds.extend(latLngs[i]);
       }
 
       this.map.fitBounds(bounds);
     };
 
-    this.setCenter = function(lat, lng, callback) {
+    this.setCenter = function setCenter(lat, lng, callback) {
       this.map.panTo(new google.maps.LatLng(lat, lng));
 
-      if (callback) {
-        callback();
-      }
+      if (callback) { callback(); }
     };
 
-    this.getElement = function() {
+    this.getElement = function getElement() {
       return this.el;
     };
 
-    this.zoomIn = function(value) {
+    this.zoomIn = function zoomIn(value) {
       value = value || 1;
 
       this.zoom = this.map.getZoom() + value;
       this.map.setZoom(this.zoom);
     };
 
-    this.zoomOut = function(value) {
+    this.zoomOut = function zoomOut(value) {
       value = value || 1;
 
       this.zoom = this.map.getZoom() - value;
       this.map.setZoom(this.zoom);
     };
 
-    var native_methods = [],
-        method;
+    var nativeMethods = [];
+    var method;
 
     for (method in this.map) {
       if (typeof this.map[method] === 'function' && !this[method]) {
-        native_methods.push(method);
+        nativeMethods.push(method);
       }
     }
 
-    function createNativeMethod(gmaps, scope, method_name) {
-      gmaps[method_name] = function() {
-        return scope[method_name].apply(scope, arguments);
+    function createNativeMethod(gmaps, scope, methodName) {
+      gmaps[methodName] = function() {
+        return scope[methodName].apply(scope, arguments);
       };
     }
 
-    for (i = 0; i < native_methods.length; i++) {
-      createNativeMethod(this, this.map, native_methods[i]);
+    for (i = 0, l = nativeMethods.length; i < l; i++) {
+      createNativeMethod(this, this.map, nativeMethods[i]);
     }
   };
 
@@ -486,7 +479,16 @@ GMaps.prototype.addCircle = function(options) {
   }, options);
 
   var circle = new google.maps.Circle(options);
-  var circleEvents = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+  var circleEvents = [
+    'click',
+    'dblclick',
+    'mousedown',
+    'mousemove',
+    'mouseout',
+    'mouseover',
+    'mouseup',
+    'rightclick'
+  ];
 
   for (var i = 0, l = circleEvents.length, name; i < l; i++) {
     name = circleEvents[i];
@@ -558,8 +560,17 @@ GMaps.prototype.drawPolygon = function(options) {
     }
   }
 
-  var polygon = new google.maps.Polygon(options),
-      polygonEvents = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+  var polygon = new google.maps.Polygon(options);
+  var polygonEvents = [
+    'click',
+    'dblclick',
+    'mousedown',
+    'mousemove',
+    'mouseout',
+    'mouseover',
+    'mouseup',
+    'rightclick'
+  ];
 
   for (var ev = 0, l = polygonEvents.length, name; ev < l; ev++) {
     name = polygonEvents[ev];
@@ -613,11 +624,20 @@ GMaps.prototype.drawRectangle = function(options) {
 
   options.bounds = latLngBounds;
 
-  var rectangle = new google.maps.Rectangle(options),
-      rectangle_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+  var rectangle = new google.maps.Rectangle(options);
+  var rectangleEvents = [
+    'click',
+    'dblclick',
+    'mousedown',
+    'mousemove',
+    'mouseout',
+    'mouseover',
+    'mouseup',
+    'rightclick'
+  ];
 
-  for (var ev = 0, l = rectangle_events.length, name; ev < l; ev++) {
-    name = rectangle_events[ev];
+  for (var ev = 0, l = rectangleEvents.length, name; ev < l; ev++) {
+    name = rectangleEvents[ev];
     if (options.hasOwnProperty(name)) {
       google.maps.event.addListener(
         rectangle,
@@ -673,7 +693,7 @@ GMaps.prototype.drawPolyline = function(options) {
     }
   }
 
-  var polyline_options = {
+  var polylineOptions = {
     map: this.map,
     path: path,
     strokeColor: options.strokeColor,
@@ -686,24 +706,34 @@ GMaps.prototype.drawPolyline = function(options) {
   };
 
   if (options.hasOwnProperty('clickable')) {
-    polyline_options.clickable = options.clickable;
+    polylineOptions.clickable = options.clickable;
   }
 
   if (options.hasOwnProperty('editable')) {
-    polyline_options.editable = options.editable;
+    polylineOptions.editable = options.editable;
   }
 
   if (options.hasOwnProperty('icons')) {
-    polyline_options.icons = options.icons;
+    polylineOptions.icons = options.icons;
   }
 
   if (options.hasOwnProperty('zIndex')) {
-    polyline_options.zIndex = options.zIndex;
+    polylineOptions.zIndex = options.zIndex;
   }
 
-  var polyline = new google.maps.Polyline(polyline_options);
+  var polyline = new google.maps.Polyline(polylineOptions);
+  this.utils.merge(polyline, options);
 
-  var polylineEvents = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+  var polylineEvents = [
+    'click',
+    'dblclick',
+    'mousedown',
+    'mousemove',
+    'mouseout',
+    'mouseover',
+    'mouseup',
+    'rightclick'
+  ];
 
   for (i = 0, l = polylineEvents.length; i < l; i++) {
     name = polylineEvents[i];
@@ -763,11 +793,20 @@ GMaps.prototype.addInfoWindow = function(options) {
     '</div>'
   ].join('');
 
-  var infoWindow = new google.maps.InfoWindow(options);
-  infoWindow._map = this.map;
-  infoWindow._id = infoWindowSelector;
+  var infoWindow    = new google.maps.InfoWindow(options);
+  infoWindow._map   = this.map;
+  infoWindow._DOMid = infoWindowSelector;
   infoWindow.delegatedEvents = [];
-  var mouseEvents = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+  var mouseEvents = [
+    'click',
+    'dblclick',
+    'mousedown',
+    'mousemove',
+    'mouseout',
+    'mouseover',
+    'mouseup',
+    'rightclick'
+  ];
 
   var i, l, name, removeDelegatedEvent;
 
@@ -788,7 +827,13 @@ GMaps.prototype.addInfoWindow = function(options) {
   }
 
   // Add default events
-  var classEvents = ['closeclick', 'content_changed', 'domready', 'position_changed', 'zindex_changed'];
+  var classEvents = [
+    'closeclick',
+    'content_changed',
+    'domready',
+    'position_changed',
+    'zindex_changed'
+  ];
 
   for(i = 0, l = classEvents.length, name; i < l; i++) {
     name = classEvents[i];
@@ -849,7 +894,7 @@ GMaps.prototype.removeInfoWindows = function() {
 
 GMaps.prototype.createMarker = function(options) {
   if (typeof options.lat === 'undefined' && typeof options.lng === 'undefined' && options.position === 'undefined') {
-    throw 'No latitude or longitude defined.';
+    throw new Error('No latitude or longitude defined.');
   }
 
   var self = this;
@@ -883,9 +928,31 @@ GMaps.prototype.createMarker = function(options) {
     }
   }
 
-  var markerEvents = ['animation_changed', 'clickable_changed', 'cursor_changed', 'draggable_changed', 'flat_changed', 'icon_changed', 'position_changed', 'shadow_changed', 'shape_changed', 'title_changed', 'visible_changed', 'zindex_changed'];
+  var markerEvents = [
+    'animation_changed',
+    'clickable_changed',
+    'cursor_changed',
+    'draggable_changed',
+    'flat_changed',
+    'icon_changed',
+    'position_changed',
+    'shadow_changed',
+    'shape_changed',
+    'title_changed',
+    'visible_changed',
+    'zindex_changed'
+  ];
 
-  var markerEventsWithMouse = ['dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseout', 'mouseover', 'mouseup'];
+  var markerEventsWithMouse = [
+    'dblclick',
+    'drag',
+    'dragend',
+    'dragstart',
+    'mousedown',
+    'mouseout',
+    'mouseover',
+    'mouseup'
+  ];
 
   for (ev = 0, l = markerEvents.length; ev < l; ev++) {
     name = markerEvents[ev];
@@ -968,7 +1035,7 @@ GMaps.prototype.addMarker = function(options) {
       marker = this.createMarker(options);
     }
     else {
-      throw 'No latitude or longitude defined.';
+      throw new Error('No latitude or longitude defined.');
     }
   }
 
@@ -1070,6 +1137,7 @@ GMaps.prototype.drawOverlay = function(options) {
   var overlay = new google.maps.OverlayView();
   var visible = true;
 
+  this.utils.merge(overlay, options);
   overlay.setMap(this.map);
 
   if (options.hasOwnProperty('visible')) {
@@ -1091,9 +1159,14 @@ GMaps.prototype.drawOverlay = function(options) {
       options.layer = 'overlayLayer';
     }
     
-    var panes = this.getPanes(),
-        overlayLayer = panes[options.layer],
-        stopOverlayEvents = ['contextmenu', 'DOMMouseScroll', 'dblclick', 'mousedown'];
+    var panes = this.getPanes();
+    var overlayLayer = panes[options.layer];
+    var stopOverlayEvents = [
+      'contextmenu',
+      'DOMMouseScroll',
+      'dblclick',
+      'mousedown'
+    ];
 
     overlayLayer.appendChild(el);
 
@@ -1115,8 +1188,16 @@ GMaps.prototype.drawOverlay = function(options) {
       google.maps.event.addDomListener(el, name, preventOverlayEvents());
     }
 
-    var overlayEvents = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
-
+    var overlayEvents = [
+      'click',
+      'dblclick',
+      'mousedown',
+      'mousemove',
+      'mouseout',
+      'mouseover',
+      'mouseup',
+      'rightclick'
+    ];
 
     // If there are any mouse events append the mouse target element
     for (ev = 0, l = overlayEvents.length; ev < l; ev++) {
@@ -1230,6 +1311,8 @@ GMaps.prototype.addText = function(options) {
   var overlayText = new google.maps.OverlayView();
   var visible = true;
 
+  this.utils.merge(overlayText, options);
+
   if(!options.text || typeof options.text !== 'string') {
     throw new Error('addText requires an options config with a text string property');
   }
@@ -1255,7 +1338,12 @@ GMaps.prototype.addText = function(options) {
 
     var panes = this.getPanes();
     var overlayLayer = panes.overlayLayer;
-    var stopOverlayEvents = ['contextmenu', 'DOMMouseScroll', 'dblclick', 'mousedown'];
+    var stopOverlayEvents = [
+      'contextmenu',
+      'DOMMouseScroll',
+      'dblclick',
+      'mousedown'
+    ];
 
     overlayLayer.appendChild(el);
 
@@ -1561,26 +1649,26 @@ GMaps.prototype.getRoutes = function(options) {
     unitSystem = google.maps.UnitSystem.METRIC;
   }
 
-  var base_options = {
-        avoidHighways: false,
-        avoidTolls: false,
-        optimizeWaypoints: false,
-        waypoints: []
-      },
-      request_options =  this.utils.merge(base_options, options);
+  var baseOptions = {
+    avoidHighways: false,
+    avoidTolls: false,
+    optimizeWaypoints: false,
+    waypoints: []
+  };
+  var requestOptions =  this.utils.merge(baseOptions, options);
 
-  request_options.origin = /string/.test(typeof options.origin) ? options.origin : new google.maps.LatLng(options.origin[0], options.origin[1]);
-  request_options.destination = /string/.test(typeof options.destination) ? options.destination : new google.maps.LatLng(options.destination[0], options.destination[1]);
-  request_options.travelMode = travelMode;
-  request_options.unitSystem = unitSystem;
+  requestOptions.origin = /string/.test(typeof options.origin) ? options.origin : new google.maps.LatLng(options.origin[0], options.origin[1]);
+  requestOptions.destination = /string/.test(typeof options.destination) ? options.destination : new google.maps.LatLng(options.destination[0], options.destination[1]);
+  requestOptions.travelMode = travelMode;
+  requestOptions.unitSystem = unitSystem;
 
-  delete request_options.callback;
-  delete request_options.error;
+  delete requestOptions.callback;
+  delete requestOptions.error;
 
   var self = this,
       service = new google.maps.DirectionsService();
 
-  service.route(request_options, function(result, status) {
+  service.route(requestOptions, function(result, status) {
     if (status === google.maps.DirectionsStatus.OK) {
       for (var r in result.routes) {
         if (result.routes.hasOwnProperty(r)) {
@@ -1910,25 +1998,25 @@ GMaps.prototype.checkMarkerGeofence = function(marker, outside_callback) {
 };
 
 GMaps.prototype.toImage = function(options) {
-  var static_map_options = {};
+  var staticMapOptions = {};
 
   if(!options) {
     options = {};
   }
 
   if(options.size) {
-    static_map_options.size = options.size;
+    staticMapOptions.size = options.size;
   } else {
-    static_map_options.size = [this.el.clientWidth, this.el.clientHeight];
+    staticMapOptions.size = [this.el.clientWidth, this.el.clientHeight];
   }
-  static_map_options.lat = this.getCenter().lat();
-  static_map_options.lng = this.getCenter().lng();
+  staticMapOptions.lat = this.getCenter().lat();
+  staticMapOptions.lng = this.getCenter().lng();
 
   if (this.markers.length > 0) {
-    static_map_options['markers'] = [];
+    staticMapOptions['markers'] = [];
 
     for (var i = 0, l = this.markers.length; i < l; i++) {
-      static_map_options['markers'].push({
+      staticMapOptions['markers'].push({
         lat: this.markers[i].getPosition().lat(),
         lng: this.markers[i].getPosition().lng()
       });
@@ -1938,14 +2026,14 @@ GMaps.prototype.toImage = function(options) {
   if (this.polylines.length > 0) {
     var polyline = this.polylines[0];
 
-    static_map_options['polyline'] = {};
-    static_map_options['polyline']['path'] = google.maps.geometry.encoding.encodePath(polyline.getPath());
-    static_map_options['polyline']['strokeColor'] = polyline.strokeColor
-    static_map_options['polyline']['strokeOpacity'] = polyline.strokeOpacity
-    static_map_options['polyline']['strokeWeight'] = polyline.strokeWeight
+    staticMapOptions['polyline'] = {};
+    staticMapOptions['polyline']['path'] = google.maps.geometry.encoding.encodePath(polyline.getPath());
+    staticMapOptions['polyline']['strokeColor'] = polyline.strokeColor
+    staticMapOptions['polyline']['strokeOpacity'] = polyline.strokeOpacity
+    staticMapOptions['polyline']['strokeWeight'] = polyline.strokeWeight
   }
 
-  return GMaps.staticMapURL(static_map_options);
+  return GMaps.staticMapURL(staticMapOptions);
 };
 
 GMaps.staticMapURL = function(options){
@@ -2235,7 +2323,15 @@ GMaps.createPanorama = function(options) {
   delete options.lat;
   delete options.lng;
 
-  var streetviewEvents = ['closeclick', 'links_changed', 'pano_changed', 'position_changed', 'pov_changed', 'resize', 'visible_changed'];
+  var streetviewEvents = [
+    'closeclick',
+    'links_changed',
+    'pano_changed',
+    'position_changed',
+    'pov_changed',
+    'resize',
+    'visible_changed'
+  ];
   var streetviewOptions = GMaps.prototype.utils.merge({visible : true}, options);
 
   for (var i = 0, l = streetviewEvents.length; i < l; i++) {
@@ -2703,7 +2799,9 @@ GMaps.prototype.hasChild = function(child, type) {
     }
   }
   else {
-    console.warn('invalid child argument to hasMapChild, requires an id or map child instance');
+    if(console && console.warn) {
+      console.warn('invalid child argument to hasMapChild, requires an id or map child instance');
+    }
   }
   
   return false;

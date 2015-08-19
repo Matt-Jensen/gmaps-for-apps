@@ -25,6 +25,7 @@ describe('Marker', function() {
 
     beforeAll(function() {
       marker = mapInstance.addMarker({
+        id: 'marker-id',
         lat : -12.0533,
         lng: -77.0293,
         title : 'New marker'
@@ -40,6 +41,10 @@ describe('Marker', function() {
       // Fix for floating-point bug
       expect(parseFloat(marker.getPosition().lat().toFixed(4))).toEqual(-12.0533);
       expect(parseFloat(marker.getPosition().lng().toFixed(4))).toEqual(-77.0293);
+    });
+
+    it('should have the configured id', function() {
+      expect(marker.id).toEqual('marker-id');
     });
   });
 

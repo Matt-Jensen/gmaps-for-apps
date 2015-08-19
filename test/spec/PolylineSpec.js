@@ -24,6 +24,7 @@ describe('GMaps Polylines', function() {
   describe('creation', function() {
     beforeAll(function() {
       polyline = mapInstance.drawPolyline({
+        id: 'polyline-id',
         path : path,
         strokeColor : '#131540',
         strokeOpacity : 0.6,
@@ -45,6 +46,10 @@ describe('GMaps Polylines', function() {
 
       expect(parseFloat(firstPoint.lat().toFixed(4))).toEqual(-12.0440);
       expect(parseFloat(firstPoint.lng().toFixed(4))).toEqual(-77.0247);
+    });
+
+    it('should have the configured id', function() {
+      expect(polyline.id).toEqual('polyline-id');
     });
   });
 

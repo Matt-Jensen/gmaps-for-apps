@@ -9,14 +9,14 @@
   <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="examples.css" />
   <script type="text/javascript">
-    var map;
+    var map, overlay;
     $(document).ready(function(){
       map = new GMaps({
         el: '#map',
         lat: -12.043333,
         lng: -77.028333
       });
-      map.drawOverlay({
+      overlay = map.drawOverlay({
         lat: map.getCenter().lat(),
         lng: map.getCenter().lng(),
         layer: 'overlayLayer',

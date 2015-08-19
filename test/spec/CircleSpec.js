@@ -22,6 +22,7 @@ describe('GMap circles', function() {
   describe('Creating', function() {
     beforeAll(function() {
       circle = mapInstance.addCircle({
+        id: 'circle-id',
         lat : -12.040504866577001,
         lng : -77.02024422636042,
         radius : 350,
@@ -44,6 +45,10 @@ describe('GMap circles', function() {
 
     it('should have the defined radius', function() {
       expect(circle.getRadius()).toEqual(350);
+    });
+
+    it('should have the configured id', function() {
+      expect(circle.id).toBe('circle-id');
     });
   });
 
