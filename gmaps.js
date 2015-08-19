@@ -421,7 +421,7 @@ var GMaps = (function() {
   return GMaps;
 })();
 
-GMaps.prototype.createControl = function(options) {
+GMaps.prototype._createControl = function(options) {
   var control = document.createElement('div');
 
   control.style.cursor = 'pointer';
@@ -479,7 +479,7 @@ GMaps.prototype.createControl = function(options) {
 };
 
 GMaps.prototype.addControl = function(options) {
-  var control = this.createControl(options);
+  var control = this._createControl(options);
   
   this.controls.push(control);
   this.map.controls[control.position].push(control);
@@ -573,7 +573,12 @@ GMaps.prototype.removeCircles = function() {
   this.circles.length = 0;
 };
 
-GMaps.prototype.drawPolygon = function(options) {
+GMaps.prototype.drawPolygon = function() {
+  var args = Array.prototype.slice.call(arguments);
+  return this.addPolygon.apply(this, args);
+};
+
+GMaps.prototype.addPolygon = function(options) {
   var useGeoJSON = false;
   var self = this;
 
@@ -654,7 +659,12 @@ GMaps.prototype.removePolygons = function() {
   this.polygons.length = 0;
 };
 
-GMaps.prototype.drawRectangle = function(options) {
+GMaps.prototype.drawRectangle = function() {
+  var args = Array.prototype.slice.call(arguments);
+  return this.addRectangle.apply(this, args);
+}
+
+GMaps.prototype.addRectangle = function(options) {
   options = this.utils.merge({
     map: this.map
   }, options);
@@ -717,7 +727,12 @@ GMaps.prototype.removeRectangles = function() {
   this.rectangles.length = 0;
 };
 
-GMaps.prototype.drawPolyline = function(options) {
+GMaps.prototype.drawPolyline = function() {
+  var args = Array.prototype.slice.call(arguments);
+  this.addPolyline.apply(this, args);
+};
+
+GMaps.prototype.addPolyline = function(options) {
   var path = [],
       points = options.path;
 
@@ -1174,7 +1189,12 @@ GMaps.prototype.removeMarkers = function (collection) {
   return this.markers = new_markers;
 };
 
-GMaps.prototype.drawOverlay = function(options) {
+GMaps.prototype.drawOverlay = function() {
+  var args = Array.prototype.slice.call(arguments);
+  return this.addOverlay.apply(this, args);
+};
+
+GMaps.prototype.addOverlay = function(options) {
   var self = this;
   var overlay = new google.maps.OverlayView();
   var visible = true;
@@ -1787,7 +1807,12 @@ GMaps.prototype.getElevations = function(options) {
 
 GMaps.prototype.cleanRoute = GMaps.prototype.removePolylines;
 
-GMaps.prototype.drawRoute = function(options) {
+GMaps.prototype.drawRoute = function() {
+  var args = Array.prototype.slice.call(arguments);
+  this.addRoute.apply(this, args);
+};
+
+GMaps.prototype.addRoute = function(options) {
   var self = this;
 
   this.getRoutes({
@@ -1810,7 +1835,7 @@ GMaps.prototype.drawRoute = function(options) {
           polyline_options.icons = options.icons;
         }
 
-        self.drawPolyline(polyline_options);
+        self.addPolyline(polyline_options);
         
         if (options.callback) {
           options.callback(e[e.length - 1]);
@@ -1872,7 +1897,12 @@ GMaps.prototype.travelRoute = function(options) {
 };
 
 
-GMaps.prototype.drawSteppedRoute = function(options) {
+GMaps.prototype.drawSteppedRoute = function() {
+  var args = Array.prototype.slice.call(arguments);
+  this.addSteppedRoute.apply(this, args);
+};
+
+GMaps.prototype.addSteppedRoute = function(options) {
   var self = this;
   var route, steps, step, i, l, polyline_options;
   
@@ -1910,7 +1940,7 @@ GMaps.prototype.drawSteppedRoute = function(options) {
                 polyline_options.icons = options.icons;
               }
 
-              self.drawPolyline(polyline_options);
+              self.addPolyline(polyline_options);
               options.step(step, (route.legs[0].steps.length - 1));
             }
           }
@@ -1941,7 +1971,7 @@ GMaps.prototype.drawSteppedRoute = function(options) {
           polyline_options.icons = options.icons;
         }
 
-        self.drawPolyline(polyline_options);
+        self.addPolyline(polyline_options);
         options.step(step);
       }
     }
@@ -1971,7 +2001,7 @@ GMaps.Route = function(options) {
     polyline_options.icons = options.icons;
   }
 
-  this.polyline = this.map.drawPolyline(polyline_options).getPath();
+  this.polyline = this.map.addPolyline(polyline_options).getPath();
 };
 
 GMaps.Route.prototype.getRoute = function(options) {

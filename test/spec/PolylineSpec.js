@@ -23,7 +23,7 @@ describe('GMaps Polylines', function() {
 
   describe('creation', function() {
     beforeAll(function() {
-      polyline = mapInstance.drawPolyline({
+      polyline = mapInstance.addPolyline({
         id: 'polyline-id',
         path : path,
         strokeColor : '#131540',
@@ -77,7 +77,7 @@ describe('GMaps Polylines', function() {
       spyOn(callbacks, 'onmousemove').and.callThrough();
       spyOn(callbacks, 'onmouseover').and.callThrough();
 
-      polyline = mapInstance.drawPolyline({
+      polyline = mapInstance.addPolyline({
         path: path,
         strokeColor: '#131540',
         strokeOpacity: 0.6,
@@ -107,7 +107,7 @@ describe('GMaps Polylines', function() {
   describe('removal', function() {
     beforeEach(function() {
       // Continue to add polylines
-      mapInstance.drawPolyline({
+      mapInstance.addPolyline({
         path : path,
         strokeColor : '#131540',
         strokeOpacity : 0.6,

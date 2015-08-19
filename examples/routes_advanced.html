@@ -23,7 +23,7 @@
         step: function(e){
           $('#instructions').append('<li>'+e.instructions+'</li>');
           $('#instructions li:eq('+e.step_number+')').delay(450*e.step_number).fadeIn(200, function(){
-            map.drawPolyline({
+            map.addPolyline({
               path: e.path,
               strokeColor: '#131540',
               strokeOpacity: 0.6,
@@ -52,7 +52,7 @@
   step: function(e){
     $('#instructions').append('&lt;li&gt;'+e.instructions+'&lt;/li&gt;');
     $('#instructions li:eq('+e.step_number+')').delay(450*e.step_number).fadeIn(200, function(){
-      map.drawPolyline({
+      map.addPolyline({
         path: e.path,
         strokeColor: '#131540',
         strokeOpacity: 0.6,

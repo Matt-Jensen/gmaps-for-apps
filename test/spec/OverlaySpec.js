@@ -14,7 +14,7 @@ describe('Overlays', function() {
       zoom : 12
     });
 
-    overlay = mapInstance.drawOverlay({
+    overlay = mapInstance.addOverlay({
       id: 'overlay-id',
       lat: mapInstance.getCenter().lat(),
       lng: mapInstance.getCenter().lng(),
@@ -67,7 +67,7 @@ describe('Overlays', function() {
       spyOn(callbacks, 'onmousemove').and.callThrough();
       spyOn(callbacks, 'onrightclick').and.callThrough();
 
-      overlayWithClick = mapInstance.drawOverlay({
+      overlayWithClick = mapInstance.addOverlay({
         lat: mapInstance.getCenter().lat(),
         lng: mapInstance.getCenter().lng(),
         content: '<p>Clickable overlay</p>',
@@ -98,7 +98,7 @@ describe('Overlays', function() {
   describe('removing', function() {
     beforeAll(function() {
       // continually add overlays
-      overlay = mapInstance.drawOverlay({
+      overlay = mapInstance.addOverlay({
         lat: mapInstance.getCenter().lat(),
         lng: mapInstance.getCenter().lng(),
         content: '<p>Clickable overlay</p>'

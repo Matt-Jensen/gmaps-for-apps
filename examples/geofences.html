@@ -23,7 +23,7 @@
             [-12.044804866577001,-77.02154422636042]
           ];
 
-      polygon = map.drawPolygon({
+      polygon = map.addPolygon({
         paths: path,
         strokeColor: '#BBD8E9',
         strokeOpacity: 1,
@@ -73,7 +73,7 @@
     </div>
     <div class="span6">
       <p>You can attach a geofence (which can be a polygon or a bounds) to a marker with:</p>
-      <pre>polygon = map.drawPolygon({
+      <pre>polygon = map.addPolygon({
   paths: path,
   strokeColor: '#BBD8E9',
   strokeOpacity: 1,

@@ -16,7 +16,7 @@
         lat: -12.043333,
         lng: -77.028333
       });
-      overlay = map.drawOverlay({
+      overlay = map.addOverlay({
         lat: map.getCenter().lat(),
         lng: map.getCenter().lng(),
         layer: 'overlayLayer',
@@ -35,7 +35,7 @@
     </div>
     <div class="span6">
       <p>You can add overlays using:</p>
-      <pre>map.drawOverlay({
+      <pre>map.addOverlay({
   lat: -12.043333,
   lng: -77.028333,
   content: '&lt;div class="overlay"&gt;Lima&lt;/div&gt;',
