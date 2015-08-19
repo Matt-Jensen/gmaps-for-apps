@@ -1,480 +1,145 @@
-**Why GMaps-For-Apps?**
+GMaps-For-Apps - Simplified Google Maps For Your JavaScript Apps.
+==================================================================
+*This project is a fork of [GMaps](https://github.com/hpneo/gmaps)*
 
-[GMaps](https://github.com/hpneo/gmaps) is a fantasic abstraction for Google Maps. I'm a fan. However, after working with GMaps in the context of Single Page App, there are issues that make it problematic:
+**GMaps-for-Apps** supports all features available in [original Gmaps](http://hpneo.github.com/gmaps/) and more.  This project aims to be the rendering layer for your JavaScript App's Google maps.  That way you can focus on managing your app's state instead of Googling for Google Map examples, which makes Google feel self conscious.
 
-- Context hijacking in map child events. √
-- Inconsistent storing of map children. √
-- Inconsistent location of lib methods in file structure. √
-- Inconsistent method naming
-- No support for first class Info-Windows. √
-- No support for a simple text element.
-- Performance optimizations concerns. √
-- Fails common JShint configuration, no automated code hinting. √
-- Expanded Unit Test Coverage √
-- General utility methods
+How can you use this?  Take a look at how I'm using it in an [Ember.js addon here](https://github.com/Matt-Jensen/ember-cli-g-maps) to see how you could use it in framework/library/toolset of your choosing. GMaps For Apps is just plane old vanilla JavaScript, however _currently only supports IE 9+_.
 
-GMaps For Apps aims to solve all this as well as provide a consistent platform for future development. _Excelsior!_
+Install
+--------------------
+`bower install gmaps-for-apps`
 
----
+Loading the `gmaps.min.js` script will make available a global contructor function: **GMaps** 
 
-GMaps.js - A Javascript library that simplifies your life
-=========================================================
+Usage
+-------
+You can learn more about the usage from original project's links here:
 
-GMaps.js allows you to use the potential of Google Maps in a simple way. No more extensive documentation or large amount of code.
-
-Visit the examples in [hpneo.github.com/gmaps](http://hpneo.github.com/gmaps/)
+Visit the examples in [hpneo.github.io/gmaps/examples.html](http://hpneo.github.io/gmaps/examples.html)
 Go to the API Documentation [hpneo.github.io/gmaps/documentation.html](http://hpneo.github.io/gmaps/documentation.html)
 
-Quick Start
------
+There are updated examples in the `examples/` directory of this project.
 
-1. Add a reference to Google Maps API
-2. Add gmaps.js in your HTML
-3. Enjoy!
+So Why's It Better?
+---------------------
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-  <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
-  <script src="gmaps.js"></script>
-  <style type="text/css">
-    #map {
-      width: 400px;
-      height: 400px;
-    }
-  </style>
-</head>
-<body>
-  <div id="map"></div>
-  <script>
-    var map = new GMaps({
-      el: '#map',
-      lat: -12.043333,
-      lng: -77.028333
+The original [GMaps](https://github.com/hpneo/gmaps) is a fantasic abstraction for Google Maps. However, after working with GMaps in the context of Single Page App, there are issues that make it a pain in the derriere.  `GMaps For Apps` fixes all the issues so your web components can shine like a gleaming beacon of hope.
+
+- No more context hijacking in map child events, now your functions can reference wherever (like your Controllers).
+- Consistent storing of map children, no more arrays of [polygon, circle, polygon]
+- Map children maintain references to their given id's.
+- First class Info-Windows children.
+- First class <strong> text element children.
+- Event more event support for map children.
+- Destroy map method so you can remove your Map with ease.
+- Destroy any individual map child with remove{Child}(childInstanceObj).
+- Destroy all of a map child type with remove{Child}s.
+- Lots of performance optimizations, and reductions to memory leaks.
+- Hugely increased Unit Test coverage.
+- Source code and tests now pass standard JShinting.
+- All methods are now add{Child}, no more confusing draw{Child} scattered about.
+- Additional utility methods to help with data binding.
+- Simplified in file structure and test runner so you can debug with ease.
+---
+
+API Differences
+-----------------
+
+`GMaps For Apps` supports everything GMaps.js v0.4.18 supports including *Info-Window* and *text* elements as well as some utility functions helpful for managing application data bindings.  Below is the updated API:
+
+Info Windows:
+```js
+    myGMapInstance.addInfoWindow({
+        lat: 34.54148095772571,
+        lng: -112.47004508972168,
+        content: '<h3>Info Window</h3>',
+        click: function() {
+            alert('well that\'s alarming...');
+        }
     });
-  </script>
-</body>
-</html>
+    
+    // stored in array:
+    // myMapInstance.infoWindows
+    
+    // Supports events:
+    // click, dblclick, mousedown, mousemove, mouseout, mouseover, mouseup, rightclick
 ```
 
-Build
-------
-
-If you would like to build gmaps from source run the following at the terminal:
-
-```sh
-git clone https://github.com/HPNeo/gmaps.git
-cd gmaps
-npm install
-grunt
+Text Elements:
+```js
+      myGMapInstance.addText({
+        lat: 30.257806291133193,
+        lng: -97.72566276602447,
+        text: 'text content only, its very simple',
+        zIndex: 999
+      });
+      
+    // stored in array:
+    // myMapInstance.texts
+    
+    // Supports events:
+    // click, dblclick, mousedown, mousemove, mouseout, mouseover, mouseup, rightclick
 ```
 
-Changelog
+Destroying The GMap:
+```js
+    myMapInstance.destroy();
+```
+*Please note: destroying Google Maps have known memory leaking/performace issues.  GMaps-for-apps only manages to minimize these leaks.  Don't create or destroy more maps than you need to!*
+
+**Utility Methods**
+
+`hasChild(childInstance || id, typeString)`
+```js
+// search if child in map store exists w/ id
+mayGMapInstance.hasChild('unique-id', 'infoWindow');
+
+// search if child in map store w/ an instance
+mayGMapInstance.hasChild(mapTextInstance, 'text');
+```
+
+`addDelegatedEvent(eventName, selector, callback)`
+```js
+    myGMapInstance.addInfoWindow({
+        lat: 34.54148095772571,
+        lng: -112.47004508972168,
+        content: '<div id="my-selector">Info Window</div>',
+    });
+    
+    // Binds event to root map element
+    myMapInstance.addDelegatedEvent('click', '#my-selector', function() { console.log('delegate'); });
+```
+
+`geolocate` moved to `utils.geolocate`
+
+**Adding Map Children**
+
+No more drawOverlay, drawPolyline ect.  Everything can be refrenced simply as:
+
+`addMarker`, `addInfoWindow`, `addPolygon`, `addPolyline`, `addRectangle`, `addOverlay`, and `addText`.
+
+draw methods are still available but simply reference the associated add method.
+
+**Removing Map Children**
+
+Support for removing map children was spotty as well as memory leaky. All the methods to remove individual children are:
+
+`removeMarker`, `removeOverlay`, `removeText`, `removePolygon`, `removePolyline`, `removeCircle`, `removeRectangle`, `removeInfoWindow`
+    
+Methods for removing all children in one go are:
+
+`removeMarkers`, `removeOverlays`, `removeTexts`, `removePolygons`, `removePolylines`, `removeCircles`, `removeRectangles`, `removeInfoWindows`
+
+Testing
 ---------
+Happy to say GMaps For Apps has made strides with the test story.  Now using Jasmine 2.3 and Karma on top of a Chrome web browser. To test for your safe clone the git repo and run:
 
-0.4.18
------------------------
-* Fix bug in `array_map`
+```js
+grunt test-all
+```
+Requires `node v0.12.7` & `grunt v0.4.1`
 
-0.4.17
------------------------
-* Remove the http so the library (Google Maps call) will also work under SSL without warnings
-* Update route drawing methods to allow 'icons' option for drawPolyline
-* Remove dependency on 'grunt-cli' having to be installed globally
-
-0.4.16
------------------------
-* Fix removeMarkers
-
-0.4.15
------------------------
-* Add overlay to mouseTarget when click event is set
-* addControl/createControl now accepts HTML elements or HTML strings
-* Add containsLatLng to google.maps.Circle
-
-0.4.14
------------------------
-* Fix bug in drawPolygon
-* Hide context menu before the zoom is changed
-
-0.4.13
------------------------
-* Allow unitSystem setting in travelRoute
-* Add functionality to remove controls
-* Delegates non custom events to google.map
-* Convert featureType and elementType toLowerCase in static maps
-
-0.4.12
------------------------
-* Adds ability to listen for clicks on overlays
-
-0.4.11
------------------------
-* Add RadarSearch to the places layer
-* Update default control styles to match new Google Maps release.
-
-0.4.10
------------------------
-* Fix and optimize removeMarkers
-* Fix bug in addMarker (issue #270)
-
-0.4.9
------------------------
-* Add UMD support (AMD, CommonJS, browser globals)
-* Add retina support
-* FitZoom only use visible markers
-
-0.4.8
------------------------
-* Fix getRoutes
-
-0.4.7
------------------------
-* Add callback for failure in getRoutes
-* Update marker clusterer after remove marker
-* Add support for string arrays to arrayToLatLng
-
-0.4.6
------------------------
-* Allow initialising GMaps without new
-* Added styled map support for static maps
-* Fixed name display for styled maps
-* Allow no zoom for static map request
-
-0.4.5
------------------------
-* Fix IE8 bug using array_map
-* Add Grunt and Bower support
-
-0.4.4
------------------------
-* Fix buildContextMenu reference in addMarker
-
-0.4.3
------------------------
-* Fix removePolylines and removePolygons
-
-0.4.2
------------------------
-* Fix drawSteppedRoute
-
-0.4.1
------------------------
-* Fix fitZoom
-
-0.4.0
------------------------
-* Split gmaps.js in modules
-
-0.3.5
------------------------
-* Enable new Google Maps style
-
-0.3.4
------------------------
-* Add support for context menu in multiple maps
-
-0.3.3
------------------------
-* Fix destination as address in getRoutes
-
-0.3.2
------------------------
-* Support for removing Fusion Tables and GeoRSS/KML layers with removeLayer
-
-0.3.1
------------------------
-* Improve event binding at adding markers, polylines or polygons
-
-0.3
------------------------
-* Add native events to google.maps objects and custom events to GMaps maps
-* Check for Google Maps library and defined element when initialize
-* Allow route origins to be a string or array
-
-0.2.31
------------------------
-* Fix context menu position bug
-
-0.2.30
------------------------
-* New feature: StreetView Panoramas
-
-0.2.29
------------------------
-* New methods: removePolyline and removePolygon
-* Tests for Styled MapTypes
-
-0.2.28
------------------------
-* Test suite
-* Fix double event firing bug
-
-0.2.27
------------------------
-* Allow create context menus for markers
-
-0.2.26
------------------------
-* Fix bug in getElevations
-* Rename fitBounds to fitLatLngBounds
-
-0.2.25
------------------------
-* Support for GeoJSON in drawPolygon
-* Use 'complete' instead of 'always' in GMaps.geolocate
-
-0.2.24
------------------------
-* New feature: **Overlay Map Types**
-
-0.2.23
------------------------
-* Add full support to google.maps.PolylineOptions
-* New method: removeMarker
-
-0.2.22
------------------------
-* New feature: **Map Types**
-
-0.2.21
------------------------
-* Support to add google.maps.Marker objects in addMarker and addMarkers methods.
-
-0.2.20
------------------------
-* Add support for other HTML block elements instead "div" (like "section").
-
-0.2.19
------------------------
-* Use MarkerClusterer to group markers
-
-0.2.18
------------------------
-* Check if GMaps is defined before load extensions
-
-0.2.17
------------------------
-* Fix bug with disableDefaultUI option in constructor
-
-0.2.16
------------------------
-* Fix another bug in createMarker
-
-0.2.15
------------------------
-* Fix bug in createMarker
-
-0.2.14
------------------------
-* Adding IDs, classes and innerHTML to createControl. (**Note**: Use 'content' instead 'text' in createControl)
-
-0.2.13
------------------------
-* Add support for Places library in addLayer
-
-0.2.12
------------------------
-* Fix map events without MouseEvent object
-* Fix bug in drawCircle and drawRectangle
-* Fix bug in zoomIn and zoomOut
-* New methods: removePolygon and removePolygons
-
-0.2.11
------------------------
-* Add support to Panoramio in addLayer
-
-0.2.10
------------------------
-* New method: toImage
-
-0.2.9
------------------------
-* Extend the drawSteppedRoute and travelRoute functions
-
-0.2.8
------------------------
-* New feature: **Layers**
-
-0.2.7
------------------------
-* New method: removeRoutes
-* Access all native methods of google.maps.Map class
-
-0.2.6
------------------------
-* Support for multiple overlays
-
-0.2.5
------------------------
-* Add support to all marker events
-* Add suport for animations at show and remove overlays
-
-0.2.4.1
------------------------
-* Create GMaps class only when Google Maps API is loaded
-
-0.2.4
------------------------
-* New feature: **Elevation service**
-
-0.2.3
------------------------
-* New method: getZoom
-
-0.2.2
------------------------
-* Minor improvements to support Backbone.js
-* Fix controls position
-
-0.2.1
------------------------
-* More default values in GMaps constructor.
-
-0.2
------------------------
-* Remove jQuery dependency.
-
-0.1.12.5
------------------------
-* New method "removePolylines" and alias "cleanRoute"
-
-0.1.12.4
------------------------
-* New methods: fitZoom and fitBounds
-
-0.1.12.3
------------------------
-* New method: refresh
-
-0.1.12.2
------------------------
-* New options in GMaps constructor: width and height
-
-0.1.12.1
------------------------
-* New methods: loadFromFusionTables and loadFromKML
-
-0.1.12
------------------------
-* New feature: **KML and GeoRSS**
-* Fix bug in getFromFusionTables
-
-0.1.11
------------------------
-* New feature: **Fusion Tables**
-
-0.1.10
------------------------
-* New feature: **Custom controls**
-
-0.1.9
------------------------
-* New feature: **Static maps**
-
-0.1.8.10
------------------------
-* Better GMaps.Route methods
-
-0.1.8.9
------------------------
-* Fix typo in Polyline events
-* Add InfoWindow events
-
-0.1.8.8
------------------------
-* Add Polyline events
-
-0.1.8.7
------------------------
-* Add drag and dragstart events to Marker
-
-0.1.8.6
------------------------
-* Add avoidHighways, avoidTolls, optimizeWaypoints, unitSystem and waypoints options in getRoutes
-* New method: createMarker
-
-0.1.8.5
------------------------
-* geolocation and geocode methods are static now (using them with GMaps.geolocation and GMaps.geocode)
-
-0.1.8.4
------------------------
-* Fix typo in geocode method
-* Allow all MapOptions in constructor (see 'MapOptions' section in Google Maps API Reference)
-
-0.1.8.3
------------------------
-* Add pane option ('floatPane', 'floatShadow', 'mapPane', 'overlayImage', 'overlayLayer', 'overlayMouseTarget', 'overlayShadow') in drawOverlay
-* New methods: removeOverlay and removeOverlays
-
-0.1.8.2
------------------------
-* Change pane ('floatPane' to 'overlayLayer') in drawOverlay
-
-0.1.8.1
------------------------
-* Fix bug in drawCircle
-
-0.1.8
------------------------
-* New feature: **Overlays**
-* New method: drawCircle
-
-0.1.7.1
------------------------
-* Bug fix: zoomIn/zoomOut can change zoom by argument
-* New method: setZoom
-
-0.1.7
------------------------
-* New class: **GMaps.Route**
-
-0.1.6
------------------------
-* New feature: **Geofence** (with markers)
-* New method: **drawPolygon**
-* Bug fix: Change reserved word in Context menu
-
-0.1.5
------------------------
-* New feature: **Geocoding**
-* New method: **drawSteppedRoute** (similar to travelRoute)
-
-0.1.4
------------------------
-* New events in **addMarker**
-* Add step_number property in **travelRoute** method
-
-0.1.3
------------------------
-* New feature: **Context menu** (for map and marker only)
-* New method: **travelRoute**
-* Change setCenter to panTo in GMaps **setCenter** method
-* Save entire route data in routes array (instead saving only route path)
-* Context menu and Route example (using **travelRoute**)
-
-0.1.2
------------------------
-* **drawPolyline** can accept both an array of LatLng objets or an array of coordinates
-* New methods: **getRoutes** and **drawRoute**
-* Route example
-
-0.1.1
------------------------
-* Rename **drawRoute** method to **drawPolyline** (more accurate)
-* Marker example
-
-0.1 - Initial release
------------------------
-* Map events
-* Geolocation
-* Add Markers
-* Marker infoWindows
-* Draw routes and circles
-* Initial examples
 
 License
 ---------
