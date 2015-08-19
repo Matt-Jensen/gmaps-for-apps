@@ -92,18 +92,17 @@ describe('Instance Helpers', function () {
     beforeAll(function() {
       // Add one info window
       infoWindow = mapInstance.addInfoWindow({
+        id: 'info-window-id',
         lat: 34.54148095772571,
         lng: -112.47004508972168,
         content: '<h1>test</h1>'
       });
 
       marker = mapInstance.addMarker({
+        id: 'record-id',
         lat : -12.0533,
         lng: -77.0293,
         title : 'New marker',
-        details: {
-          id: 'record-id'
-        }
       });
     });
 
@@ -111,8 +110,12 @@ describe('Instance Helpers', function () {
       expect(mapInstance.hasChild(infoWindow, 'info-windows')).toBe(true);
     });
 
-    it('should return true for details.id string w/ singular type', function() {
-      expect(mapInstance.hasChild(marker.details.id, 'marker')).toBe(true);
+    it('should return true for id string w/ singular type', function() {
+      expect(mapInstance.hasChild(marker.id, 'marker')).toBe(true);
+    });
+
+    it('should return true for id string w/ plural camel case type', function() {
+      expect(mapInstance.hasChild(infoWindow.id, 'infoWindows')).toBe(true);
     });
   });
 
