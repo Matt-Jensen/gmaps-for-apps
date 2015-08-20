@@ -10,12 +10,12 @@ describe('Creating a map', function() {
 
     beforeAll(function() {
       container = document.createElement('div');
-      container.id = 'marker-map';
+      container.id = 'standard-map';
       container.className = 'map';
       document.body.appendChild(container);
 
       basicMap = new GMaps({
-        el : '#marker-map',
+        el : '#standard-map',
         lat: -12.0433,
         lng: -77.0283,
         zoom: 12
@@ -23,6 +23,7 @@ describe('Creating a map', function() {
     });
 
     afterAll(function() {
+      basicMap.destroy();
       document.body.removeChild(container);
     });
 
@@ -65,6 +66,7 @@ describe('Creating a map', function() {
     });
 
     afterAll(function() {
+      advancedMap.destroy();
       document.body.removeChild(container);
     });
 
@@ -120,6 +122,7 @@ describe('Creating a map', function() {
     });
 
     afterAll(function() {
+      mapWithEvents.destroy();
       document.body.removeChild(container);
     });
 
@@ -199,6 +202,7 @@ describe('Creating a map', function() {
     });
 
     afterAll(function() {
+      mapWithCustomControls.destroy();
       document.body.removeChild(container);
     });
 
@@ -211,6 +215,68 @@ describe('Creating a map', function() {
 
       expect(callbacks.onclick).toHaveBeenCalled();
       expect(mapWithCustomControls.markers.length).toEqual(1);
+    });
+  });
+
+  describe('destroing map', function() {
+    var destroyMap, container, originalClearInstanceListeners;
+
+    beforeAll(function() {
+      container = document.createElement('div');
+      container.id = 'destroy-map';
+      container.className = 'map';
+      document.body.appendChild(container);
+
+      destroyMap = new GMaps({
+        el : '#destroy-map',
+        lat: -12.0433,
+        lng: -77.0283,
+        zoom: 12
+      });
+
+      // Add `_mapEventListeners`
+      destroyMap.setContextMenu({
+        control: 'marker',
+        options: [{
+          title: 'Center here',
+          name: 'center_here'
+        }]
+      });
+
+      originalClearInstanceListeners = google.maps.event.clearInstanceListeners;
+    });
+
+    afterAll(function() {
+      document.body.removeChild(container);
+      google.maps.event.clearInstanceListeners = originalClearInstanceListeners;
+    });
+
+    it('should empty element, remove children, clear event and instance listeners', function() {
+      spyOn(destroyMap, 'removeMarkers').and.callThrough();
+      spyOn(destroyMap, 'removeOverlays').and.callThrough();
+      spyOn(destroyMap, 'removeTexts').and.callThrough();
+      spyOn(destroyMap, 'removePolygons').and.callThrough();
+      spyOn(destroyMap, 'removePolylines').and.callThrough();
+      spyOn(destroyMap, 'removeCircles').and.callThrough();
+      spyOn(destroyMap, 'removeRectangles').and.callThrough();
+      spyOn(destroyMap, 'removeInfoWindows').and.callThrough();
+      spyOn(google.maps.event, 'clearInstanceListeners').and.callThrough();
+
+      destroyMap.destroy();
+
+      expect(destroyMap.removeMarkers).toHaveBeenCalled();
+      expect(destroyMap.removeOverlays).toHaveBeenCalled();
+      expect(destroyMap.removeTexts).toHaveBeenCalled();
+      expect(destroyMap.removePolygons).toHaveBeenCalled();
+      expect(destroyMap.removePolylines).toHaveBeenCalled();
+      expect(destroyMap.removeCircles).toHaveBeenCalled();
+      expect(destroyMap.removeRectangles).toHaveBeenCalled();
+      expect(destroyMap.removeInfoWindows).toHaveBeenCalled();
+      expect(google.maps.event.clearInstanceListeners).toHaveBeenCalled();
+
+      expect(destroyMap._mapEventListeners.length).toEqual(0);
+      expect(destroyMap.map).toBe(null);
+      expect(destroyMap.el.innerHTML.length).toEqual(0);
     });
   });
 });

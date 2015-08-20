@@ -24,6 +24,7 @@ describe('GMap Info Window', function() {
 
      // Add one info window
      infoWindow = mapInstance.addInfoWindow({
+        id: 'info-window-id',
         lat: 34.54148095772571,
         lng: -112.47004508972168
       });
@@ -40,6 +41,10 @@ describe('GMap Info Window', function() {
 
     it('should have the defined content', function() {
       expect(infoWindow.getContent()).toBeTruthy();
+    });
+
+    it('should have the configured id', function() {
+      expect(infoWindow.id).toEqual('info-window-id');
     });
   });
 
@@ -89,7 +94,7 @@ describe('GMap Info Window', function() {
         expect(callbacks.onmousemove).toHaveBeenCalled();
         expect(callbacks.onclick).toHaveBeenCalled();
         done();
-      });
+      }, 10);
     }, 100);
   });
 

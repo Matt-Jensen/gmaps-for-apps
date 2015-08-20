@@ -9,14 +9,14 @@
   <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="examples.css" />
   <script type="text/javascript">
-    var map;
+    var map, overlay;
     $(document).ready(function(){
       map = new GMaps({
         el: '#map',
         lat: -12.043333,
         lng: -77.028333
       });
-      map.drawOverlay({
+      overlay = map.addOverlay({
         lat: map.getCenter().lat(),
         lng: map.getCenter().lng(),
         layer: 'overlayLayer',
@@ -35,7 +35,7 @@
     </div>
     <div class="span6">
       <p>You can add overlays using:</p>
-      <pre>map.drawOverlay({
+      <pre>map.addOverlay({
   lat: -12.043333,
   lng: -77.028333,
   content: '&lt;div class="overlay"&gt;Lima&lt;/div&gt;',

@@ -23,7 +23,8 @@ describe('GMaps Polylines', function() {
 
   describe('creation', function() {
     beforeAll(function() {
-      polyline = mapInstance.drawPolyline({
+      polyline = mapInstance.addPolyline({
+        id: 'polyline-id',
         path : path,
         strokeColor : '#131540',
         strokeOpacity : 0.6,
@@ -45,6 +46,10 @@ describe('GMaps Polylines', function() {
 
       expect(parseFloat(firstPoint.lat().toFixed(4))).toEqual(-12.0440);
       expect(parseFloat(firstPoint.lng().toFixed(4))).toEqual(-77.0247);
+    });
+
+    it('should have the configured id', function() {
+      expect(polyline.id).toEqual('polyline-id');
     });
   });
 
@@ -72,7 +77,7 @@ describe('GMaps Polylines', function() {
       spyOn(callbacks, 'onmousemove').and.callThrough();
       spyOn(callbacks, 'onmouseover').and.callThrough();
 
-      polyline = mapInstance.drawPolyline({
+      polyline = mapInstance.addPolyline({
         path: path,
         strokeColor: '#131540',
         strokeOpacity: 0.6,
@@ -102,7 +107,7 @@ describe('GMaps Polylines', function() {
   describe('removal', function() {
     beforeEach(function() {
       // Continue to add polylines
-      mapInstance.drawPolyline({
+      mapInstance.addPolyline({
         path : path,
         strokeColor : '#131540',
         strokeOpacity : 0.6,

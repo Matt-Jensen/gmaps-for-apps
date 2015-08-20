@@ -15,6 +15,7 @@ describe('Text Elements', function() {
     });
 
     textElement = mapInstance.addText({
+      id: 'text-id',
       lat: 30.257806291133193,
       lng: -97.72566276602447,
       text: 'Wild Stallions!'
@@ -25,13 +26,19 @@ describe('Text Elements', function() {
     document.body.removeChild(container);
   });
 
-  it('should add the text to the texts store', function() {
-    expect(mapInstance.texts.length).toEqual(1);
-    expect(mapInstance.texts[0]).toEqual(textElement);
-  });
+  describe('creating', function() {
+    it('should add the text to the texts store', function() {
+      expect(mapInstance.texts.length).toEqual(1);
+      expect(mapInstance.texts[0]).toEqual(textElement);
+    });
 
-  it('should add the text in the current map', function() {
-    expect(textElement.getMap()).toEqual(mapInstance.map);
+    it('should add the text in the current map', function() {
+      expect(textElement.getMap()).toEqual(mapInstance.map);
+    });
+
+    it('should have configured id', function() {
+      expect(textElement.id).toEqual('text-id');
+    });
   });
 
   describe('events', function() {

@@ -30,14 +30,14 @@ describe('Creating event listeners', function() {
       title : 'New marker'
     });
 
-    line = map_events.drawPolyline({
+    line = map_events.addPolyline({
       path : [[-12.0440, -77.0247], [-12.0544, -77.0302], [-12.0551, -77.0303], [-12.0759, -77.0276], [-12.0763, -77.0279], [-12.0768, -77.0289], [-12.0885, -77.0241], [-12.0908, -77.0227]],
       strokeColor : '#131540',
       strokeOpacity : 0.6,
       strokeWeight : 6
     });
 
-    polygon = map_events.drawPolygon({
+    polygon = map_events.addPolygon({
       paths : [[-12.0403,-77.0337],[-12.0402,-77.0399],[-12.0500,-77.0244],[-12.0448,-77.0215]],
       strokeColor : '#25D359',
       strokeOpacity : 1,
@@ -52,11 +52,11 @@ describe('Creating event listeners', function() {
       radius : 350
     });
 
-    rectangle = map_events.drawRectangle({
+    rectangle = map_events.addRectangle({
       bounds: [[-12.030397656836609,-77.02373871559225],[-12.034804866577001,-77.01154422636042]]
     });
 
-    overlay = map_events.drawOverlay({
+    overlay = map_events.addOverlay({
       lat: -12.040504866577001,
       lng: -77.02024422636042,
       content: '<h1>testing</h1>'
@@ -375,7 +375,7 @@ describe('Creating event listeners', function() {
       });
 
       it('should trigger the listener created', function() {
-        added_line = added_line || map_events.drawPolyline({
+        added_line = added_line || map_events.addPolyline({
           path : [[-12.0420, -77.0247], [-12.0544, -77.0102], [-12.0751, -77.0903], [-12.0759, -77.0276], [-12.0763, -77.0279], [-12.0768, -77.0289], [-12.0885, -77.0241], [-12.0908, -77.0227]],
           strokeColor : '#271804',
           strokeOpacity : 0.1,
@@ -420,7 +420,7 @@ describe('Creating event listeners', function() {
       });
 
       it('should trigger the listener created', function() {
-        added_polygon = added_polygon || map_events.drawPolygon({
+        added_polygon = added_polygon || map_events.addPolygon({
           paths : [[-12.0203,-77.0137],[-12.0402,-77.0109],[-12.0500,-77.0144],[-12.0848,-77.0115]],
           strokeColor : '#D32559',
           strokeOpacity : 0.7,
@@ -510,7 +510,7 @@ describe('Creating event listeners', function() {
       });
 
       it('should trigger the listener created', function() {
-        added_rectangle = added_rectangle || map_events.drawRectangle({
+        added_rectangle = added_rectangle || map_events.addRectangle({
           bounds: [[-12.030397656836609,-77.02373871559225],[-12.034804866577001,-77.01154422636042]]
         });
 
@@ -551,7 +551,7 @@ describe('Creating event listeners', function() {
       });
 
       it('should trigger the listener created', function() {
-        added_overlay = added_overlay || map_events.drawOverlay({
+        added_overlay = added_overlay || map_events.addOverlay({
           lat: -12.040504866577001,
           lng: -77.02024422636042,
           content: '<h1>testing</h1>'

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GMaps.js &mdash; Basic</title>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+  <script type="text/javascript" src="../gmaps.js"></script>
+  <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="examples.css" />
+</head>
+<body>
+  <h1>GMaps.js &mdash; Basic</h1>
+  <div class="row">
+    <div class="span11">
+      <div id="map"></div>
+    </div>
+    <div class="span6">
+      <p>Using GMaps.js is as easy as:</p>
+      <pre>new GMaps({
+  el: '#map',
+  lat: -12.043333,
+  lng: -77.028333
+});</pre>
+      <p>You must define <strong>container ID</strong>, <strong>latitude</strong> and <strong>longitude</strong> of the map's center.</p>
+      <p><span class="label notice">Note: </span>You also can define <strong>zoom</strong>, <strong>width</strong> and <strong>height</strong>. By default, zoom is 15. Width and height in a CSS class will replace these values.</p>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var map = {};
+    createNewMap();
+
+    function createNewMap() {
+      map.map = new GMaps({
+        el: '#map',
+        lat: -12.043333,
+        lng: -77.028333,
+        zoomControl: true,
+        zoomControlOpt: {
+          style : 'SMALL',
+          position: 'TOP_LEFT'
+        },
+        panControl: false,
+        streetViewControl: false,
+        mapTypeControl: false,
+        overviewMapControl: false,
+        click: function(e){
+
+          // Less Expensive
+          map.map.addMarker({
+            lat: e.latLng.lat(),
+            lng: e.latLng.lng()
+          });
+
+          // Very Expensive
+          // map.map.addInfoWindow({
+          //   lat: e.latLng.lat(),
+          //   lng: e.latLng.lng(),
+          //   content: [
+          //     '<h3>Info Window</h3>',
+          //     '<p>With HTML content, plus...</p>',
+          //     '<button>Abstracted Event handlers</button>'
+          //   ].join(''),
+          //   click: function(e) {
+          //     alert('Consider your event handled.');
+          //   },
+          //   closeclick: function(e) {
+          //     alert('Hey you closed my Info Window!');
+          //   }
+          // });
+        }
+      });
+    };
+
+    function creatify() {
+      createNewMap();
+
+      window.setTimeout(function destroyify() {
+        map.map.destroy();
+        delete map.map;
+
+        window.setTimeout(function creatification() { 
+          creatify();
+        }, 1000);
+      }, 3000);
+    }
+
+    creatify();
+
+  </script>
+</body>
+</html>

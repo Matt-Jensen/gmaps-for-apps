@@ -24,7 +24,8 @@ describe('Polygons', function() {
 
   describe('creating', function() {
     beforeAll(function() {
-      polygon = mapInstance.drawPolygon({
+      polygon = mapInstance.addPolygon({
+        id: 'polygon-id',
         paths : paths,
         strokeColor : '#25D359',
         strokeOpacity : 1,
@@ -48,6 +49,10 @@ describe('Polygons', function() {
 
       expect(parseFloat(firstPoint.lat().toFixed(4))).toEqual(-12.0403);
       expect(parseFloat(firstPoint.lng().toFixed(4))).toEqual(-77.0337);
+    });
+
+    it('should have the configured id', function() {
+      expect(polygon.id).toEqual('polygon-id')
     });
   });
 
@@ -75,7 +80,7 @@ describe('Polygons', function() {
       spyOn(callbacks, 'onmousedown').and.callThrough();
       spyOn(callbacks, 'onmousemove').and.callThrough();
 
-      polygon = mapInstance.drawPolygon({
+      polygon = mapInstance.addPolygon({
         paths : paths,
         strokeColor: '#25D359',
         strokeOpacity: 1,
@@ -107,7 +112,7 @@ describe('Polygons', function() {
   describe('removing', function() {
     beforeEach(function() {
       // Continuously add polygons
-      mapInstance.drawPolygon({
+      mapInstance.addPolygon({
         paths : paths,
         strokeColor : '#25D359',
         strokeOpacity : 1,

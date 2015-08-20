@@ -17,7 +17,7 @@
         lng: -77.028333
       });
       var bounds = [[-12.030397656836609,-77.02373871559225],[-12.034804866577001,-77.01154422636042]];
-      rectangle = map.drawRectangle({
+      rectangle = map.addRectangle({
         bounds: bounds,
         strokeColor: '#BBD8E9',
         strokeOpacity: 1,
@@ -27,7 +27,7 @@
       });
 
       var paths = [[-12.040397656836609,-77.03373871559225],[-12.040248585302038,-77.03993927003302],[-12.050047116528843,-77.02448169303511],[-12.044804866577001,-77.02154422636042]];
-      polygon = map.drawPolygon({
+      polygon = map.addPolygon({
         paths: paths,
         strokeColor: '#25D359',
         strokeOpacity: 1,
@@ -38,6 +38,8 @@
       var lat = -12.040504866577001;
       var lng = -77.02024422636042;
       circle = map.addCircle({
+        _id: '_circle_id',
+        id: 'circle-id',
         lat: lat,
         lng: lng,
         radius: 350,
@@ -47,6 +49,7 @@
         fillColor: '#432070',
         fillOpacity: 0.6
       });
+      console.log(circle._id, circle.id);
       for(var i in paths){
         bounds.push(paths[i]);
       }
@@ -71,7 +74,7 @@
     </div>
     <div class="span6">
       <p>You can draw geometry overlays (which can be a polygon or a rectangle or a circle):</p>
-      <pre>polygon = map.drawRectangle({
+      <pre>polygon = map.addRectangle({
   bounds: bounds,
   strokeColor: '#BBD8E9',
   strokeOpacity: 1,
@@ -79,7 +82,7 @@
   fillColor: '#BBD8E9',
   fillOpacity: 0.6
 });
-polygon = map.drawPolygon({
+polygon = map.addPolygon({
   paths: paths,
   strokeColor: '#25D359',
   strokeOpacity: 1,

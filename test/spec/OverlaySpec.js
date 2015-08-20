@@ -14,7 +14,8 @@ describe('Overlays', function() {
       zoom : 12
     });
 
-    overlay = mapInstance.drawOverlay({
+    overlay = mapInstance.addOverlay({
+      id: 'overlay-id',
       lat: mapInstance.getCenter().lat(),
       lng: mapInstance.getCenter().lng(),
       layer: 'overlayLayer',
@@ -28,13 +29,19 @@ describe('Overlays', function() {
     document.body.removeChild(container);
   });
 
-  it('should add the overlay to the overlays collection', function() {
-    expect(mapInstance.overlays.length).toEqual(1);
-    expect(mapInstance.overlays[0]).toEqual(overlay);
-  });
+  describe('creating', function() {
+    it('should add the overlay to the overlays collection', function() {
+      expect(mapInstance.overlays.length).toEqual(1);
+      expect(mapInstance.overlays[0]).toEqual(overlay);
+    });
 
-  it('should add the overlay in the current map', function() {
-    expect(overlay.getMap()).toEqual(mapInstance.map);
+    it('should add the overlay in the current map', function() {
+      expect(overlay.getMap()).toEqual(mapInstance.map);
+    });
+
+    it('should have the configured id', function() {
+      expect(overlay.id).toEqual('overlay-id');
+    });
   });
 
   describe('events', function() {
@@ -60,7 +67,7 @@ describe('Overlays', function() {
       spyOn(callbacks, 'onmousemove').and.callThrough();
       spyOn(callbacks, 'onrightclick').and.callThrough();
 
-      overlayWithClick = mapInstance.drawOverlay({
+      overlayWithClick = mapInstance.addOverlay({
         lat: mapInstance.getCenter().lat(),
         lng: mapInstance.getCenter().lng(),
         content: '<p>Clickable overlay</p>',
@@ -91,7 +98,7 @@ describe('Overlays', function() {
   describe('removing', function() {
     beforeAll(function() {
       // continually add overlays
-      overlay = mapInstance.drawOverlay({
+      overlay = mapInstance.addOverlay({
         lat: mapInstance.getCenter().lat(),
         lng: mapInstance.getCenter().lng(),
         content: '<p>Clickable overlay</p>'

@@ -21,7 +21,7 @@ describe('Routes', function() {
 
   describe('Drawing a route', function() {
     it('should add a line in the current map', function(done) {
-      mapInstance.drawRoute({
+      mapInstance.addRoute({
         origin : [-12.044012922866312, -77.02470665341184],
         destination : [-12.090814532191756, -77.02271108990476],
         travelMode : 'driving',

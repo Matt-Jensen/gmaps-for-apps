@@ -64,7 +64,7 @@
 
       path = [[-12.040397656836609,-77.03373871559225], [-12.040248585302038,-77.03993927003302], [-12.050047116528843,-77.02448169303511], [-12.044804866577001,-77.02154422636042]];
 
-      map.drawPolygon({
+      map.addPolygon({
         paths: paths,
         useGeoJSON: true,
         strokeColor: '#131540',
@@ -72,7 +72,7 @@
         strokeWeight: 6
       });
 
-      map.drawPolygon({
+      map.addPolygon({
         paths: path,
         strokeColor: '#131540',
         strokeOpacity: 0.6,
@@ -91,7 +91,7 @@
       <p>You can add polygons in GMaps.js this way:</p>
       <pre>path = [[-12.040397656836609,-77.03373871559225], [-12.040248585302038,-77.03993927003302], [-12.050047116528843,-77.02448169303511], [-12.044804866577001,-77.02154422636042]];
 
-map.drawPolygon({
+map.addPolygon({
   paths: path,
   strokeColor: '#131540',
   strokeOpacity: 0.6,
