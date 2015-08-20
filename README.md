@@ -30,7 +30,7 @@ The original [GMaps](https://github.com/hpneo/gmaps) is a fantasic abstraction f
 - Consistent storing of map children, no more arrays of [polygon, circle, polygon]
 - Map children maintain references to their given id's.
 - First class Info-Windows children.
-- First class <strong> text element children.
+- First class strong HTML text element children.
 - Event more event support for map children.
 - Destroy map method so you can remove your Map with ease.
 - Destroy any individual map child with remove{Child}(childInstanceObj).
