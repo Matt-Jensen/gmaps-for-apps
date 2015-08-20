@@ -97,7 +97,7 @@ module.exports = function(grunt) {
       },
       baseRelease: {
         configFile: 'karma.conf.js',
-        browsers: [ 'Safari'],
+        browsers: ['Chrome', 'Firefox', 'Opera', 'Safari'],
         options: {
           files: [
             'http://maps.google.com/maps/api/js?sensor=true',
