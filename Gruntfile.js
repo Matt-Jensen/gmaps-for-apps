@@ -94,6 +94,66 @@ module.exports = function(grunt) {
             'test/spec/UtilsSpec.js'
           ]
         }
+      },
+      baseRelease: {
+        configFile: 'karma.conf.js',
+        browsers: [ 'Safari'],
+        options: {
+          files: [
+            'http://maps.google.com/maps/api/js?sensor=true',
+            './gmaps.js',
+            'test/spec/CircleSpec.js',
+            'test/spec/ControlSpec.js',
+            'test/spec/EventSpec.js',
+            'test/spec/InfoWindowSpec.js',
+            'test/spec/InstanceHelpersSpec.js',
+            'test/spec/LayerSpec.js',
+            'test/spec/MapSpec.js',
+            // 
+            'test/spec/PolygonSpec.js',
+            'test/spec/PolylineSpec.js',
+            'test/spec/RectangleSpec.js',
+            // 
+            'test/spec/RouteSpec.js',
+            'test/spec/StyleSpec.js',
+            'test/spec/TextSpec.js'
+          ]
+        }
+      },
+      streetViewRelease: {
+        configFile: 'karma.conf.js',
+        browsers: ['Chrome', 'Firefox', 'Opera', 'Safari'],
+        options: {
+          files: [
+            'http://maps.google.com/maps/api/js?sensor=true',
+            './gmaps.js',
+            'test/spec/StreetViewSpec.js'
+          ]
+        }
+      },
+      overlaysRelease: {
+        configFile: 'karma.conf.js',
+        browsers: ['Chrome', 'Firefox', 'Opera', 'Safari'],
+        port: 9877,
+        options: {
+          files: [
+            'http://maps.google.com/maps/api/js?sensor=true',
+            './gmaps.js',
+            'test/spec/OverlaySpec.js'
+          ]
+        }
+      },
+      utilsRelease: {
+        configFile: 'karma.conf.js',
+        browsers: ['Chrome', 'Firefox', 'Opera', 'Safari'],
+        port: 9878,
+        options: {
+          files: [
+            'http://maps.google.com/maps/api/js?sensor=true',
+            './gmaps.js',
+            'test/spec/UtilsSpec.js'
+          ]
+        }
       }
     },
 
@@ -155,6 +215,10 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test-dev', ['jshint:test', 'karma:base']);
   grunt.registerTask('test-all', ['jshint:test', 'karma:base', 'karma:overlays', 'karma:utils']);
+  grunt.registerTask('test-release', [
+    'jshint:test', 'build', 'jshint:test', 
+    'karma:baseRelease', 'karma:streetViewRelease', 'karma:overlaysRelease', 'karma:utilsRelease'
+  ]);
   grunt.registerTask('dev', ['jshint:main', 'concat', 'umd', 'test-dev', 'watch:dev']);
   grunt.registerTask('build', ['concat', 'umd', 'uglify']);
   grunt.registerTask('default', ['jshint:main', 'concat', 'umd', 'uglify', 'test-all']);

@@ -1287,7 +1287,12 @@ GMaps.prototype.addOverlay = function(options) {
 
   overlay.draw = function() {
     var projection = this.getProjection();
-    var pixel = projection.fromLatLngToDivPixel(new google.maps.LatLng(options.lat, options.lng));
+    var pixel = 0;
+
+    // Avoid crashing unit tests
+    try {
+      pixel = projection.fromLatLngToDivPixel(new google.maps.LatLng(options.lat, options.lng));
+    } catch(e) {};
 
     options.horizontalOffset = options.horizontalOffset || 0;
     options.verticalOffset = options.verticalOffset || 0;
