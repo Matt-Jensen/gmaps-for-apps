@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Matt-Jensen/gmaps-for-apps.svg?branch=master)](https://travis-ci.org/Matt-Jensen/gmaps-for-apps)
+
 GMaps-For-Apps - Simplified Google Maps For Your JavaScript Apps.
 ==================================================================
 *This project is a fork of [GMaps](https://github.com/hpneo/gmaps)*
