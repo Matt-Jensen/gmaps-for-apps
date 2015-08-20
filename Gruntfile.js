@@ -109,11 +109,9 @@ module.exports = function(grunt) {
             'test/spec/InstanceHelpersSpec.js',
             'test/spec/LayerSpec.js',
             'test/spec/MapSpec.js',
-            // 
             'test/spec/PolygonSpec.js',
             'test/spec/PolylineSpec.js',
             'test/spec/RectangleSpec.js',
-            // 
             'test/spec/RouteSpec.js',
             'test/spec/StyleSpec.js',
             'test/spec/TextSpec.js'
@@ -219,6 +217,7 @@ module.exports = function(grunt) {
     'jshint:test', 'build', 'jshint:test', 
     'karma:baseRelease', 'karma:streetViewRelease', 'karma:overlaysRelease', 'karma:utilsRelease'
   ]);
+  grunt.registerTask('travis', ['karma:base', 'karma:overlays', 'karma:utils']);
   grunt.registerTask('dev', ['jshint:main', 'concat', 'umd', 'test-dev', 'watch:dev']);
   grunt.registerTask('build', ['concat', 'umd', 'uglify']);
   grunt.registerTask('default', ['jshint:main', 'concat', 'umd', 'uglify', 'test-all']);

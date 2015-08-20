@@ -4,7 +4,7 @@
   "description": "the easiest way to use Google Maps in your apps",
   "main": "gmaps.js",
   "scripts": {
-    "test": "./node_modules/.bin/grunt test-release"
+    "test": "./node_modules/.bin/grunt travis --browsers Firefox --single-run"
   },
   "repository": {
     "type": "git",
