@@ -52,6 +52,7 @@ module.exports = function(grunt) {
     karma: {
       base: {
         configFile: 'karma.conf.js',
+        browsers: ['Firefox'],
         options: {
           files: [
             'http://maps.google.com/maps/api/js?sensor=true',
@@ -75,6 +76,7 @@ module.exports = function(grunt) {
       },
       overlays: {
         configFile: 'karma.conf.js',
+        browsers: ['Firefox'],
         port: 9877,
         options: {
           files: [
@@ -86,6 +88,7 @@ module.exports = function(grunt) {
       },
       utils: {
         configFile: 'karma.conf.js',
+        browsers: ['Firefox'],
         port: 9878,
         options: {
           files: [
