@@ -17,6 +17,7 @@ describe('Instance Helpers', function () {
   });
 
   afterAll(function() {
+    mapInstance.destroy();
     document.body.removeChild(container);
   });
 

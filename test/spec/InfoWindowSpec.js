@@ -16,6 +16,7 @@ describe('GMap Info Window', function() {
   });
 
   afterAll(function() {
+    mapInstance.destroy();
     document.body.removeChild(container);
   });
 

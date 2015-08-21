@@ -76,6 +76,7 @@ describe('Creating event listeners', function() {
   });
 
   afterAll(function() {
+    map_events.destroy();
     document.body.removeChild(container);
   });
 

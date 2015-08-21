@@ -16,6 +16,7 @@ describe('Layers', function() {
   });
 
   afterAll(function() {
+    mapInstance.destroy();
     document.body.removeChild(container);
   });
 

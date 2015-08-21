@@ -23,6 +23,7 @@ describe('Text Elements', function() {
   });
 
   afterAll(function() {
+    mapInstance.destroy();
     document.body.removeChild(container);
   });
 

@@ -16,6 +16,7 @@ describe('GMaps rectangles', function() {
   });
 
   afterAll(function() {
+    mapInstance.destroy();
     document.body.removeChild(container);
   });
 

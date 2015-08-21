@@ -16,6 +16,7 @@ describe('Creating custom map controls', function () {
   });
 
   afterAll(function() {
+    mapInstance.destroy();
     document.body.removeChild(container);
   });
 

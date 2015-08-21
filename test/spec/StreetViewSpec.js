@@ -16,6 +16,7 @@ describe('Create a Street View Panorama', function() {
   });
 
   afterAll(function() {
+    mapWithStreetview.destroy();
     document.body.removeChild(container);
   });
 

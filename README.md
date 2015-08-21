@@ -134,10 +134,10 @@ Methods for removing all children in one go are:
 
 Testing
 ---------
-Happy to say GMaps For Apps has made strides with the test story.  Now using Jasmine 2.3 and Karma on top of a Chrome web browser. To test for your safe clone the git repo and run:
+Happy to say GMaps For Apps has improved upon the solid test story of GMaps.  Now using Jasmine 2.3 and Karma on top of multiple web browsers. To test for your self clone the git repo and run:
 
 ```js
-grunt test-all
+grunt test-release
 ```
 Requires `node v0.12.7` & `grunt v0.4.1`
 

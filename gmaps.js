@@ -14,7 +14,7 @@
 }(this, function() {
 
 /*!
- * GMaps.js v0.4.18
+ * GMaps.js v0.5.0
  * http://hpneo.github.com/gmaps/
  *
  * Copyright 2015, Matt Jensen
@@ -1027,7 +1027,8 @@ GMaps.prototype.createMarker = function(options) {
       if(!me.pixel){
         me.pixel = map.getProjection();
         if(me.pixel) {
-          me.pixel = (me.pixel &&
+          me.pixel = (
+            me.latLng &&
             me.pixel.fromLatLngToPoint &&
             me.pixel.fromLatLngToPoint(me.latLng)
           );
@@ -1065,9 +1066,10 @@ GMaps.prototype.createMarker = function(options) {
       options.rightclick.apply(this, [e]);
     }
 
-    if (typeof window.context_menu[self.el.id]['marker'] !== undefined) {
-      self.buildContextMenu('marker', e);
-    }
+    // TODO: debug self.el.id is undefined
+    // if (typeof window.context_menu[self.el.id]['marker'] !== undefined) {
+    //   self.buildContextMenu('marker', e);
+    // }
   });
 
   if (marker.fences) {

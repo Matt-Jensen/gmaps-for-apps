@@ -37,6 +37,7 @@ describe('Adding Map Styles', function() {
   });
 
   afterAll(function() {
+    mapInstance.destroy();
     document.body.removeChild(container);
   });
 

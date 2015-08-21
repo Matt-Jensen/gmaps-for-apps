@@ -19,6 +19,7 @@ describe('Polygons', function() {
   });
 
   afterAll(function() {
+    mapInstance.destroy();
     document.body.removeChild(container);
   });
 

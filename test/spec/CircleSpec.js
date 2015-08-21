@@ -16,6 +16,7 @@ describe('GMap circles', function() {
   });
 
   afterAll(function() {
+    mapInstance.destroy();
     document.body.removeChild(container);
   });
 
