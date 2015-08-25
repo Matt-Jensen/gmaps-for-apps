@@ -52,44 +52,108 @@ describe('Text Elements', function() {
           this.passed = true;
         }.bind(context),
 
+        onrightclick: function() {
+          return true;
+        },
+
+        ondblclick: function() {
+          return true;
+        },
+
+        ondrag: function() {
+          return true;
+        },
+
+        ondragend: function() {
+          return true;
+        },
+
+        ondragstart: function() {
+          return true;
+        },
+
+        onmousedown: function() {
+          return true;
+        },
+
+        onmouseout: function() {
+          return true;
+        },
+
+        onmouseover: function() {
+          return true;
+        },
+
         onmousemove: function() {
           return true;
         },
 
-        onrightclick: function() {
+        onmouseup: function() {
           return true;
         }
       };
 
       spyOn(callbacks, 'onclick').and.callThrough();
-      spyOn(callbacks, 'onmousemove').and.callThrough();
       spyOn(callbacks, 'onrightclick').and.callThrough();
+      spyOn(callbacks, 'ondblclick').and.callThrough();
+      spyOn(callbacks, 'ondrag').and.callThrough();
+      spyOn(callbacks, 'ondragend').and.callThrough();
+      spyOn(callbacks, 'ondragstart').and.callThrough();
+      spyOn(callbacks, 'onmousedown').and.callThrough();
+      spyOn(callbacks, 'onmouseout').and.callThrough();
+      spyOn(callbacks, 'onmouseover').and.callThrough();
+      spyOn(callbacks, 'onmousemove').and.callThrough();
+      spyOn(callbacks, 'onmouseup').and.callThrough();
 
       textWithEvents = mapInstance.addText({
         lat: mapInstance.getCenter().lat(),
         lng: mapInstance.getCenter().lng(),
         text: 'tester',
         click: callbacks.onclick,
+        rightclick: callbacks.onrightclick,
+        dblclick: callbacks.ondblclick,
+        drag: callbacks.ondrag,
+        dragend: callbacks.ondragend,
+        dragstart: callbacks.ondragstart,
+        mousedown: callbacks.onmousedown,
+        mouseout: callbacks.onmouseout,
+        mouseover: callbacks.onmouseover,
         mousemove: callbacks.onmousemove,
-        rightclick: callbacks.onrightclick
+        mouseup: callbacks.onmouseup
       });
     });
 
-    it('should respond to click and maintain method context', function() {
+    it('should respond to click and maintain method context', function(done) {
       google.maps.event.addListenerOnce(textWithEvents, 'ready', function () {
         // responds to click event and maintain method context
         google.maps.event.trigger(textWithEvents.el, 'click');
-        expect(callbacks.onclick).toHaveBeenCalled();
+        expect(callbacks.onclick.calls.count()).toEqual(1);
         expect(context.passed).toBe(true);
 
-        // binds multiple events
-        google.maps.event.trigger(textWithEvents.el, 'mousemove', {});
-        expect(callbacks.onmousemove).toHaveBeenCalled();
-
         google.maps.event.trigger(textWithEvents.el, 'rightclick', {});
-        expect(callbacks.onrightclick).toHaveBeenCalled();
+        google.maps.event.trigger(textWithEvents.el, 'dblclick', {});
+        google.maps.event.trigger(textWithEvents.el, 'drag', {});
+        google.maps.event.trigger(textWithEvents.el, 'dragend', {});
+        google.maps.event.trigger(textWithEvents.el, 'dragstart', {});
+        google.maps.event.trigger(textWithEvents.el, 'mousedown', {});
+        google.maps.event.trigger(textWithEvents.el, 'mouseout', {});
+        google.maps.event.trigger(textWithEvents.el, 'mouseover', {});
+        google.maps.event.trigger(textWithEvents.el, 'mousemove', {});
+        google.maps.event.trigger(textWithEvents.el, 'mouseup', {});
+
+        expect(callbacks.onrightclick.calls.count()).toEqual(1);
+        expect(callbacks.ondblclick.calls.count()).toEqual(1);
+        expect(callbacks.ondrag.calls.count()).toEqual(1);
+        expect(callbacks.ondragend.calls.count()).toEqual(1);
+        expect(callbacks.ondragstart.calls.count()).toEqual(1);
+        expect(callbacks.onmousedown.calls.count()).toEqual(1);
+        expect(callbacks.onmouseout.calls.count()).toEqual(1);
+        expect(callbacks.onmouseover.calls.count()).toEqual(1);
+        expect(callbacks.onmousemove.calls.count()).toEqual(1);
+        expect(callbacks.onmouseup.calls.count()).toEqual(1);
+        done();
       });
-    });
+    }, 5000);
   });
 
   describe('removing', function() {

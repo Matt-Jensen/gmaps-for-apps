@@ -63,20 +63,61 @@ describe('GMap circles', function() {
           this.passed = true;
         }.bind(context),
 
-        onmousemove: function() {
+        onrightclick: function() {
+          return true;
+        },
+
+        ondblclick: function() {
+          return true;
+        },
+
+        ondrag: function() {
+          return true;
+        },
+
+        ondragend: function() {
+          return true;
+        },
+
+        ondragstart: function() {
+          return true;
+        },
+
+        onmousedown: function() {
           return true;
         },
 
         onmouseout: function() {
           return true;
+        },
+
+        onmouseover: function() {
+          return true;
+        },
+
+        onmousemove: function() {
+          return true;
+        },
+
+        onmouseup: function() {
+          return true;
         }
       };
 
       spyOn(callbacks, 'onclick').and.callThrough();
-      spyOn(callbacks, 'onmousemove').and.callThrough();
+      spyOn(callbacks, 'onrightclick').and.callThrough();
+      spyOn(callbacks, 'ondblclick').and.callThrough();
+      spyOn(callbacks, 'ondrag').and.callThrough();
+      spyOn(callbacks, 'ondragend').and.callThrough();
+      spyOn(callbacks, 'ondragstart').and.callThrough();
+      spyOn(callbacks, 'onmousedown').and.callThrough();
       spyOn(callbacks, 'onmouseout').and.callThrough();
+      spyOn(callbacks, 'onmouseover').and.callThrough();
+      spyOn(callbacks, 'onmousemove').and.callThrough();
+      spyOn(callbacks, 'onmouseup').and.callThrough();
 
       circle = mapInstance.addCircle({
+        id: 'unique-circle',
         lat : -12.040504866577001,
         lng : -77.02024422636042,
         radius : 350,
@@ -85,12 +126,17 @@ describe('GMap circles', function() {
         strokeWeight : 3,
         fillColor : '#432070',
         fillOpacity : 0.6,
-        details: {
-          id: 'rosebud'
-        },
-        click : callbacks.onclick,
-        mousemove : callbacks.onmousemove,
-        mouseout : callbacks.onmouseout
+        click: callbacks.onclick,
+        rightclick: callbacks.onrightclick,
+        dblclick: callbacks.ondblclick,
+        drag: callbacks.ondrag,
+        dragend: callbacks.ondragend,
+        dragstart: callbacks.ondragstart,
+        mousedown: callbacks.onmousedown,
+        mouseout: callbacks.onmouseout,
+        mouseover: callbacks.onmouseover,
+        mousemove: callbacks.onmousemove,
+        mouseup: callbacks.onmouseup
       });
     });
 
@@ -100,12 +146,28 @@ describe('GMap circles', function() {
       expect(context.passed).toBe(true);
     });
 
-    it('should bind multiple events', function() {
-      google.maps.event.trigger(circle, 'mousemove', {});
-      expect(callbacks.onmousemove).toHaveBeenCalled();
-
+    it('should subscribe all mouse events', function() {
+      google.maps.event.trigger(circle, 'rightclick', {});
+      google.maps.event.trigger(circle, 'dblclick', {});
+      google.maps.event.trigger(circle, 'drag', {});
+      google.maps.event.trigger(circle, 'dragend', {});
+      google.maps.event.trigger(circle, 'dragstart', {});
       google.maps.event.trigger(circle, 'mouseout', {});
-      expect(callbacks.onmouseout).toHaveBeenCalled();
+      google.maps.event.trigger(circle, 'mousedown', {});
+      google.maps.event.trigger(circle, 'mouseover', {});
+      google.maps.event.trigger(circle, 'mousemove', {});
+      google.maps.event.trigger(circle, 'mouseup', {});
+
+      expect(callbacks.onrightclick.calls.count()).toEqual(1);
+      expect(callbacks.ondblclick.calls.count()).toEqual(1);
+      expect(callbacks.ondrag.calls.count()).toEqual(1);
+      expect(callbacks.ondragend.calls.count()).toEqual(1);
+      expect(callbacks.ondragstart.calls.count()).toEqual(1);
+      expect(callbacks.onmousedown.calls.count()).toEqual(1);
+      expect(callbacks.onmouseout.calls.count()).toEqual(1);
+      expect(callbacks.onmouseover.calls.count()).toEqual(1);
+      expect(callbacks.onmousemove.calls.count()).toEqual(1);
+      expect(callbacks.onmouseup.calls.count()).toEqual(1);
     });
   });
 

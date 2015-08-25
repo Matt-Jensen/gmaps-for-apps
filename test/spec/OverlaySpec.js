@@ -46,7 +46,7 @@ describe('Overlays', function() {
   });
 
   describe('events', function() {
-    var callbacks, context, overlayWithClick;
+    var callbacks, context, overlayWithEvents;
 
     beforeAll(function() {
       context = { passed: false };
@@ -55,45 +55,110 @@ describe('Overlays', function() {
           this.passed = true;
         }.bind(context),
 
+        onrightclick: function() {
+          return true;
+        },
+
+        ondblclick: function() {
+          return true;
+        },
+
+        ondrag: function() {
+          return true;
+        },
+
+        ondragend: function() {
+          return true;
+        },
+
+        ondragstart: function() {
+          return true;
+        },
+
+        onmousedown: function() {
+          return true;
+        },
+
+        onmouseout: function() {
+          return true;
+        },
+
+        onmouseover: function() {
+          return true;
+        },
+
         onmousemove: function() {
           return true;
         },
 
-        onrightclick: function() {
+        onmouseup: function() {
           return true;
         }
       };
 
       spyOn(callbacks, 'onclick').and.callThrough();
-      spyOn(callbacks, 'onmousemove').and.callThrough();
       spyOn(callbacks, 'onrightclick').and.callThrough();
+      spyOn(callbacks, 'ondblclick').and.callThrough();
+      spyOn(callbacks, 'ondrag').and.callThrough();
+      spyOn(callbacks, 'ondragend').and.callThrough();
+      spyOn(callbacks, 'ondragstart').and.callThrough();
+      spyOn(callbacks, 'onmousedown').and.callThrough();
+      spyOn(callbacks, 'onmouseout').and.callThrough();
+      spyOn(callbacks, 'onmouseover').and.callThrough();
+      spyOn(callbacks, 'onmousemove').and.callThrough();
+      spyOn(callbacks, 'onmouseup').and.callThrough();
 
-      overlayWithClick = mapInstance.addOverlay({
+      overlayWithEvents = mapInstance.addOverlay({
         lat: mapInstance.getCenter().lat(),
         lng: mapInstance.getCenter().lng(),
         content: '<p>Clickable overlay</p>',
         click: callbacks.onclick,
+        rightclick: callbacks.onrightclick,
+        dblclick: callbacks.ondblclick,
+        drag: callbacks.ondrag,
+        dragend: callbacks.ondragend,
+        dragstart: callbacks.ondragstart,
+        mousedown: callbacks.onmousedown,
+        mouseout: callbacks.onmouseout,
+        mouseover: callbacks.onmouseover,
         mousemove: callbacks.onmousemove,
-        rightclick: callbacks.onrightclick
+        mouseup: callbacks.onmouseup
       });
     });
 
-    it('should respond to click and maintain method context', function(done) {
-      google.maps.event.addListenerOnce(overlayWithClick, 'ready', function () {
+    it('should respond to all mouse events and maintain method context', function(done) {
+      google.maps.event.addListenerOnce(overlayWithEvents, 'ready', function () {
+
+        google.maps.event.trigger(overlayWithEvents.el, 'click', {});
+        google.maps.event.trigger(overlayWithEvents.el, 'rightclick', {});
+        google.maps.event.trigger(overlayWithEvents.el, 'dblclick', {});
+        google.maps.event.trigger(overlayWithEvents.el, 'drag', {});
+        google.maps.event.trigger(overlayWithEvents.el, 'dragend', {});
+        google.maps.event.trigger(overlayWithEvents.el, 'dragstart', {});
+        google.maps.event.trigger(overlayWithEvents.el, 'mousedown', {});
+        google.maps.event.trigger(overlayWithEvents.el, 'mouseout', {});
+        google.maps.event.trigger(overlayWithEvents.el, 'mouseover', {});
+        google.maps.event.trigger(overlayWithEvents.el, 'mousemove', {});
+        google.maps.event.trigger(overlayWithEvents.el, 'mouseup', {});
+
         // responds to click event and maintain method context
-        google.maps.event.trigger(overlayWithClick.el, 'click');
-        expect(callbacks.onclick).toHaveBeenCalled();
         expect(context.passed).toBe(true);
 
-        // binds multiple events
-        google.maps.event.trigger(overlayWithClick.el, 'mousemove', {});
-        expect(callbacks.onmousemove).toHaveBeenCalled();
+        expect(callbacks.onclick.calls.count()).toEqual(1);
+        expect(callbacks.onrightclick.calls.count()).toEqual(1);
+        expect(callbacks.ondblclick.calls.count()).toEqual(1);
+        expect(callbacks.ondrag.calls.count()).toEqual(1);
+        expect(callbacks.ondragend.calls.count()).toEqual(1);
+        expect(callbacks.ondragstart.calls.count()).toEqual(1);
+        expect(callbacks.onmousedown.calls.count()).toEqual(1);
+        expect(callbacks.onmouseout.calls.count()).toEqual(1);
+        expect(callbacks.onmouseover.calls.count()).toEqual(1);
+        expect(callbacks.onmousemove.calls.count()).toEqual(1);
+        expect(callbacks.onmouseup.calls.count()).toEqual(1);
 
-        google.maps.event.trigger(overlayWithClick.el, 'rightclick', {});
-        expect(callbacks.onrightclick).toHaveBeenCalled();
         done();
       });
-    }, 2000);
+    }, 5000);
   });
 
   describe('removing', function() {

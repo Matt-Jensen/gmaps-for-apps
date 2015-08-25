@@ -68,22 +68,62 @@ describe('GMaps rectangles', function() {
     beforeAll(function() {
       context = { passed: false };
       callbacks = {
-        onclick : function() {
+        onclick: function() {
           this.passed = true;
         }.bind(context),
+
+        onrightclick: function() {
+          return true;
+        },
+
+        ondblclick: function() {
+          return true;
+        },
+
+        ondrag: function() {
+          return true;
+        },
+
+        ondragend: function() {
+          return true;
+        },
+
+        ondragstart: function() {
+          return true;
+        },
 
         onmousedown: function() {
           return true;
         },
 
+        onmouseout: function() {
+          return true;
+        },
+
         onmouseover: function() {
+          return true;
+        },
+
+        onmousemove: function() {
+          return true;
+        },
+
+        onmouseup: function() {
           return true;
         }
       };
 
       spyOn(callbacks, 'onclick').and.callThrough();
+      spyOn(callbacks, 'onrightclick').and.callThrough();
+      spyOn(callbacks, 'ondblclick').and.callThrough();
+      spyOn(callbacks, 'ondrag').and.callThrough();
+      spyOn(callbacks, 'ondragend').and.callThrough();
+      spyOn(callbacks, 'ondragstart').and.callThrough();
       spyOn(callbacks, 'onmousedown').and.callThrough();
+      spyOn(callbacks, 'onmouseout').and.callThrough();
       spyOn(callbacks, 'onmouseover').and.callThrough();
+      spyOn(callbacks, 'onmousemove').and.callThrough();
+      spyOn(callbacks, 'onmouseup').and.callThrough();
 
       rectangle = mapInstance.addRectangle({
         bounds : [[-12.0303,-77.0237],[-12.0348,-77.0115]],
@@ -93,8 +133,16 @@ describe('GMaps rectangles', function() {
         fillColor : '#BBD8E9',
         fillOpacity : 0.6,
         click: callbacks.onclick,
+        rightclick: callbacks.onrightclick,
+        dblclick: callbacks.ondblclick,
+        drag: callbacks.ondrag,
+        dragend: callbacks.ondragend,
+        dragstart: callbacks.ondragstart,
         mousedown: callbacks.onmousedown,
-        mouseover: callbacks.onmouseover
+        mouseout: callbacks.onmouseout,
+        mouseover: callbacks.onmouseover,
+        mousemove: callbacks.onmousemove,
+        mouseup: callbacks.onmouseup
       });
     });
 
@@ -104,12 +152,28 @@ describe('GMaps rectangles', function() {
       expect(context.passed).toBe(true);
     });
 
-    it('should subscribe multiple events', function() {
+    it('should subscribe all mouse events', function() {
+      google.maps.event.trigger(rectangle, 'rightclick', {});
+      google.maps.event.trigger(rectangle, 'dblclick', {});
+      google.maps.event.trigger(rectangle, 'drag', {});
+      google.maps.event.trigger(rectangle, 'dragend', {});
+      google.maps.event.trigger(rectangle, 'dragstart', {});
       google.maps.event.trigger(rectangle, 'mousedown', {});
-      expect(callbacks.onmousedown).toHaveBeenCalled();
-
+      // google.maps.event.trigger(rectangle, 'mouseout', {}); // triggers google error
       google.maps.event.trigger(rectangle, 'mouseover', {});
-      expect(callbacks.onmouseover).toHaveBeenCalled();
+      google.maps.event.trigger(rectangle, 'mousemove', {});
+      google.maps.event.trigger(rectangle, 'mouseup', {});
+
+      expect(callbacks.onrightclick.calls.count()).toEqual(1);
+      expect(callbacks.ondblclick.calls.count()).toEqual(1);
+      expect(callbacks.ondrag.calls.count()).toEqual(1);
+      expect(callbacks.ondragend.calls.count()).toEqual(1);
+      expect(callbacks.ondragstart.calls.count()).toEqual(1);
+      expect(callbacks.onmousedown.calls.count()).toEqual(1);
+      // expect(callbacks.onmouseout.calls.count()).toEqual(1);
+      expect(callbacks.onmouseover.calls.count()).toEqual(1);
+      expect(callbacks.onmousemove.calls.count()).toEqual(1);
+      expect(callbacks.onmouseup.calls.count()).toEqual(1);
     });
   });
 

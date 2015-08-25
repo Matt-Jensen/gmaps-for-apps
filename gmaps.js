@@ -524,12 +524,15 @@ GMaps.prototype.addCircle = function(options) {
   var circleEvents = [
     'click',
     'dblclick',
+    'rightclick',
+    'drag',
+    'dragend',
+    'dragstart',
     'mousedown',
     'mousemove',
     'mouseout',
     'mouseover',
-    'mouseup',
-    'rightclick'
+    'mouseup'
   ];
 
   for (var i = 0, l = circleEvents.length, name; i < l; i++) {
@@ -610,13 +613,16 @@ GMaps.prototype.addPolygon = function(options) {
   var polygon = new google.maps.Polygon(options);
   var polygonEvents = [
     'click',
+    'rightclick',
     'dblclick',
+    'drag',
+    'dragend',
+    'dragstart',
     'mousedown',
     'mousemove',
     'mouseout',
     'mouseover',
-    'mouseup',
-    'rightclick'
+    'mouseup'
   ];
 
   for (var ev = 0, l = polygonEvents.length, name; ev < l; ev++) {
@@ -679,13 +685,16 @@ GMaps.prototype.addRectangle = function(options) {
   var rectangle = new google.maps.Rectangle(options);
   var rectangleEvents = [
     'click',
+    'rightclick',
     'dblclick',
+    'drag',
+    'dragend',
+    'dragstart',
     'mousedown',
     'mousemove',
     'mouseout',
     'mouseover',
-    'mouseup',
-    'rightclick'
+    'mouseup'
   ];
 
   for (var ev = 0, l = rectangleEvents.length, name; ev < l; ev++) {
@@ -783,13 +792,16 @@ GMaps.prototype.addPolyline = function(options) {
 
   var polylineEvents = [
     'click',
+    'rightclick',
     'dblclick',
+    'drag',
+    'dragend',
+    'dragstart',
     'mousedown',
     'mousemove',
     'mouseout',
     'mouseover',
-    'mouseup',
-    'rightclick'
+    'mouseup'
   ];
 
   for (i = 0, l = polylineEvents.length; i < l; i++) {
@@ -856,13 +868,16 @@ GMaps.prototype.addInfoWindow = function(options) {
   infoWindow.delegatedEvents = [];
   var mouseEvents = [
     'click',
+    'rightclick',
     'dblclick',
+    'drag',
+    'dragend',
+    'dragstart',
     'mousedown',
-    'mousemove',
     'mouseout',
     'mouseover',
-    'mouseup',
-    'rightclick'
+    'mousemove',
+    'mouseup'
   ];
 
   var i, l, name, removeDelegatedEvent;
@@ -971,10 +986,16 @@ GMaps.prototype.createMarker = function(options) {
   if (options.infoWindow) {
     marker.infoWindow = new google.maps.InfoWindow(options.infoWindow);
 
-    var info_window_events = ['closeclick', 'content_changed', 'domready', 'position_changed', 'zindex_changed'];
+    var infoWindowEvents = [
+      'closeclick',
+      'content_changed',
+      'domready',
+      'position_changed',
+      'zindex_changed'
+    ];
 
-    for (ev = 0, l = info_window_events.length; ev < l; ev++) {
-      name = info_window_events[ev];
+    for (ev = 0, l = infoWindowEvents.length; ev < l; ev++) {
+      name = infoWindowEvents[ev];
       if (options.infoWindow.hasOwnProperty(name)) {
         google.maps.event.addListener(
           marker.infoWindow,
@@ -1008,6 +1029,7 @@ GMaps.prototype.createMarker = function(options) {
     'mousedown',
     'mouseout',
     'mouseover',
+    'mousemove',
     'mouseup'
   ];
 
@@ -1066,10 +1088,9 @@ GMaps.prototype.createMarker = function(options) {
       options.rightclick.apply(this, [e]);
     }
 
-    // TODO: debug self.el.id is undefined
-    // if (typeof window.context_menu[self.el.id]['marker'] !== undefined) {
-    //   self.buildContextMenu('marker', e);
-    // }
+    if (typeof window.contextMenu[self.el.id]['marker'] !== undefined) {
+      self.buildContextMenu('marker', e);
+    }
   });
 
   if (marker.fences) {
@@ -1240,7 +1261,7 @@ GMaps.prototype.addOverlay = function(options) {
           e.cancelBubble = true;
           e.returnValue = false;
         }
-        else {
+        else if(e && typeof e.stopPropagation === 'function') {
           e.stopPropagation();
         }
       };
@@ -1254,13 +1275,16 @@ GMaps.prototype.addOverlay = function(options) {
 
     var overlayEvents = [
       'click',
+      'rightclick',
       'dblclick',
+      'drag',
+      'dragend',
+      'dragstart',
       'mousedown',
-      'mousemove',
       'mouseout',
       'mouseover',
-      'mouseup',
-      'rightclick'
+      'mousemove',
+      'mouseup'
     ];
 
     // If there are any mouse events append the mouse target element
@@ -1422,7 +1446,7 @@ GMaps.prototype.addText = function(options) {
           e.cancelBubble = true;
           e.returnValue = false;
         }
-        else {
+        else if(e && typeof e.stopPropagation === 'function') {
           e.stopPropagation();
         }
       };
@@ -1434,7 +1458,19 @@ GMaps.prototype.addText = function(options) {
       google.maps.event.addDomListener(el, name, preventOverlayEvents());
     }
 
-    var overlayEvents = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+    var overlayEvents = [
+      'click',
+      'rightclick',
+      'dblclick',
+      'drag',
+      'dragend',
+      'dragstart',
+      'mousedown',
+      'mousemove',
+      'mouseout',
+      'mouseover',
+      'mouseup'
+    ];
 
     // If there are any mouse events append the mouse target element
     for (ev = 0, l = overlayEvents.length; ev < l; ev++) {
@@ -1462,7 +1498,12 @@ GMaps.prototype.addText = function(options) {
 
   overlayText.draw = function() {
     var projection = this.getProjection();
-    var pixel = projection.fromLatLngToDivPixel(new google.maps.LatLng(options.lat, options.lng));
+    var pixel = 0;
+
+    // Avoid crashing unit tests
+    try {
+      pixel = projection.fromLatLngToDivPixel(new google.maps.LatLng(options.lat, options.lng));
+    } catch(e) {};
 
     options.horizontalOffset = options.horizontalOffset || 0;
     options.verticalOffset = options.verticalOffset || 0;

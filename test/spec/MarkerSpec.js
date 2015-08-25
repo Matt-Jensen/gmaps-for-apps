@@ -20,7 +20,6 @@ describe('Marker', function() {
     document.body.removeChild(container);
   });
 
-
   describe('creating', function() {
     var marker;
 
@@ -60,26 +59,74 @@ describe('Marker', function() {
           this.passed = true;
         }.bind(context),
 
-        onmouseover: function() {
+        onrightclick: function() {
+          return true;
+        },
+
+        ondblclick: function() {
           return true;
         },
 
         ondrag: function() {
           return true;
+        },
+
+        ondragend: function() {
+          return true;
+        },
+
+        ondragstart: function() {
+          return true;
+        },
+
+        onmousedown: function() {
+          return true;
+        },
+
+        onmouseout: function() {
+          return true;
+        },
+
+        onmouseover: function() {
+          return true;
+        },
+
+        onmousemove: function() {
+          return true;
+        },
+
+        onmouseup: function() {
+          return true;
         }
       };
 
       spyOn(callbacks, 'onclick').and.callThrough();
-      spyOn(callbacks, 'onmouseover').and.callThrough();
+      spyOn(callbacks, 'onrightclick').and.callThrough();
+      spyOn(callbacks, 'ondblclick').and.callThrough();
       spyOn(callbacks, 'ondrag').and.callThrough();
+      spyOn(callbacks, 'ondragend').and.callThrough();
+      spyOn(callbacks, 'ondragstart').and.callThrough();
+      spyOn(callbacks, 'onmousedown').and.callThrough();
+      spyOn(callbacks, 'onmouseout').and.callThrough();
+      spyOn(callbacks, 'onmouseover').and.callThrough();
+      spyOn(callbacks, 'onmousemove').and.callThrough();
+      spyOn(callbacks, 'onmouseup').and.callThrough();
 
       marker = mapInstance.addMarker({
         lat : -12.0533,
         lng: -77.0193,
         title : 'New marker',
-        click : callbacks.onclick,
+        click: callbacks.onclick,
+        rightclick: callbacks.onrightclick,
+        dblclick: callbacks.ondblclick,
+        drag: callbacks.ondrag,
+        dragend: callbacks.ondragend,
+        dragstart: callbacks.ondragstart,
+        mousedown: callbacks.onmousedown,
+        mouseout: callbacks.onmouseout,
         mouseover: callbacks.onmouseover,
-        drag: callbacks.ondrag
+        mousemove: callbacks.onmousemove,
+        mouseup: callbacks.onmouseup
       });
     });
 
@@ -89,12 +136,28 @@ describe('Marker', function() {
       expect(context.passed).toBe(true);
     });
 
-    it('should subscribe multiple events', function() {
-      google.maps.event.trigger(marker, 'mouseover', {});
-      expect(callbacks.onmouseover).toHaveBeenCalled();
-
+    it('should subscribe all mouse events', function() {
+      google.maps.event.trigger(marker, 'rightclick', {});
+      google.maps.event.trigger(marker, 'dblclick', {});
       google.maps.event.trigger(marker, 'drag', {});
-      expect(callbacks.ondrag).toHaveBeenCalled();
+      google.maps.event.trigger(marker, 'dragend', {});
+      google.maps.event.trigger(marker, 'dragstart', {});
+      google.maps.event.trigger(marker, 'mousedown', {});
+      google.maps.event.trigger(marker, 'mouseout', {});
+      google.maps.event.trigger(marker, 'mouseover', {});
+      google.maps.event.trigger(marker, 'mousemove', {});
+      google.maps.event.trigger(marker, 'mouseup', {});
+
+      expect(callbacks.onrightclick.calls.count()).toEqual(1);
+      expect(callbacks.ondblclick.calls.count()).toEqual(1);
+      expect(callbacks.ondrag.calls.count()).toEqual(1);
+      expect(callbacks.ondragend.calls.count()).toEqual(1);
+      expect(callbacks.ondragstart.calls.count()).toEqual(1);
+      expect(callbacks.onmousedown.calls.count()).toEqual(1);
+      expect(callbacks.onmouseout.calls.count()).toEqual(1);
+      expect(callbacks.onmouseover.calls.count()).toEqual(1);
+      expect(callbacks.onmousemove.calls.count()).toEqual(1);
+      expect(callbacks.onmouseup.calls.count()).toEqual(1);
     });
   });
 

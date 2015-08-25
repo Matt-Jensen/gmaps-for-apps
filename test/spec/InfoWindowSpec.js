@@ -59,7 +59,43 @@ describe('GMap Info Window', function() {
           this.passed = true;
         },
 
+        onrightclick: function() {
+          return true;
+        },
+
+        ondblclick: function() {
+          return true;
+        },
+
+        ondrag: function() {
+          return true;
+        },
+
+        ondragend: function() {
+          return true;
+        },
+
+        ondragstart: function() {
+          return true;
+        },
+
+        onmousedown: function() {
+          return true;
+        },
+
+        onmouseout: function() {
+          return true;
+        },
+
+        onmouseover: function() {
+          return true;
+        },
+
         onmousemove: function() {
+          return true;
+        },
+
+        onmouseup: function() {
           return true;
         },
 
@@ -69,14 +105,32 @@ describe('GMap Info Window', function() {
       };
 
       spyOn(callbacks, 'onclick').and.callThrough();
+      spyOn(callbacks, 'onrightclick').and.callThrough();
+      spyOn(callbacks, 'ondblclick').and.callThrough();
+      spyOn(callbacks, 'ondrag').and.callThrough();
+      spyOn(callbacks, 'ondragend').and.callThrough();
+      spyOn(callbacks, 'ondragstart').and.callThrough();
+      spyOn(callbacks, 'onmousedown').and.callThrough();
+      spyOn(callbacks, 'onmouseout').and.callThrough();
+      spyOn(callbacks, 'onmouseover').and.callThrough();
       spyOn(callbacks, 'onmousemove').and.callThrough();
+      spyOn(callbacks, 'onmouseup').and.callThrough();
       spyOn(callbacks, 'oncloseclick').and.callThrough();
 
       infoWindow = mapInstance.addInfoWindow({
         lat: 34.54148095772571,
         lng: -112.47004508972168,
         click : callbacks.onclick,
+        rightclick: callbacks.onrightclick,
+        dblclick: callbacks.ondblclick,
+        drag: callbacks.ondrag,
+        dragend: callbacks.ondragend,
+        dragstart: callbacks.ondragstart,
+        mousedown: callbacks.onmousedown,
+        mouseout: callbacks.onmouseout,
+        mouseover: callbacks.onmouseover,
         mousemove : callbacks.onmousemove,
+        mouseup : callbacks.onmouseup,
         closeclick : callbacks.oncloseclick
       });
     });
@@ -87,13 +141,31 @@ describe('GMap Info Window', function() {
       expect(context.passed).toBe(true);
     });
 
-    it('should bind delegated events', function(done) {
+    it('should bind all mouse events as delegated events', function(done) {
       infoWindow.click();
+      infoWindow.rightclick();
+      infoWindow.dblclick();
+      infoWindow.drag();
+      infoWindow.dragend();
+      infoWindow.dragstart();
+      infoWindow.mousedown();
+      infoWindow.mouseout();
+      infoWindow.mouseover();
       infoWindow.mousemove();
+      infoWindow.mouseup();
       window.setTimeout(function () {
-        expect(infoWindow.delegatedEvents.length).toBe(2);
-        expect(callbacks.onmousemove).toHaveBeenCalled();
-        expect(callbacks.onclick).toHaveBeenCalled();
+        expect(infoWindow.delegatedEvents.length).toBe(11);
+        expect(callbacks.onclick.calls.count()).toEqual(1);
+        expect(callbacks.onrightclick.calls.count()).toEqual(1);
+        expect(callbacks.ondblclick.calls.count()).toEqual(1);
+        expect(callbacks.ondrag.calls.count()).toEqual(1);
+        expect(callbacks.ondragend.calls.count()).toEqual(1);
+        expect(callbacks.ondragstart.calls.count()).toEqual(1);
+        expect(callbacks.onmousedown.calls.count()).toEqual(1);
+        expect(callbacks.onmouseout.calls.count()).toEqual(1);
+        expect(callbacks.onmouseover.calls.count()).toEqual(1);
+        expect(callbacks.onmousemove.calls.count()).toEqual(1);
+        expect(callbacks.onmouseup.calls.count()).toEqual(1);
         done();
       }, 10);
     }, 100);
