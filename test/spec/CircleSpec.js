@@ -101,6 +101,14 @@ describe('GMap circles', function() {
 
         onmouseup: function() {
           return true;
+        },
+
+        onradius_changed: function() {
+          return true;
+        },
+
+        oncenter_changed: function() {
+          return true;
         }
       };
 
@@ -115,6 +123,8 @@ describe('GMap circles', function() {
       spyOn(callbacks, 'onmouseover').and.callThrough();
       spyOn(callbacks, 'onmousemove').and.callThrough();
       spyOn(callbacks, 'onmouseup').and.callThrough();
+      spyOn(callbacks, 'onradius_changed').and.callThrough();
+      spyOn(callbacks, 'oncenter_changed').and.callThrough();
 
       circle = mapInstance.addCircle({
         id: 'unique-circle',
@@ -136,7 +146,9 @@ describe('GMap circles', function() {
         mouseout: callbacks.onmouseout,
         mouseover: callbacks.onmouseover,
         mousemove: callbacks.onmousemove,
-        mouseup: callbacks.onmouseup
+        mouseup: callbacks.onmouseup,
+        radius_changed: callbacks.onradius_changed,
+        center_changed: callbacks.oncenter_changed
       });
     });
 
@@ -157,6 +169,8 @@ describe('GMap circles', function() {
       google.maps.event.trigger(circle, 'mouseover', {});
       google.maps.event.trigger(circle, 'mousemove', {});
       google.maps.event.trigger(circle, 'mouseup', {});
+      google.maps.event.trigger(circle, 'radius_changed', {});
+      google.maps.event.trigger(circle, 'center_changed', {});
 
       expect(callbacks.onrightclick.calls.count()).toEqual(1);
       expect(callbacks.ondblclick.calls.count()).toEqual(1);
@@ -168,6 +182,8 @@ describe('GMap circles', function() {
       expect(callbacks.onmouseover.calls.count()).toEqual(1);
       expect(callbacks.onmousemove.calls.count()).toEqual(1);
       expect(callbacks.onmouseup.calls.count()).toEqual(1);
+      expect(callbacks.onradius_changed.calls.count()).toEqual(1);
+      expect(callbacks.oncenter_changed.calls.count()).toEqual(1);
     });
   });
 

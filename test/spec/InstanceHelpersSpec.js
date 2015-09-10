@@ -24,12 +24,12 @@ describe('Instance Helpers', function () {
   describe('geocode', function() {
     it('should call callback once geocode returns results & status', function(done) {
       result = mapInstance.geocode({
-        address: 'Legoland California Resort',
+        address: '600 Congress Ave. Austin TX',
         callback: function(results, status) {
           var latLng = results[0].geometry.location;
           expect(status).toBe('OK');
-          expect(latLng.lat()).toBe(33.1265294);
-          expect(latLng.lng()).toBe(-117.3115977);
+          expect(latLng.lat()).toBe(30.26861199999999);
+          expect(latLng.lng()).toBe(-97.7431067);
           done();
         }
       });

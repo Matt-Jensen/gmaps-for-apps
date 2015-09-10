@@ -14,7 +14,7 @@
 }(this, function() {
 
 /*!
- * GMaps.js v0.5.0
+ * GMaps.js v0.5.1
  * http://hpneo.github.com/gmaps/
  *
  * Copyright 2015, Matt Jensen
@@ -532,7 +532,9 @@ GMaps.prototype.addCircle = function(options) {
     'mousemove',
     'mouseout',
     'mouseover',
-    'mouseup'
+    'mouseup',
+    'radius_changed',
+    'center_changed'
   ];
 
   for (var i = 0, l = circleEvents.length, name; i < l; i++) {
