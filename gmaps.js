@@ -14,7 +14,7 @@
 }(this, function() {
 
 /*!
- * GMaps.js v0.5.3
+ * GMaps.js v0.5.4
  * http://hpneo.github.com/gmaps/
  *
  * Copyright 2015, Matt Jensen
@@ -655,7 +655,7 @@ GMaps.prototype.addPolygon = function(options) {
   ];
 
   // Set editable events to polygon's path
-  for (var ev = 0, l = polygonEditableEvents.length, name; ev < l; ev++) {
+  for (ev = 0, l = polygonEditableEvents.length, name; ev < l; ev++) {
     name = polygonEditableEvents[ev];
     if (options.hasOwnProperty(name)) {
       polygon.delegatedEvents.push(google.maps.event.addListener(
@@ -2826,7 +2826,7 @@ GMaps.prototype.utils.findAbsolutePosition = function findAbsolutePosition(node)
 GMaps.prototype.utils.subcribeEvent = function subcribeEvent(callback, obj) {
   return function(e) {
     var args = [];
-    if(e) { args.push(e); }
+    if(e && typeof e !== 'number') { args.push(e); } // don't allow index parameters as events
     args.push(obj || this);
     return callback.apply(null, args);
   };
