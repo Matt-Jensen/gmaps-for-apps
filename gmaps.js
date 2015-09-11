@@ -14,7 +14,7 @@
 }(this, function() {
 
 /*!
- * GMaps.js v0.5.4
+ * GMaps.js v0.5.5
  * http://hpneo.github.com/gmaps/
  *
  * Copyright 2015, Matt Jensen
