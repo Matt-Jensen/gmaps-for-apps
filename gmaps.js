@@ -14,7 +14,7 @@
 }(this, function() {
 
 /*!
- * GMaps.js v0.5.1
+ * GMaps.js v0.5.3
  * http://hpneo.github.com/gmaps/
  *
  * Copyright 2015, Matt Jensen
@@ -550,6 +550,10 @@ GMaps.prototype.addCircle = function(options) {
     }
   }
 
+  // Prevent double events
+  delete circle.radius_changed;
+  delete circle.center_changed;
+
   this.circles.push(circle);
   GMaps.fire('circle_added', circle, this);
 
@@ -635,6 +639,30 @@ GMaps.prototype.addPolygon = function(options) {
         name,
         this.utils.subcribeEvent(options[name], polygon)
       );
+    }
+  }
+
+  //////////////////////
+  // Editable Events //
+  ////////////////////
+
+  polygon.delegatedEvents = [];
+
+  var polygonEditableEvents = [
+    'set_at',
+    'insert_at',
+    'remove_at'
+  ];
+
+  // Set editable events to polygon's path
+  for (var ev = 0, l = polygonEditableEvents.length, name; ev < l; ev++) {
+    name = polygonEditableEvents[ev];
+    if (options.hasOwnProperty(name)) {
+      polygon.delegatedEvents.push(google.maps.event.addListener(
+        polygon.getPath(),
+        name,
+        this.utils.subcribeEvent(options[name], polygon.getPath())
+      ));
     }
   }
 
@@ -2797,7 +2825,10 @@ GMaps.prototype.utils.findAbsolutePosition = function findAbsolutePosition(node)
  */
 GMaps.prototype.utils.subcribeEvent = function subcribeEvent(callback, obj) {
   return function(e) {
-    return callback(e, (obj || this));
+    var args = [];
+    if(e) { args.push(e); }
+    args.push(obj || this);
+    return callback.apply(null, args);
   };
 };
 
