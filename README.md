@@ -43,6 +43,7 @@ The original [GMaps](https://github.com/hpneo/gmaps) is a fantasic abstraction f
 - All methods are now add{Child}, no more confusing draw{Child} scattered about.
 - Additional utility methods to help with data binding.
 - Simplified in file structure and test runner so you can debug with ease.
+- Adds edit events, consistend with event callback parameter conventions, to map children.
 
 API Differences
 -----------------
