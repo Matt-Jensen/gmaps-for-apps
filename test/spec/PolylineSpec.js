@@ -103,6 +103,18 @@ describe('GMaps Polylines', function() {
 
         onmouseup: function() {
           return true;
+        },
+
+        onset_at: function() {
+          return true;
+        },
+
+        oninsert_at: function() {
+          return true;
+        },
+
+        onremove_at: function() {
+          return true;
         }
       };
 
@@ -117,6 +129,9 @@ describe('GMaps Polylines', function() {
       spyOn(callbacks, 'onmouseover').and.callThrough();
       spyOn(callbacks, 'onmousemove').and.callThrough();
       spyOn(callbacks, 'onmouseup').and.callThrough();
+      spyOn(callbacks, 'onset_at').and.callThrough();
+      spyOn(callbacks, 'oninsert_at').and.callThrough();
+      spyOn(callbacks, 'onremove_at').and.callThrough();
 
       polyline = mapInstance.addPolyline({
         path: path,
@@ -133,7 +148,10 @@ describe('GMaps Polylines', function() {
         mouseout: callbacks.onmouseout,
         mouseover: callbacks.onmouseover,
         mousemove: callbacks.onmousemove,
-        mouseup: callbacks.onmouseup
+        mouseup: callbacks.onmouseup,
+        set_at: callbacks.onset_at,
+        insert_at: callbacks.oninsert_at,
+        remove_at: callbacks.onremove_at
       });
     });
 
@@ -154,6 +172,9 @@ describe('GMaps Polylines', function() {
       google.maps.event.trigger(polyline, 'mouseover', {});
       google.maps.event.trigger(polyline, 'mousemove', {});
       google.maps.event.trigger(polyline, 'mouseup', {});
+      google.maps.event.trigger(polyline.getPath(), 'set_at', {});
+      google.maps.event.trigger(polyline.getPath(), 'insert_at', {});
+      google.maps.event.trigger(polyline.getPath(), 'remove_at', {});
 
       expect(callbacks.onrightclick.calls.count()).toEqual(1);
       expect(callbacks.ondblclick.calls.count()).toEqual(1);
@@ -165,6 +186,9 @@ describe('GMaps Polylines', function() {
       expect(callbacks.onmouseover.calls.count()).toEqual(1);
       expect(callbacks.onmousemove.calls.count()).toEqual(1);
       expect(callbacks.onmouseup.calls.count()).toEqual(1);
+      expect(callbacks.onset_at.calls.count()).toEqual(1);
+      expect(callbacks.oninsert_at.calls.count()).toEqual(1);
+      expect(callbacks.onremove_at.calls.count()).toEqual(1);
     });
   });
 

@@ -26,7 +26,11 @@
         path: path,
         strokeColor: '#131540',
         strokeOpacity: 0.6,
-        strokeWeight: 6
+        strokeWeight: 6,
+        editable: true,
+        set_at: function(polyline) { console.log(polyline); },
+        insert_at: function(polyline) { console.log(polyline); },
+        remove_at: function(polyline) { console.log(polyline); }
       });
     });
   </script>

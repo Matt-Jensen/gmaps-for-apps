@@ -111,9 +111,11 @@ describe('Polygons', function() {
         onset_at: function() {
           return true;
         },
+
         oninsert_at: function() {
           return true;
         },
+
         onremove_at: function() {
           return true;
         }
@@ -190,7 +192,6 @@ describe('Polygons', function() {
       // expect(callbacks.onmouseout.calls.count()).toEqual(1);
       expect(callbacks.onmousemove.calls.count()).toEqual(1);
       expect(callbacks.onmouseup.calls.count()).toEqual(1);
-
       expect(callbacks.onset_at.calls.count()).toEqual(1);
       expect(callbacks.oninsert_at.calls.count()).toEqual(1);
       expect(callbacks.onremove_at.calls.count()).toEqual(1);
