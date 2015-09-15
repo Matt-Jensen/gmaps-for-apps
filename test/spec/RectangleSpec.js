@@ -110,6 +110,10 @@ describe('GMaps rectangles', function() {
 
         onmouseup: function() {
           return true;
+        },
+
+        onbounds_changed: function() {
+          return true;
         }
       };
 
@@ -124,6 +128,7 @@ describe('GMaps rectangles', function() {
       spyOn(callbacks, 'onmouseover').and.callThrough();
       spyOn(callbacks, 'onmousemove').and.callThrough();
       spyOn(callbacks, 'onmouseup').and.callThrough();
+      spyOn(callbacks, 'onbounds_changed').and.callThrough();
 
       rectangle = mapInstance.addRectangle({
         bounds : [[-12.0303,-77.0237],[-12.0348,-77.0115]],
@@ -142,7 +147,8 @@ describe('GMaps rectangles', function() {
         mouseout: callbacks.onmouseout,
         mouseover: callbacks.onmouseover,
         mousemove: callbacks.onmousemove,
-        mouseup: callbacks.onmouseup
+        mouseup: callbacks.onmouseup,
+        bounds_changed: callbacks.onbounds_changed
       });
     });
 
@@ -163,6 +169,7 @@ describe('GMaps rectangles', function() {
       google.maps.event.trigger(rectangle, 'mouseover', {});
       google.maps.event.trigger(rectangle, 'mousemove', {});
       google.maps.event.trigger(rectangle, 'mouseup', {});
+      google.maps.event.trigger(rectangle, 'bounds_changed', {});
 
       expect(callbacks.onrightclick.calls.count()).toEqual(1);
       expect(callbacks.ondblclick.calls.count()).toEqual(1);
@@ -174,6 +181,7 @@ describe('GMaps rectangles', function() {
       expect(callbacks.onmouseover.calls.count()).toEqual(1);
       expect(callbacks.onmousemove.calls.count()).toEqual(1);
       expect(callbacks.onmouseup.calls.count()).toEqual(1);
+      expect(callbacks.onbounds_changed.calls.count()).toEqual(1);
     });
   });
 

@@ -14,7 +14,7 @@
 }(this, function() {
 
 /*!
- * GMaps.js v0.5.5
+ * GMaps.js v0.5.8
  * http://hpneo.github.com/gmaps/
  *
  * Copyright 2015, Matt Jensen
@@ -724,7 +724,8 @@ GMaps.prototype.addRectangle = function(options) {
     'mousemove',
     'mouseout',
     'mouseover',
-    'mouseup'
+    'mouseup',
+    'bounds_changed'
   ];
 
   for (var ev = 0, l = rectangleEvents.length, name; ev < l; ev++) {
@@ -737,6 +738,9 @@ GMaps.prototype.addRectangle = function(options) {
       );
     }
   }
+
+  // Prevent double events
+  delete rectangle.bounds_changed;
 
   this.rectangles.push(rectangle);
   GMaps.fire('rectangle_added', rectangle, this);
