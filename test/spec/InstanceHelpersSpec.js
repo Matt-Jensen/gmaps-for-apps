@@ -64,7 +64,6 @@ describe('Instance Helpers', function () {
 
     it('should add an event listener to the base map element', function(done) {
       window.setTimeout(function() {
-        console.log(document.getElementById(infoWindow._DOMid));
         document.getElementById(infoWindow._DOMid).click();
 
         window.setTimeout(function() {
