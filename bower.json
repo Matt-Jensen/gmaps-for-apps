@@ -1,7 +1,7 @@
 {
   "name": "gmaps-for-apps",
   "main": "gmaps.js",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "homepage": "https://github.com/Matt-Jensen/gmaps-for-apps",
   "authors": [
     "Matt-Jensen"

@@ -1,7 +1,5 @@
-[![Build Status](https://travis-ci.org/Matt-Jensen/gmaps-for-apps.svg?branch=master)](https://travis-ci.org/Matt-Jensen/gmaps-for-apps)
+# GMaps-For-Apps [![Build Status](https://travis-ci.org/Matt-Jensen/gmaps-for-apps.svg?branch=master)](https://travis-ci.org/Matt-Jensen/gmaps-for-apps)
 
-GMaps-For-Apps - Simplified Google Maps For Your JavaScript Apps.
-==================================================================
 *This project is a fork of [GMaps](https://github.com/hpneo/gmaps)*
 
 **GMaps-for-Apps** supports all features available in [original Gmaps](http://hpneo.github.com/gmaps/) and more.  This project aims to be the rendering layer for your JavaScript App's Google maps.  That way you can focus on managing your app's state instead of Googling for Google Map examples, which makes Google feel self conscious.
@@ -12,7 +10,7 @@ Install
 --------------------
 `bower install gmaps-for-apps`
 
-Loading the `gmaps.min.js` script will make available a global contructor function: **GMaps** 
+Loading the `gmaps.min.js` script will make available a global constructor function: **GMaps**
 
 Usage
 -------
@@ -60,10 +58,10 @@ Info Windows:
             alert('well that\'s alarming...');
         }
     });
-    
+
     // stored in array:
     // myMapInstance.infoWindows
-    
+
     // Supports events:
     // click, dblclick, mousedown, mousemove, mouseout, mouseover, mouseup, rightclick
 ```
@@ -76,10 +74,10 @@ Text Elements:
         text: 'text content only, its very simple',
         zIndex: 999
       });
-      
+
     // stored in array:
     // myMapInstance.texts
-    
+
     // Supports events:
     // click, dblclick, mousedown, mousemove, mouseout, mouseover, mouseup, rightclick
 ```
@@ -108,7 +106,7 @@ mayGMapInstance.hasChild(mapTextInstance, 'text');
         lng: -112.47004508972168,
         content: '<div id="my-selector">Info Window</div>',
     });
-    
+
     // Binds event to root map element
     myMapInstance.addDelegatedEvent('click', '#my-selector', function() { console.log('delegate'); });
 ```
@@ -128,7 +126,7 @@ draw methods are still available but simply reference the associated add method.
 Support for removing map children was spotty as well as memory leaky. All the methods to remove individual children are:
 
 `removeMarker`, `removeOverlay`, `removeText`, `removePolygon`, `removePolyline`, `removeCircle`, `removeRectangle`, `removeInfoWindow`
-    
+
 Methods for removing all children in one go are:
 
 `removeMarkers`, `removeOverlays`, `removeTexts`, `removePolygons`, `removePolylines`, `removeCircles`, `removeRectangles`, `removeInfoWindows`
