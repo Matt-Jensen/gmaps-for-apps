@@ -14,26 +14,30 @@
 }(this, function() {
 
 /*!
- * GMaps.js v0.5.8
+ * GMaps.js v0.5.9
  * http://hpneo.github.com/gmaps/
  *
- * Copyright 2015, Matt Jensen
+ * Copyright 2016, Matt Jensen
  * Released under the MIT License.
  */
 
 /*jshint unused:false*/
-
-if (!(typeof window.google === 'object' && window.google.maps)) {
-  throw new Error('Google Maps API is required. Please register the following JavaScript library http://maps.google.com/maps/api/js?sensor=true.');
-}
+var isNodeEnv = (typeof window === 'undefined' && typeof global === 'object');
 
 var GMaps = (function() {
   'use strict';
+
+  if (isNodeEnv) {
+    return function noop() {};
+  } else if (typeof window.google !== 'object' || typeof window.google.maps !== 'object') {
+    throw new Error('Google Maps API is required. Please register the following JavaScript library http://maps.google.com/maps/api/js?sensor=true.');
+  }
 
   var doc = document;
 
   var GMaps = function(options) {
     if (!this) { return new GMaps(options); }
+    this.isNodeEnv = isNodeEnv;
 
     options.zoom = options.zoom || 15;
     options.mapType = options.mapType || 'roadmap';
@@ -164,7 +168,7 @@ var GMaps = (function() {
       if (!document.getElementById('gmaps-context-menu')) { return; }
 
       var contextMenuElement = document.getElementById('gmaps-context-menu');
-      
+
       contextMenuElement.innerHTML = html;
 
       var contextMenuItems = contextMenuElement.getElementsByTagName('a');
@@ -202,11 +206,11 @@ var GMaps = (function() {
 
         var overlay = new google.maps.OverlayView();
         overlay.setMap(self.map);
-        
+
         overlay.draw = function() {
           var projection = overlay.getProjection();
           var position = e.marker.getPosition();
-          
+
           e.pixel = projection.fromLatLngToContainerPixel(position);
 
           buildContextMenuHTML(control, e);
@@ -2872,6 +2876,9 @@ GMaps.prototype.utils.subcribeEvent = function subcribeEvent(callback, obj) {
  * @return {[Geocoder]}       [instance of Geocoder]
  */
 GMaps.prototype.geocode = (function() {
+  if (isNodeEnv) {
+    return function noop() {};
+  }
 
   var geocoder = new google.maps.Geocoder();
 
@@ -2889,7 +2896,7 @@ GMaps.prototype.geocode = (function() {
     delete options.lat;
     delete options.lng;
     delete options.callback;
-    
+
     geocoder.geocode(options, function(results, status) {
       callback(results, status);
     });
@@ -2985,7 +2992,7 @@ GMaps.prototype.hasChild = function(child, type) {
       console.warn('invalid child argument to hasMapChild, requires an id or map child instance');
     }
   }
-  
+
   return false;
 };
 
@@ -3010,6 +3017,7 @@ GMaps.prototype._teardownChild = function teardownChild(type, child) {
   GMaps.fire(type+'_removed', child, this);
 }
 
+if (!isNodeEnv) {
 //==========================
 // Polygon containsLatLng
 // https://github.com/tparkin/Google-Maps-Point-in-Polygon
@@ -3132,6 +3140,8 @@ if (!Array.prototype.indexOf) {
       return -1;
   }
 }
+} // close if
+
 
 return GMaps;
 }));

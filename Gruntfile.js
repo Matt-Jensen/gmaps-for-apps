@@ -219,7 +219,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test-dev', ['jshint:test', 'karma:base']);
   grunt.registerTask('test-all', ['jshint:test', 'karma:base', 'karma:overlays', 'karma:utils']);
   grunt.registerTask('test-release', [
-    'jshint:test', 'build', 'jshint:test', 
+    'jshint:test', 'build', 'jshint:test',
     'karma:baseRelease', 'karma:streetViewRelease', 'karma:overlaysRelease', 'karma:utilsRelease'
   ]);
   grunt.registerTask('travis', ['karma:base', 'karma:overlays', 'karma:utils']);

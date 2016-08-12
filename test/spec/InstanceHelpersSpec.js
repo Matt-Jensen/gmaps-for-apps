@@ -28,8 +28,8 @@ describe('Instance Helpers', function () {
         callback: function(results, status) {
           var latLng = results[0].geometry.location;
           expect(status).toBe('OK');
-          expect(latLng.lat()).toBe(30.26861199999999);
-          expect(latLng.lng()).toBe(-97.7431067);
+          expect(Math.round(latLng.lat())).toBe(30);
+          expect(Math.round(latLng.lng())).toBe(-98);
           done();
         }
       });
@@ -64,6 +64,7 @@ describe('Instance Helpers', function () {
 
     it('should add an event listener to the base map element', function(done) {
       window.setTimeout(function() {
+        console.log(document.getElementById(infoWindow._DOMid));
         document.getElementById(infoWindow._DOMid).click();
 
         window.setTimeout(function() {
