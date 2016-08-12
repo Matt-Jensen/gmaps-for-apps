@@ -14,7 +14,7 @@
 }(this, function() {
 
 /*!
- * GMaps.js v0.5.9
+ * GMaps.js v0.5.11
  * http://hpneo.github.com/gmaps/
  *
  * Copyright 2016, Matt Jensen
@@ -22,7 +22,7 @@
  */
 
 /*jshint unused:false*/
-var isNodeEnv = (typeof window === 'undefined' && typeof global === 'object');
+var isNodeEnv = (typeof module === 'object' && typeof module.exports === 'object' && typeof require === 'function');
 
 var GMaps = (function() {
   'use strict';
