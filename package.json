@@ -1,6 +1,6 @@
 {
   "name": "gmaps-for-apps",
-  "version": "0.5.11",
+  "version": "0.5.12",
   "description": "the easiest way to use Google Maps in your apps",
   "main": "gmaps.js",
   "scripts": {
