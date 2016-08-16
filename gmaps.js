@@ -14,7 +14,7 @@
 }(this, function() {
 
 /*!
- * GMaps.js v0.5.12
+ * GMaps.js v0.5.13
  * http://hpneo.github.com/gmaps/
  *
  * Copyright 2016, Matt Jensen
@@ -430,7 +430,7 @@ GMaps.prototype._createControl = function(options) {
   var control = document.createElement('div');
 
   control.style.cursor = 'pointer';
-
+  
   if (options.disableDefaultStyles !== true) {
     control.style.fontFamily = 'Roboto, Arial, sans-serif';
     control.style.fontSize = '11px';
@@ -446,7 +446,7 @@ GMaps.prototype._createControl = function(options) {
   if (options.id) {
     control.id = options.id;
   }
-
+  
   if (options.title) {
     control.title = options.title;
   }
@@ -485,7 +485,7 @@ GMaps.prototype._createControl = function(options) {
 
 GMaps.prototype.addControl = function(options) {
   var control = this._createControl(options);
-
+  
   this.controls.push(control);
   this.map.controls[control.position].push(control);
 
@@ -1306,7 +1306,7 @@ GMaps.prototype.addOverlay = function(options) {
     if (!options.layer) {
       options.layer = 'overlayLayer';
     }
-
+    
     var panes = this.getPanes();
     var overlayLayer = panes[options.layer];
     var stopOverlayEvents = [
@@ -1947,7 +1947,7 @@ GMaps.prototype.addRoute = function(options) {
         }
 
         self.addPolyline(polyline_options);
-
+        
         if (options.callback) {
           options.callback(e[e.length - 1]);
         }
@@ -2016,7 +2016,7 @@ GMaps.prototype.drawSteppedRoute = function() {
 GMaps.prototype.addSteppedRoute = function(options) {
   var self = this;
   var route, steps, step, i, l, polyline_options;
-
+  
   if (options.origin && options.destination) {
     this.getRoutes({
       origin: options.origin,
@@ -2032,7 +2032,7 @@ GMaps.prototype.addSteppedRoute = function(options) {
 
         //step callback
         if (e.length > 0 && options.step) {
-
+        
           route = e[e.length - 1];
           if (route.legs.length > 0) {
 
@@ -2232,7 +2232,7 @@ GMaps.staticMapURL = function(options){
   static_root += '?';
 
   var markers = options.markers;
-
+  
   delete options.markers;
 
   if (!markers && options.marker) {
@@ -2750,7 +2750,7 @@ GMaps.prototype.utils.toCamelCase = (function() {
 
 /**
  * [arrayMap polyfill for Array.prototype.map]
- * @param  {[Array]}  array
+ * @param  {[Array]}  array   
  * @param  {Function} callback [recieves (array[i], i, array)]
  * @param  {[object]} context  [optional context for callback]
  * @return {[type]}            [description]
