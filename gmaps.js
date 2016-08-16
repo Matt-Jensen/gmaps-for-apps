@@ -31,8 +31,6 @@ var GMaps = (function() {
     return function noop() {};
   }
 
-  var doc = document;
-
   var GMaps = function(options) {
     if (typeof window.google !== 'object' || typeof window.google.maps !== 'object') {
       throw new Error('Google Maps API is required. Please register the following JavaScript library http://maps.google.com/maps/api/js?sensor=true.');
@@ -227,7 +225,7 @@ var GMaps = (function() {
     this.setContextMenu = function setContextMenu(options) {
       window.contextMenu[self.el.id][options.control] = {};
 
-      var ul = doc.createElement('ul');
+      var ul = document.createElement('ul');
 
       var i;
       for (i in options.options) {
@@ -250,7 +248,7 @@ var GMaps = (function() {
       ul.style.padding = '8px';
       ul.style.boxShadow = '2px 2px 6px #ccc';
 
-      doc.body.appendChild(ul);
+      document.body.appendChild(ul);
 
       var contextMenuElement = document.getElementById('gmaps-context-menu')
 
@@ -432,7 +430,7 @@ GMaps.prototype._createControl = function(options) {
   var control = document.createElement('div');
 
   control.style.cursor = 'pointer';
-  
+
   if (options.disableDefaultStyles !== true) {
     control.style.fontFamily = 'Roboto, Arial, sans-serif';
     control.style.fontSize = '11px';
@@ -448,7 +446,7 @@ GMaps.prototype._createControl = function(options) {
   if (options.id) {
     control.id = options.id;
   }
-  
+
   if (options.title) {
     control.title = options.title;
   }
@@ -487,7 +485,7 @@ GMaps.prototype._createControl = function(options) {
 
 GMaps.prototype.addControl = function(options) {
   var control = this._createControl(options);
-  
+
   this.controls.push(control);
   this.map.controls[control.position].push(control);
 
@@ -1308,7 +1306,7 @@ GMaps.prototype.addOverlay = function(options) {
     if (!options.layer) {
       options.layer = 'overlayLayer';
     }
-    
+
     var panes = this.getPanes();
     var overlayLayer = panes[options.layer];
     var stopOverlayEvents = [
@@ -1949,7 +1947,7 @@ GMaps.prototype.addRoute = function(options) {
         }
 
         self.addPolyline(polyline_options);
-        
+
         if (options.callback) {
           options.callback(e[e.length - 1]);
         }
@@ -2018,7 +2016,7 @@ GMaps.prototype.drawSteppedRoute = function() {
 GMaps.prototype.addSteppedRoute = function(options) {
   var self = this;
   var route, steps, step, i, l, polyline_options;
-  
+
   if (options.origin && options.destination) {
     this.getRoutes({
       origin: options.origin,
@@ -2034,7 +2032,7 @@ GMaps.prototype.addSteppedRoute = function(options) {
 
         //step callback
         if (e.length > 0 && options.step) {
-        
+
           route = e[e.length - 1];
           if (route.legs.length > 0) {
 
@@ -2234,7 +2232,7 @@ GMaps.staticMapURL = function(options){
   static_root += '?';
 
   var markers = options.markers;
-  
+
   delete options.markers;
 
   if (!markers && options.marker) {
@@ -2752,7 +2750,7 @@ GMaps.prototype.utils.toCamelCase = (function() {
 
 /**
  * [arrayMap polyfill for Array.prototype.map]
- * @param  {[Array]}  array   
+ * @param  {[Array]}  array
  * @param  {Function} callback [recieves (array[i], i, array)]
  * @param  {[object]} context  [optional context for callback]
  * @return {[type]}            [description]
