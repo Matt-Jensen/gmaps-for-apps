@@ -14,7 +14,7 @@
 }(this, function() {
 
 /*!
- * GMaps.js v0.5.13
+ * GMaps.js v0.5.14
  * http://hpneo.github.com/gmaps/
  *
  * Copyright 2016, Matt Jensen
@@ -2870,33 +2870,39 @@ GMaps.prototype.utils.subcribeEvent = function subcribeEvent(callback, obj) {
 // with logic reliant upon a GMaps instance dynamic scope
 // ********************************************************
 
-var gMapsGeocoder; // instantiated via `setupGMapsForApps`
 
 /**
  * [geocode instantiates a google.maps Geocoder]
  * @param  {[object]} options [accepts properties lat, lng, and callback]
  * @return {[Geocoder]}       [instance of Geocoder]
  */
-GMaps.prototype.geocode = function geocode(options) {
-  if(!options || !options.callback) {
-    throw new Error('geocode requires an options object with a callback');
-  }
+;(function () {
+  var gMapsGeocoder; // Geocoder singleton
 
-  var callback = options.callback;
+  GMaps.prototype.geocode = function geocode(options) {
+    if(!options || !options.callback) {
+      throw new Error('geocode requires an options object with a callback');
+    }
 
-  if (options.hasOwnProperty('lat') && options.hasOwnProperty('lng')) {
-    options.latLng = new google.maps.LatLng(options.lat, options.lng);
-  }
+    if (!gMapsGeocoder) {
+      gMapsGeocoder = new google.maps.Geocoder(); // instantiate
+    }
 
-  delete options.lat;
-  delete options.lng;
-  delete options.callback;
+    var callback = options.callback;
 
-  gMapsGeocoder.geocode(options, function(results, status) {
-    callback(results, status);
-  });
-};
+    if (options.hasOwnProperty('lat') && options.hasOwnProperty('lng')) {
+      options.latLng = new google.maps.LatLng(options.lat, options.lng);
+    }
 
+    delete options.lat;
+    delete options.lng;
+    delete options.callback;
+
+    gMapsGeocoder.geocode(options, function(results, status) {
+      callback(results, status);
+    });
+  };
+})();
 
 /**
  * [addDelegatedEvent creates an event listener on the root map element that triggers a
@@ -3019,9 +3025,6 @@ function setupGMapsForApps() {
   } else {
     isGMapsForAppsSetup = true;
   }
-
-  // Instantiate gMapsGeocoder
-  gMapsGeocoder = new google.maps.Geocoder();
 
   //==========================
   // Polygon containsLatLng
