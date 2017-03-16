@@ -17,12 +17,14 @@
  * GMaps.js v0.5.14
  * http://hpneo.github.com/gmaps/
  *
- * Copyright 2016, Matt Jensen
+ * Copyright 2017, Matt Jensen
  * Released under the MIT License.
  */
 
 /*jshint unused:false*/
-var isNodeEnv = (typeof module === 'object' && typeof module.exports === 'object' && typeof require === 'function');
+var isNodeEnv = (
+  typeof module === 'object' && typeof module.exports === 'object' && typeof require === 'function' // jshint ignore:line
+);
 
 var GMaps = (function() {
   'use strict';
@@ -36,7 +38,7 @@ var GMaps = (function() {
       throw new Error('Google Maps API is required. Please register the following JavaScript library http://maps.google.com/maps/api/js?sensor=true.');
     }
 
-    setupGMapsForApps();
+    setupGMapsForApps(); // jshint ignore:line
 
     if (!this) { return new GMaps(options); }
 
@@ -1131,11 +1133,11 @@ GMaps.prototype.createMarker = function(options) {
     }
   }
 
-  google.maps.event.addListener(marker, 'click', function() {
+  google.maps.event.addListener(marker, 'click', function(evt) {
     this.details = details;
 
     if (options.click) {
-      options.click.apply(this, [this]);
+      options.click.apply(this, [evt, this]);
     }
 
     if (marker.infoWindow) {
@@ -1306,7 +1308,7 @@ GMaps.prototype.addOverlay = function(options) {
     if (!options.layer) {
       options.layer = 'overlayLayer';
     }
-    
+
     var panes = this.getPanes();
     var overlayLayer = panes[options.layer];
     var stopOverlayEvents = [
@@ -1381,7 +1383,7 @@ GMaps.prototype.addOverlay = function(options) {
     // Avoid crashing unit tests
     try {
       pixel = projection.fromLatLngToDivPixel(new google.maps.LatLng(options.lat, options.lng));
-    } catch(e) {};
+    } catch(e) {}
 
     options.horizontalOffset = options.horizontalOffset || 0;
     options.verticalOffset = options.verticalOffset || 0;
@@ -1566,7 +1568,7 @@ GMaps.prototype.addText = function(options) {
     // Avoid crashing unit tests
     try {
       pixel = projection.fromLatLngToDivPixel(new google.maps.LatLng(options.lat, options.lng));
-    } catch(e) {};
+    } catch(e) {}
 
     options.horizontalOffset = options.horizontalOffset || 0;
     options.verticalOffset = options.verticalOffset || 0;
@@ -3017,6 +3019,7 @@ GMaps.prototype._teardownChild = function teardownChild(type, child) {
   GMaps.fire(type+'_removed', child, this);
 }
 
+/* jshint unused:false */
 var isGMapsForAppsSetup = false;
 
 function setupGMapsForApps() {
