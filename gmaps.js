@@ -2799,18 +2799,17 @@ GMaps.prototype.utils.arrayFlat = function arrayFlat(array) {
  * @return {[Array]}              [Array of google LatLng instances]
  */
 GMaps.prototype.utils.arrayToLatLng = function arrayToLatLng(coords, useGeoJSON) {
-  for (var i = 0, l = coords.length; i < l; i++) {
-    if (!(coords[i] instanceof google.maps.LatLng)) {
-      if (coords[i].length > 0 && typeof coords[i][0] === 'object') {
-        coords[i] = GMaps.prototype.utils.arrayToLatLng(coords[i], useGeoJSON);
-      }
-      else {
-        coords[i] = GMaps.prototype.utils.coordsToLatLngs(coords[i], useGeoJSON);
-      }
+  return GMaps.prototype.utils.arrayMap(coords, function(coord) {
+    if (coord instanceof google.maps.LatLng) {
+      return coord;
     }
-  }
-
-  return coords;
+    if (coord.length > 0 && typeof(coord[0]) === 'object') {
+      return GMaps.prototype.utils.arrayToLatLng(coord, useGeoJSON);
+    }
+    else {
+      return GMaps.prototype.utils.coordsToLatLngs(coord, useGeoJSON);
+    }
+  });
 };
 
 
